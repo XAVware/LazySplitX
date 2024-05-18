@@ -39,13 +39,13 @@ struct MenuView: View {
                     
                     
                     Button {
-                        print("Menu button tapped. Delegate \(delegate)")
+//                        print("Menu button tapped. Delegate \(delegate)")
                         print("Attempting to change display to \(display)")
                         self.delegate?.changeDisplay(to: display)
                         //                    onChange?(data)
                     } label: {
                         HStack(spacing: 16) {
-                            Text(display.menuButtonText)
+                            Text(display.rawValue)
                             Spacer()
                             Image(systemName: display.menuIconName)
                         }
@@ -99,6 +99,6 @@ struct MenuView: View {
 }
 
 #Preview {
-    ViewWrapper(display: .constant(.pointOfSale), menuIsHidden: .constant(true))
+    ViewWrapper(display: .constant(.home), menuIsHidden: .constant(true))
 }
 

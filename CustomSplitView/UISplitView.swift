@@ -169,5 +169,5 @@ public protocol NavDelegate: AnyObject {
 }
 
 #Preview {
-    ViewWrapper(display: .constant(.pointOfSale), menuIsHidden: .constant(true)).ignoresSafeArea()
+    ViewWrapper(display: .constant(.home), menuIsHidden: .constant(true)).ignoresSafeArea()
 }

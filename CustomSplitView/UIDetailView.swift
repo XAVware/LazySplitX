@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DetailView: View {
+struct UIDetailView: View {
     @State var display: DisplayState
     
     init(display: DisplayState) {
@@ -15,7 +15,7 @@ struct DetailView: View {
     }
     
     var body: some View {
-        if display == .pointOfSale {
+        if display == .home {
             pointOfSaleView
         } else {
             settingsView
@@ -48,5 +48,5 @@ struct DetailView: View {
 }
 
 #Preview {
-    DetailView(display: .settings)
+    UIDetailView(display: .settings)
 }

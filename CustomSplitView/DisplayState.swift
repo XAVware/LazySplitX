@@ -1,34 +1,44 @@
 //
-//  File.swift
-//  CustomSplitView
+//  DisplayState.swift
+//  GenericSplitView
 //
 //  Created by Ryan Smetana on 5/9/24.
 //
 
 import SwiftUI
 
-/// Needs to be public to be used in the public ViewDelegate protocol
-public enum DisplayState: CaseIterable, Identifiable {
-    case pointOfSale
-    case inventoryList
-    case settings
-    
-    public var id: Int { self.hashValue }
-    
-    var menuButtonText: String {
-        return switch self {
-        case .pointOfSale:        "Sale"
-        case .inventoryList:    "Inventory"
-        case .settings:         "Settings"
-        }
-    }
+enum NavPath: Identifiable, Hashable {
+    var id: NavPath { return self }
+    case landing
+    case login
+    case signUp
+
+}
+
+public enum DisplayState: String, CaseIterable, Hashable {
+    case home       = "Home"
+    case otherView  = "Other"
+    case settings   = "Settings"
+
     
     var menuIconName: String {
         return switch self {
-        case .pointOfSale:        "cart.fill"
-        case .inventoryList:    "tray.full.fill"
-        case .settings:         "gearshape"
+        case .home:        "house.fill"
+        case .otherView:   "figure.walk.motion"
+        case .settings:    "gearshape"
         }
     }
-
+    
+    /// Specify the views that will need three columns
+    var primaryView: NavigationSplitViewVisibility {
+        return switch self {
+        case .settings:     .doubleColumn
+        default: .detailOnly
+        }
+    }
+    
+    /// The preferred compact column should always be the same as the `primaryView`
+    var prefCompColumn: NavigationSplitViewColumn {
+        return primaryView == .detailOnly ? .detail : .content
+    }
 }

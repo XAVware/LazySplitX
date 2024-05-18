@@ -7,28 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9426B6EB2BF4A98C002D6230 /* ViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* ViewWrapper.swift */; };
-		94462F5A2BF5A46300D0068F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F572BF5A46300D0068F /* ContentView.swift */; };
-		94462F5B2BF5A46300D0068F /* DisplayState_Gen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* DisplayState_Gen.swift */; };
+		9405E3F42BF7EB55001E059D /* StackInSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3F32BF7EB55001E059D /* StackInSplitView.swift */; };
+		9405E3F62BF83BA3001E059D /* SplitInSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3F52BF83BA3001E059D /* SplitInSplitView.swift */; };
+		9405E3F92BF83DFE001E059D /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3F82BF83DFE001E059D /* HomeView.swift */; };
+		9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FA2BF83E02001E059D /* SettingsView.swift */; };
+		9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FC2BF83E0F001E059D /* SubDetailView.swift */; };
+		9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FE2BF83E9F001E059D /* OtherView.swift */; };
+		9405E4012BF83FC4001E059D /* SettingSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4002BF83FC4001E059D /* SettingSplitView.swift */; };
+		9405E4032BF84028001E059D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4022BF84028001E059D /* DetailView.swift */; };
+		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
+		94462F5A2BF5A46300D0068F /* GenericSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F572BF5A46300D0068F /* GenericSplitView.swift */; };
+		94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* DisplayState.swift */; };
 		9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */; };
 		945453712BED3C5F004762C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453702BED3C5F004762C0 /* Assets.xcassets */; };
 		945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453732BED3C5F004762C0 /* Preview Assets.xcassets */; };
-		9454537B2BED3C9A004762C0 /* DisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454537A2BED3C9A004762C0 /* DisplayState.swift */; };
 		9454537D2BED406E004762C0 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454537C2BED406E004762C0 /* MenuView.swift */; };
-		9454539D2BEEE670004762C0 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454539C2BEEE670004762C0 /* DetailView.swift */; };
+		9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454539C2BEEE670004762C0 /* UIDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9426B6EA2BF4A98C002D6230 /* ViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWrapper.swift; sourceTree = "<group>"; };
-		94462F572BF5A46300D0068F /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		94462F582BF5A46300D0068F /* DisplayState_Gen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayState_Gen.swift; sourceTree = "<group>"; };
+		9405E3F32BF7EB55001E059D /* StackInSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackInSplitView.swift; sourceTree = "<group>"; };
+		9405E3F52BF83BA3001E059D /* SplitInSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitInSplitView.swift; sourceTree = "<group>"; };
+		9405E3F82BF83DFE001E059D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		9405E3FA2BF83E02001E059D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		9405E3FC2BF83E0F001E059D /* SubDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubDetailView.swift; sourceTree = "<group>"; };
+		9405E3FE2BF83E9F001E059D /* OtherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherView.swift; sourceTree = "<group>"; };
+		9405E4002BF83FC4001E059D /* SettingSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingSplitView.swift; sourceTree = "<group>"; };
+		9405E4022BF84028001E059D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
+		94462F572BF5A46300D0068F /* GenericSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericSplitView.swift; sourceTree = "<group>"; };
+		94462F582BF5A46300D0068F /* DisplayState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayState.swift; sourceTree = "<group>"; };
 		945453692BED3C5E004762C0 /* CustomSplitView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomSplitView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSplitViewApp.swift; sourceTree = "<group>"; };
 		945453702BED3C5F004762C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		945453732BED3C5F004762C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		9454537A2BED3C9A004762C0 /* DisplayState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayState.swift; sourceTree = "<group>"; };
 		9454537C2BED406E004762C0 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		9454539C2BEEE670004762C0 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		9454539C2BEEE670004762C0 /* UIDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,11 +56,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9405E3F72BF83DF5001E059D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9405E3F82BF83DFE001E059D /* HomeView.swift */,
+				9405E3FA2BF83E02001E059D /* SettingsView.swift */,
+				9405E4002BF83FC4001E059D /* SettingSplitView.swift */,
+				9405E3FC2BF83E0F001E059D /* SubDetailView.swift */,
+				9405E3FE2BF83E9F001E059D /* OtherView.swift */,
+				9405E4022BF84028001E059D /* DetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		94462F562BF5A45100D0068F /* GenericSplitView */ = {
 			isa = PBXGroup;
 			children = (
-				94462F582BF5A46300D0068F /* DisplayState_Gen.swift */,
-				94462F572BF5A46300D0068F /* ContentView.swift */,
+				94462F572BF5A46300D0068F /* GenericSplitView.swift */,
+				9405E3F32BF7EB55001E059D /* StackInSplitView.swift */,
+				9405E3F52BF83BA3001E059D /* SplitInSplitView.swift */,
 			);
 			path = GenericSplitView;
 			sourceTree = "<group>";
@@ -70,14 +98,15 @@
 		9454536B2BED3C5E004762C0 /* CustomSplitView */ = {
 			isa = PBXGroup;
 			children = (
+				9405E3F72BF83DF5001E059D /* Views */,
 				94462F562BF5A45100D0068F /* GenericSplitView */,
 				9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */,
 				945453702BED3C5F004762C0 /* Assets.xcassets */,
 				945453722BED3C5F004762C0 /* Preview Content */,
-				9454537A2BED3C9A004762C0 /* DisplayState.swift */,
 				9454537C2BED406E004762C0 /* MenuView.swift */,
-				9454539C2BEEE670004762C0 /* DetailView.swift */,
-				9426B6EA2BF4A98C002D6230 /* ViewWrapper.swift */,
+				94462F582BF5A46300D0068F /* DisplayState.swift */,
+				9454539C2BEEE670004762C0 /* UIDetailView.swift */,
+				9426B6EA2BF4A98C002D6230 /* UISplitView.swift */,
 			);
 			path = CustomSplitView;
 			sourceTree = "<group>";
@@ -160,13 +189,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9454539D2BEEE670004762C0 /* DetailView.swift in Sources */,
+				9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */,
+				9405E3F92BF83DFE001E059D /* HomeView.swift in Sources */,
+				9405E3F42BF7EB55001E059D /* StackInSplitView.swift in Sources */,
+				9405E4032BF84028001E059D /* DetailView.swift in Sources */,
+				9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */,
 				9454537D2BED406E004762C0 /* MenuView.swift in Sources */,
-				94462F5A2BF5A46300D0068F /* ContentView.swift in Sources */,
-				9454537B2BED3C9A004762C0 /* DisplayState.swift in Sources */,
-				94462F5B2BF5A46300D0068F /* DisplayState_Gen.swift in Sources */,
+				94462F5A2BF5A46300D0068F /* GenericSplitView.swift in Sources */,
+				9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */,
+				9405E4012BF83FC4001E059D /* SettingSplitView.swift in Sources */,
+				9405E3F62BF83BA3001E059D /* SplitInSplitView.swift in Sources */,
+				94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */,
 				9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */,
-				9426B6EB2BF4A98C002D6230 /* ViewWrapper.swift in Sources */,
+				9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */,
+				9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

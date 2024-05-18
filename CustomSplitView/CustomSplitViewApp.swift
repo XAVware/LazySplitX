@@ -33,12 +33,12 @@ Since the app is mostly SwiftUI, I want to keep the UIKit code to a minimum and 
 
 @main
 struct CustomSplitViewApp: App {
-    @State var currentDisplay: DisplayState = .pointOfSale
+    @State var currentDisplay: DisplayState = .home
     @State var menuIsHidden: Bool = false
     var body: some Scene {
         WindowGroup {
 //            ViewWrapper(display: $currentDisplay, menuIsHidden: $menuIsHidden)
-            ContentView()
+            GenericSplitView()
         }
     }
 }
