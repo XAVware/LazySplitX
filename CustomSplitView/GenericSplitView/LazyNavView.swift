@@ -11,7 +11,7 @@
 
 import SwiftUI
 
-@MainActor final class SplitInSplitViewModel: ObservableObject {
+@MainActor final class LazyNavViewModel: ObservableObject {
     @Published var display: DisplayState = .home
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
     @Published var prefCol: NavigationSplitViewColumn = .detail
@@ -28,8 +28,8 @@ import SwiftUI
     }
 }
 
-struct SplitInSplitView<S: View, C: View>: View {
-    @StateObject var vm: SplitInSplitViewModel = SplitInSplitViewModel()
+struct LazyNavView<S: View, C: View>: View {
+    @EnvironmentObject var vm: LazyNavViewModel
     let sidebar: S
     let content: C
     
@@ -39,21 +39,12 @@ struct SplitInSplitView<S: View, C: View>: View {
     }
     
     var body: some View {
-        NavigationSplitView(columnVisibility: $vm.colVis, preferredCompactColumn: $vm.prefCol) {
-            // MARK: - MENU
-            MenuView2()
-                .environmentObject(vm)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar(removing: .sidebarToggle)
+        NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
+            sidebar
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar(removing: .sidebarToggle)
         } detail: {
-            Group {
-                switch vm.display {
-                case .home: HomeView()
-                case .settings: SettingSplitView()
-                case .otherView: OtherView()
-                }
-            }
-//            SettingSplitView()
+            content
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(removing: .sidebarToggle)
                 .navigationBarBackButtonHidden(true)
@@ -79,24 +70,17 @@ struct SplitInSplitView<S: View, C: View>: View {
 }
 
 #Preview {
-    SplitInSplitView {
+    LazyNavView {
         MenuView2()
     } content: {
         HomeView()
-//        Group {
-//            switch .constant {
-//            case .home: HomeView()
-//            case .settings: SettingSplitView()
-//            case .otherView: OtherView()
-//            }
-//        }
     }
-    .environmentObject(SplitInSplitViewModel())
+    .environmentObject(LazyNavViewModel())
 
 }
 
 struct MenuView2: View {
-    @EnvironmentObject var vm: SplitInSplitViewModel
+    @EnvironmentObject var vm: LazyNavViewModel
     var body: some View {
         VStack(spacing: 16) {
             ForEach(DisplayState.allCases, id: \.self) { data in

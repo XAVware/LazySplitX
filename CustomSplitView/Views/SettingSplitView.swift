@@ -37,6 +37,11 @@ struct SettingSplitView: View {
                 }
                 .toolbar(.hidden, for: .navigationBar)
             }
+            
+        } detail: {
+            VStack {
+                EmptyView()
+            }
             .navigationDestination(for: ViewPath.self) { view in
                 switch view {
                 case .detail:       DetailView()
@@ -44,10 +49,8 @@ struct SettingSplitView: View {
                 default: Color.clear
                 }
             }
-        } detail: {
-            
         }
-
+        .navigationSplitViewStyle(.balanced)
     }
 }
 

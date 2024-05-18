@@ -9,14 +9,16 @@ import SwiftUI
 
 struct OtherView: View {
     var body: some View {
-        ZStack {
-            Color.red
-            VStack {
-                Text("Other View")
-                NavigationLink {
-                    Color.gray
-                } label: {
-                    Text("Go")
+        NavigationStack {
+            ZStack {
+                Color.red
+                VStack {
+                    Text("Other View")
+                    NavigationLink {
+                        Color.gray
+                    } label: {
+                        Text("Go")
+                    }
                 }
             }
         }
