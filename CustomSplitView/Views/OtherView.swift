@@ -15,21 +15,26 @@ struct OtherView: View {
                 Color.red
                 VStack {
                     Text("Other View")
-                    
-                    NavigationLink(value: DetailPath.detail) {
-                        Text("Go")
-                    }
-//                    Button(action: {
-//                        vm.pushView(.detail)
-//                    }, label: {
-//                        
-//                    })
+                    // If you use 'NavigationLink' in a view that isn't in the column layout, it covers the full screen and wont allow you to go back.
 //                    NavigationLink {
-//                        Color.gray
+//                        Color.green
 //                    } label: {
-//                        Text("Go")
+//                        Text("To Green")
 //                    }
+
+
+//                    NavigationLink(value: DetailPath.detail) {
+//                        Text("Go with navlink")
+//                    }
+                    
+                    Button {
+                        vm.pushView(.subdetail)
+                    } label: {
+                        Text("Go to detail with Button")
+                    }
                 }
+                
+
 
 
             }

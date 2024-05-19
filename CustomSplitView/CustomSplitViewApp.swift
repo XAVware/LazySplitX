@@ -33,31 +33,56 @@ Since the app is mostly SwiftUI, I want to keep the UIKit code to a minimum and 
 
 @main
 struct CustomSplitViewApp: App {
-    @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
+
 //    @State var currentDisplay: DisplayState = .home
 //    @State var menuIsHidden: Bool = false
     var body: some Scene {
         WindowGroup {
 //            ViewWrapper(display: $currentDisplay, menuIsHidden: $menuIsHidden)
 //            GenericSplitView()
+            ContentView()
+        }
+    }
+}
+
+struct ContentView: View {
+    @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
+    var body: some View {
+        NavigationStack(path: $vm.path) {
             LazyNavView(layout: vm.mainDisplay == .settings ? .column : .full) {
                 MenuView2()
             } content: {
                 Group {
                     switch vm.mainDisplay {
-                    case .home: HomeView()
-                    case .settings: SettingsView()
-                    case .otherView: OtherView()
+                    case .home: 
+                        HomeView()
+                    case .settings: 
+                        SettingsView()
+                            .navigationBarTitleDisplayMode(.inline)
+                    case .otherView:
+                        OtherView()
                     }
                 }
-                .navigationDestination(for: DetailPath.self) { view in
-                    switch view {
-                    case .detail:       DetailView()
-                    case .subdetail: SubDetailView()
-                    }
-                }
+//                .navigationDestination(for: DetailPath.self) { view in
+//                    switch view {
+//                    case .detail:       DetailView()
+//                    case .subdetail: SubDetailView()
+//                    }
+//                }
             }
             .environmentObject(vm)
+            .navigationDestination(for: DetailPath.self) { view in
+                switch view {
+                case .detail:       DetailView()
+                case .subdetail: SubDetailView()
+                }
+            }
         }
     }
+}
+
+#Preview {
+    ContentView()
+//    .environmentObject(LazyNavViewModel())
+
 }

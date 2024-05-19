@@ -9,6 +9,13 @@
  Navigation Split View inside of NavigationSplitView only works normally if the style is .prominentDetail
  
  Menu closes on device orientation change
+ 
+ Keep getting 'Failed to create 0x88 image slot (alpha=1 wide=0) (client=0xadfc4a28) [0x5 (os/kern) failure]' warning
+ 
+ TODO:
+ Make protocol for DisplayState that has a property for layout, pref col, etc. so it can be passed directly.
+ 
+ Bug: on iPhone, sidebar toggle stops working after orientation change.
  */
 
 import SwiftUI
@@ -51,22 +58,27 @@ struct LazyNavView<S: View, C: View>: View {
         self.layout = layout
     }
     
+    // Can I do something like: pass array of Navpaths with content? For example, content([.first, .second, .third]) then check if content has children? So if it has children then display should be `column`. Otherwise 'full'.
     var body: some View {
-        NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
-            sidebar
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar(removing: .sidebarToggle)
-        } detail: {
-            // I think I need to make this so if is .column, the navigation stack is in the content of the column/settings split view. Otherwise the navigation stack wraps the content
-            Group {
-                if layout == .column {
-                    getColumnLayout(for: content)
-                } else {
-                    NavigationStack(path: $vm.path) {
+
+            NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
+                sidebar
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar(removing: .sidebarToggle)
+            } detail: {
+                Group {
+                    if layout == .column {
+                        getColumnLayout(for: content)
+
+                    } else {
                         content
                     }
                 }
+                .toolbar(.hidden, for: .navigationBar)
+
+                
             }
+            .navigationSplitViewStyle(.prominentDetail)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(removing: .sidebarToggle)
             .navigationBarBackButtonHidden(true)
@@ -85,32 +97,26 @@ struct LazyNavView<S: View, C: View>: View {
                 }
                 
             }
-
-        }
-        .navigationSplitViewStyle(.prominentDetail)
     } //: Body
 
     private func getColumnLayout(for content: C) -> some View {
         NavigationSplitView(columnVisibility: .constant(.doubleColumn), preferredCompactColumn: .constant(.content)) {
                 content
-                    .toolbar(.hidden, for: .navigationBar)
+                    .toolbar(.hidden, for: .navigationBar) // Required to fully remove sidebar toggle from settings page
             
         } detail: {
-            NavigationStack(path: $vm.path) {
-             EmptyView()
-            }
+//            NavigationStack(path: $vm.path) {
+//             EmptyView()
+//            }
         }
         .navigationSplitViewStyle(.balanced)
+//        .toolbar(.hidden, for: .navigationBar)
+        .toolbar(removing: .sidebarToggle)
     }
 }
 
 #Preview {
-    LazyNavView {
-        MenuView2()
-    } content: {
-        HomeView()
-    }
-    .environmentObject(LazyNavViewModel())
+    ContentView()
 
 }
 
