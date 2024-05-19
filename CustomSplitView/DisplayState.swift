@@ -7,11 +7,7 @@
 
 import SwiftUI
 
-enum DetailPath: Identifiable, Hashable {
-    var id: DetailPath { return self }
-    case detail
-    case subdetail
-}
+
 
 public enum DisplayState: String, CaseIterable, Hashable {
     case home       = "Home"

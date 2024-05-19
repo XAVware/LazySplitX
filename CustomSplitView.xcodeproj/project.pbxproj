@@ -14,6 +14,9 @@
 		9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FC2BF83E0F001E059D /* SubDetailView.swift */; };
 		9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FE2BF83E9F001E059D /* OtherView.swift */; };
 		9405E4032BF84028001E059D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4022BF84028001E059D /* DetailView.swift */; };
+		941A62682BF9E10F0040DC6C /* LazyNavViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62672BF9E10F0040DC6C /* LazyNavViewModel.swift */; };
+		941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62692BF9E1150040DC6C /* DetailPath.swift */; };
+		941A626C2BF9E1530040DC6C /* MenuView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A626B2BF9E1530040DC6C /* MenuView2.swift */; };
 		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
 		94462F5A2BF5A46300D0068F /* GenericSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F572BF5A46300D0068F /* GenericSplitView.swift */; };
 		94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* DisplayState.swift */; };
@@ -32,6 +35,9 @@
 		9405E3FC2BF83E0F001E059D /* SubDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubDetailView.swift; sourceTree = "<group>"; };
 		9405E3FE2BF83E9F001E059D /* OtherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherView.swift; sourceTree = "<group>"; };
 		9405E4022BF84028001E059D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		941A62672BF9E10F0040DC6C /* LazyNavViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyNavViewModel.swift; sourceTree = "<group>"; };
+		941A62692BF9E1150040DC6C /* DetailPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPath.swift; sourceTree = "<group>"; };
+		941A626B2BF9E1530040DC6C /* MenuView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView2.swift; sourceTree = "<group>"; };
 		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
 		94462F572BF5A46300D0068F /* GenericSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericSplitView.swift; sourceTree = "<group>"; };
 		94462F582BF5A46300D0068F /* DisplayState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayState.swift; sourceTree = "<group>"; };
@@ -62,8 +68,19 @@
 				9405E3FC2BF83E0F001E059D /* SubDetailView.swift */,
 				9405E3FE2BF83E9F001E059D /* OtherView.swift */,
 				9405E4022BF84028001E059D /* DetailView.swift */,
+				941A626B2BF9E1530040DC6C /* MenuView2.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		941A62662BF9E1010040DC6C /* LazyNavView */ = {
+			isa = PBXGroup;
+			children = (
+				9405E3F52BF83BA3001E059D /* LazyNavView.swift */,
+				941A62672BF9E10F0040DC6C /* LazyNavViewModel.swift */,
+				941A62692BF9E1150040DC6C /* DetailPath.swift */,
+			);
+			path = LazyNavView;
 			sourceTree = "<group>";
 		};
 		94462F562BF5A45100D0068F /* GenericSplitView */ = {
@@ -71,7 +88,6 @@
 			children = (
 				94462F572BF5A46300D0068F /* GenericSplitView.swift */,
 				9405E3F32BF7EB55001E059D /* StackInSplitView.swift */,
-				9405E3F52BF83BA3001E059D /* LazyNavView.swift */,
 			);
 			path = GenericSplitView;
 			sourceTree = "<group>";
@@ -95,6 +111,7 @@
 		9454536B2BED3C5E004762C0 /* CustomSplitView */ = {
 			isa = PBXGroup;
 			children = (
+				941A62662BF9E1010040DC6C /* LazyNavView */,
 				9405E3F72BF83DF5001E059D /* Views */,
 				94462F562BF5A45100D0068F /* GenericSplitView */,
 				9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */,
@@ -192,10 +209,13 @@
 				9405E4032BF84028001E059D /* DetailView.swift in Sources */,
 				9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */,
 				9454537D2BED406E004762C0 /* MenuView.swift in Sources */,
+				941A62682BF9E10F0040DC6C /* LazyNavViewModel.swift in Sources */,
 				94462F5A2BF5A46300D0068F /* GenericSplitView.swift in Sources */,
 				9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */,
 				9405E3F62BF83BA3001E059D /* LazyNavView.swift in Sources */,
+				941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */,
 				94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */,
+				941A626C2BF9E1530040DC6C /* MenuView2.swift in Sources */,
 				9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */,
 				9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */,
 				9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */,
