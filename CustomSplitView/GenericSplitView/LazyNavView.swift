@@ -15,7 +15,13 @@
  TODO:
  Make protocol for DisplayState that has a property for layout, pref col, etc. so it can be passed directly.
  
- Bug: on iPhone, sidebar toggle stops working after orientation change.
+ Bug: on iPhone 12 Pro Max, sidebar toggle stops working after orientation change. I think it's related to the navigationSplitView style differences.
+        - Possibly pass in 'isLandscape' property from Root?
+ 
+ Bug: on iPhone 12 Pro Max in portrait mode, sidebar toggle shows after navigating with a navigationLink(destination:label:) from a view that's being displayed in the content column of the child navigationSplitView. (AKA the `SettingsView`)
+        - Try updating the state based on the environment's horizontal AND VERTICAL size class. iPhone pro max in landscape mode will have .regular horizontal size and .compact vertical, while iPad .regular horizontal size classes should always have a .regular vertical class.
+ 
+ // Can I do something like: pass array of Navpaths with content? For example, content([.first, .second, .third]) then check if content has children? So if it has children then display should be `column`. Otherwise 'full'.
  */
 
 import SwiftUI
@@ -42,11 +48,16 @@ import SwiftUI
     func pushView(_ display: DetailPath) {
         path.append(display)
     }
+    
+    deinit {
+        print("Lazy Nav View Model deinitialized")
+    }
 }
 
 struct LazyNavView<S: View, C: View>: View {
     enum Layout { case full, column }
     @EnvironmentObject var vm: LazyNavViewModel
+    @Environment(\.horizontalSizeClass) var horSize
     
     let sidebar: S
     let content: C
@@ -58,7 +69,7 @@ struct LazyNavView<S: View, C: View>: View {
         self.layout = layout
     }
     
-    // Can I do something like: pass array of Navpaths with content? For example, content([.first, .second, .third]) then check if content has children? So if it has children then display should be `column`. Otherwise 'full'.
+
     var body: some View {
 
             NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
@@ -75,9 +86,8 @@ struct LazyNavView<S: View, C: View>: View {
                     }
                 }
                 .toolbar(.hidden, for: .navigationBar)
-
-                
             }
+            .environmentObject(vm)
             .navigationSplitViewStyle(.prominentDetail)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(removing: .sidebarToggle)
@@ -85,7 +95,10 @@ struct LazyNavView<S: View, C: View>: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
+                        print("Sidebar toggle tapped")
+                        print("Orig \ncolVis: \(vm.colVis). \nprefCol: \(vm.prefCol)")
                         vm.toggleSidebar()
+                        print("New colVis: \(vm.colVis). prefCol: \(vm.prefCol)")
                     } label: {
                         Image(systemName: "sidebar.leading")
                             .resizable()
@@ -98,20 +111,30 @@ struct LazyNavView<S: View, C: View>: View {
                 
             }
     } //: Body
+    
+    @State var childColVis: NavigationSplitViewVisibility = .doubleColumn
+    @State var childPrefCol: NavigationSplitViewColumn = .content
 
     private func getColumnLayout(for content: C) -> some View {
-        NavigationSplitView(columnVisibility: .constant(.doubleColumn), preferredCompactColumn: .constant(.content)) {
+        NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
                 content
-                    .toolbar(.hidden, for: .navigationBar) // Required to fully remove sidebar toggle from settings page
+                    .toolbar(.hidden, for: .navigationBar) 
+            // `.toolbar(.hidden, for: .navigationBar)` is required on the child splitView's content to fully remove sidebar toggle from settings page.
             
         } detail: {
-//            NavigationStack(path: $vm.path) {
-//             EmptyView()
-//            }
+            // Leave empty so content has a column to pass navigation views to.
         }
         .navigationSplitViewStyle(.balanced)
-//        .toolbar(.hidden, for: .navigationBar)
         .toolbar(removing: .sidebarToggle)
+        .onChange(of: childColVis) { oldValue, newValue in
+            print("Child Col vis changed from \(oldValue) to \(newValue)")
+        }
+        .onChange(of: childPrefCol) { oldValue, newValue in
+            print("Child Pref col changed from \(oldValue) to \(newValue)")
+        }
+        .onChange(of: horSize) { oldValue, newValue in
+            print("Horizontal size class changed from \(oldValue) to \(newValue)")
+        }
     }
 }
 

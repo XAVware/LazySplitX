@@ -58,24 +58,26 @@ struct ContentView: View {
                         HomeView()
                     case .settings: 
                         SettingsView()
-                            .navigationBarTitleDisplayMode(.inline)
                     case .otherView:
                         OtherView()
                     }
                 }
-//                .navigationDestination(for: DetailPath.self) { view in
-//                    switch view {
-//                    case .detail:       DetailView()
-//                    case .subdetail: SubDetailView()
-//                    }
-//                }
+            }
+            .navigationDestination(for: DetailPath.self) { view in
+                // For some reason the environment object isn't propogating into the destinations which is why DetailView needs its own env object.
+                Group {
+                    switch view {
+                    case .detail:
+                        DetailView()
+                    case .subdetail: 
+                        SubDetailView()
+                    }
+                }
+                .environmentObject(vm)
             }
             .environmentObject(vm)
-            .navigationDestination(for: DetailPath.self) { view in
-                switch view {
-                case .detail:       DetailView()
-                case .subdetail: SubDetailView()
-                }
+            .onChange(of: vm.prefCol) { oldValue, newValue in
+                
             }
         }
     }
