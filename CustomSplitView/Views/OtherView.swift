@@ -8,20 +8,32 @@
 import SwiftUI
 
 struct OtherView: View {
+    @EnvironmentObject var vm: LazyNavViewModel
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
             ZStack {
                 Color.red
                 VStack {
                     Text("Other View")
-                    NavigationLink {
-                        Color.gray
-                    } label: {
+                    
+                    NavigationLink(value: DetailPath.detail) {
                         Text("Go")
                     }
+//                    Button(action: {
+//                        vm.pushView(.detail)
+//                    }, label: {
+//                        
+//                    })
+//                    NavigationLink {
+//                        Color.gray
+//                    } label: {
+//                        Text("Go")
+//                    }
                 }
+
+
             }
-        }
+//        }
     }
 }
 

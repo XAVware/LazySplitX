@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-enum NavPath: Identifiable, Hashable {
-    var id: NavPath { return self }
-    case landing
-    case login
-    case signUp
-
+enum DetailPath: Identifiable, Hashable {
+    var id: DetailPath { return self }
+    case detail
+    case subdetail
 }
 
 public enum DisplayState: String, CaseIterable, Hashable {

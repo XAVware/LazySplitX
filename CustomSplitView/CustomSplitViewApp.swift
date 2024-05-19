@@ -40,15 +40,20 @@ struct CustomSplitViewApp: App {
         WindowGroup {
 //            ViewWrapper(display: $currentDisplay, menuIsHidden: $menuIsHidden)
 //            GenericSplitView()
-            LazyNavView {
+            LazyNavView(layout: vm.mainDisplay == .settings ? .column : .full) {
                 MenuView2()
-//                    .environmentObject(vm)
             } content: {
                 Group {
-                    switch vm.display {
+                    switch vm.mainDisplay {
                     case .home: HomeView()
-                    case .settings: SettingSplitView()
+                    case .settings: SettingsView()
                     case .otherView: OtherView()
+                    }
+                }
+                .navigationDestination(for: DetailPath.self) { view in
+                    switch view {
+                    case .detail:       DetailView()
+                    case .subdetail: SubDetailView()
                     }
                 }
             }
