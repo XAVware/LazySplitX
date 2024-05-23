@@ -29,7 +29,7 @@ struct MenuView2: View {
             } //: For Each
             Spacer()
         } //: VStack
-        .background(.accent)
+        .background(.accent.opacity(0.9))
     }
 }
 

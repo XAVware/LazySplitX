@@ -33,58 +33,11 @@ Since the app is mostly SwiftUI, I want to keep the UIKit code to a minimum and 
 
 @main
 struct CustomSplitViewApp: App {
-
-//    @State var currentDisplay: DisplayState = .home
-//    @State var menuIsHidden: Bool = false
     var body: some Scene {
         WindowGroup {
 //            ViewWrapper(display: $currentDisplay, menuIsHidden: $menuIsHidden)
 //            GenericSplitView()
-            ContentView()
+            LazyNavViewContent()
         }
     }
-}
-
-struct ContentView: View {
-    @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
-    var body: some View {
-        NavigationStack(path: $vm.path) {
-            LazyNavView(layout: vm.mainDisplay == .settings ? .column : .full) {
-                MenuView2()
-            } content: {
-                Group {
-                    switch vm.mainDisplay {
-                    case .home: 
-                        HomeView()
-                    case .settings: 
-                        SettingsView()
-                    case .otherView:
-                        OtherView()
-                    }
-                }
-            }
-            .navigationDestination(for: DetailPath.self) { view in
-                // For some reason the environment object isn't propogating into the destinations which is why DetailView needs its own env object.
-                Group {
-                    switch view {
-                    case .detail:
-                        DetailView()
-                    case .subdetail: 
-                        SubDetailView()
-                    }
-                }
-                .environmentObject(vm)
-            }
-            .environmentObject(vm)
-            .onChange(of: vm.prefCol) { oldValue, newValue in
-                
-            }
-        }
-    }
-}
-
-#Preview {
-    ContentView()
-//    .environmentObject(LazyNavViewModel())
-
 }

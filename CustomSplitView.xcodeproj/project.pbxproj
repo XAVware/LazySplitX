@@ -14,6 +14,7 @@
 		9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FC2BF83E0F001E059D /* SubDetailView.swift */; };
 		9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FE2BF83E9F001E059D /* OtherView.swift */; };
 		9405E4032BF84028001E059D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4022BF84028001E059D /* DetailView.swift */; };
+		940C97092BFEECC700A0BEAF /* LazyNavViewContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C97082BFEECC700A0BEAF /* LazyNavViewContent.swift */; };
 		941A62682BF9E10F0040DC6C /* LazyNavViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62672BF9E10F0040DC6C /* LazyNavViewModel.swift */; };
 		941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62692BF9E1150040DC6C /* DetailPath.swift */; };
 		941A626C2BF9E1530040DC6C /* MenuView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A626B2BF9E1530040DC6C /* MenuView2.swift */; };
@@ -25,6 +26,7 @@
 		945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453732BED3C5F004762C0 /* Preview Assets.xcassets */; };
 		9454537D2BED406E004762C0 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454537C2BED406E004762C0 /* MenuView.swift */; };
 		9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454539C2BEEE670004762C0 /* UIDetailView.swift */; };
+		9475F20D2BFAD9A90067FFD0 /* StackInSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9475F20C2BFAD9A90067FFD0 /* StackInSplit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		9405E3FC2BF83E0F001E059D /* SubDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubDetailView.swift; sourceTree = "<group>"; };
 		9405E3FE2BF83E9F001E059D /* OtherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherView.swift; sourceTree = "<group>"; };
 		9405E4022BF84028001E059D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		940C97072BFEEC0400A0BEAF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		940C97082BFEECC700A0BEAF /* LazyNavViewContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyNavViewContent.swift; sourceTree = "<group>"; };
 		941A62672BF9E10F0040DC6C /* LazyNavViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyNavViewModel.swift; sourceTree = "<group>"; };
 		941A62692BF9E1150040DC6C /* DetailPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPath.swift; sourceTree = "<group>"; };
 		941A626B2BF9E1530040DC6C /* MenuView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView2.swift; sourceTree = "<group>"; };
@@ -47,6 +51,7 @@
 		945453732BED3C5F004762C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9454537C2BED406E004762C0 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		9454539C2BEEE670004762C0 /* UIDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDetailView.swift; sourceTree = "<group>"; };
+		9475F20C2BFAD9A90067FFD0 /* StackInSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackInSplit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +84,8 @@
 				9405E3F52BF83BA3001E059D /* LazyNavView.swift */,
 				941A62672BF9E10F0040DC6C /* LazyNavViewModel.swift */,
 				941A62692BF9E1150040DC6C /* DetailPath.swift */,
+				94462F582BF5A46300D0068F /* DisplayState.swift */,
+				940C97082BFEECC700A0BEAF /* LazyNavViewContent.swift */,
 			);
 			path = LazyNavView;
 			sourceTree = "<group>";
@@ -95,6 +102,7 @@
 		945453602BED3C5E004762C0 = {
 			isa = PBXGroup;
 			children = (
+				940C97072BFEEC0400A0BEAF /* README.md */,
 				9454536B2BED3C5E004762C0 /* CustomSplitView */,
 				9454536A2BED3C5E004762C0 /* Products */,
 			);
@@ -118,9 +126,9 @@
 				945453702BED3C5F004762C0 /* Assets.xcassets */,
 				945453722BED3C5F004762C0 /* Preview Content */,
 				9454537C2BED406E004762C0 /* MenuView.swift */,
-				94462F582BF5A46300D0068F /* DisplayState.swift */,
 				9454539C2BEEE670004762C0 /* UIDetailView.swift */,
 				9426B6EA2BF4A98C002D6230 /* UISplitView.swift */,
+				9475F20C2BFAD9A90067FFD0 /* StackInSplit.swift */,
 			);
 			path = CustomSplitView;
 			sourceTree = "<group>";
@@ -205,6 +213,7 @@
 			files = (
 				9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */,
 				9405E3F92BF83DFE001E059D /* HomeView.swift in Sources */,
+				9475F20D2BFAD9A90067FFD0 /* StackInSplit.swift in Sources */,
 				9405E3F42BF7EB55001E059D /* StackInSplitView.swift in Sources */,
 				9405E4032BF84028001E059D /* DetailView.swift in Sources */,
 				9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */,
@@ -212,6 +221,7 @@
 				941A62682BF9E10F0040DC6C /* LazyNavViewModel.swift in Sources */,
 				94462F5A2BF5A46300D0068F /* GenericSplitView.swift in Sources */,
 				9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */,
+				940C97092BFEECC700A0BEAF /* LazyNavViewContent.swift in Sources */,
 				9405E3F62BF83BA3001E059D /* LazyNavView.swift in Sources */,
 				941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */,
 				94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */,

@@ -7,23 +7,34 @@
 
 import SwiftUI
 
+/*
+ Doesn't work because:
+ A NavigationLink is presenting a value of type “DetailPath” but there is no matching navigationDestination declaration visible from the location of the link. The link cannot be activated.
+ 
+ Note: Links search for destinations in any surrounding NavigationStack, then within the same column of a NavigationSplitView.
+ */
+//                NavigationLink(value: DetailPath.detail) {
+//                    Text("Go to Detail with value nav link")
+//                }
+
 struct SettingsView: View {
     @EnvironmentObject var vm: LazyNavViewModel
     var body: some View {
         ZStack {
-            Color.yellow
+            Color.yellow.opacity(0.3)
+                .font(.title3)
             VStack {
                 Text("Settings View")
+                    .font(.title3)
+                
                 // Use navigation link to display view in the right column.
                 NavigationLink {
                     DetailView()
                 } label: {
                     Text("Go to Detail with destination nav link")
                 }
+                .padding(.vertical)
 
-//                NavigationLink(value: DetailPath.detail) {
-//                    Text("Go to Detail with value nav link")
-//                }
 
                 // Use pushView to display view through main navigation stack, replacing the current full screen.
                 Button {
@@ -34,25 +45,5 @@ struct SettingsView: View {
 
             }
         }
-//        .navigationTitle("Settings") // These don't make a difference here.
-//        .navigationBarTitleDisplayMode(.large)
     }
-}
-
-#Preview {
-    LazyNavView(layout: .column) {
-        MenuView2()
-    } content: {
-        Group {
-            SettingsView()
-        }
-        .navigationDestination(for: DetailPath.self) { view in
-            switch view {
-            case .detail:       DetailView()
-            case .subdetail: SubDetailView()
-            }
-        }
-    }
-    .environmentObject(LazyNavViewModel())
-    
 }

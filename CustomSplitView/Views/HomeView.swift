@@ -10,8 +10,9 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         ZStack {
-            Color.cyan
+            Color.cyan.opacity(0.2)
             Text("Home View")
+                .font(.title3)
         }
     }
 }

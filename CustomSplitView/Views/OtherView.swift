@@ -12,9 +12,10 @@ struct OtherView: View {
     var body: some View {
 //        NavigationStack {
             ZStack {
-                Color.red
+                Color.red.opacity(0.1)
                 VStack {
                     Text("Other View")
+                        .font(.title3)
                     // If you use 'NavigationLink' in a view that isn't in the column layout, it covers the full screen and wont allow you to go back.
 //                    NavigationLink {
 //                        Color.green

@@ -11,11 +11,11 @@ struct DetailView: View {
     @EnvironmentObject var vm: LazyNavViewModel
     var body: some View {
         ZStack {
-            Color.green
+            Color.green.opacity(0.2)
 //            NavigationStack {
                 VStack {
                     Text("Detail View")
-                    
+                        .font(.title3)
                     
                     // Both result in 'Failed to create 0x88 image slot (alpha=1 wide=0) (client=0xadfc4a28) [0x5 (os/kern) failure]'
 //                    NavigationLink(value: DetailPath.subdetail) {
