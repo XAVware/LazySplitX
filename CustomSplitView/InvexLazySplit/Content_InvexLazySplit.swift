@@ -14,10 +14,6 @@ struct Content_InvexLazySplit: View {
         }
     }
 }
-//
-//#Preview {
-//    Content_InvexLazySplit()
-//}
 
 
 /// PointOfSaleViewModel is initialized in the root so a user's cart is not lost when

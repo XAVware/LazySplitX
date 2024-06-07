@@ -100,7 +100,7 @@
  enclosed in a View.
     - Can I use @ViewBuilder some way instead?
  
- > The NavigationDestination(for:) is used in LazyNavView_Content instead of inside 
+ > The NavigationDestination(for:) is used in LazySplit instead of inside 
  LazyNavView because Swift uses the destinations closest to the root. Adding them here
  may cause issues with reusability.
 
@@ -172,7 +172,7 @@
     - Forcing colVis and prefCol to .detail and .detailOnly, then back to doubleColumn & sidebar does not fix the issue.
     - The custom SidebarToggle button is working correctly, it successfully calls toggleSidebar() which prints 'tapped' and the current state of the columns.
  SOLUTION - NEEDS REVIEW:
- Added GeometryReader containing 'isLandscape' constant to LazyNavViewContent. Add an onChange Listener. This should force the view to regenerate itself each orientation change. Still need to make sure it doesn't cause memory/performance issues
+ Added GeometryReader containing 'isLandscape' constant to LazySplit. Add an onChange Listener. This should force the view to regenerate itself each orientation change. Still need to make sure it doesn't cause memory/performance issues
 
  
  TODO: NEEDS REVIEW: BUG #3 - 5/19/24 - Large Screen iPhone - Landscape:
@@ -216,8 +216,9 @@
 
 import SwiftUI
 
+enum Layout { case full, column }
+
 struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
-    enum Layout { case full, column }
     @EnvironmentObject var vm: LazyNavViewModel
     @Environment(\.horizontalSizeClass) var horSize
     @Environment(\.verticalSizeClass) var verSize
@@ -236,7 +237,7 @@ struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
     
     var body: some View {
         GeometryReader { geo in
-            let isIphone = horSize == .compact || verSize == .compact
+            let isIphone = horSize == .compact || verSize == .compact // Move this to lazy split and pass it in.
             NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
                 sidebar
                     .navigationBarTitleDisplayMode(.inline)
@@ -315,6 +316,47 @@ struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
 
 
 #Preview {
-    LazyNavViewContent()
+    LazySplit_Content()
 }
 
+struct LazySplit_Content: View {
+    @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
+    
+    var body: some View {
+        LazySplit {
+            MenuView()
+        } content: {
+            Group {
+                switch vm.mainDisplay {
+                case .home:         HomeView()
+                case .settings:     SettingsView()
+                case .otherView:    OtherView()
+                }
+            }
+        } toolbar: {
+            Group {
+                switch vm.mainDisplay {
+                case .home: homeToolbar
+                default:    emptyToolbar
+                }
+            }
+        }
+        .environmentObject(vm)
+    } //: Body
+    
+    
+    @ToolbarContentBuilder var homeToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Right Sidebar", systemImage: "sidebar.trailing") {
+                vm.pushView(.detail)
+            }
+        }
+    }
+    
+    // The toolbar is not optional, so views that don't need a toolbar need to use this.
+    @ToolbarContentBuilder var emptyToolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarTrailing) {
+            EmptyView()
+        }
+    }
+}

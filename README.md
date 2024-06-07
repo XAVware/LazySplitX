@@ -92,7 +92,7 @@
  enclosed in a View.
     - Can I use @ViewBuilder some way instead?
  
- > The NavigationDestination(for:) is used in LazyNavView_Content instead of inside 
+ > The NavigationDestination(for:) is used in LazySplit instead of inside 
  LazyNavView because Swift uses the destinations closest to the root. Adding them here
  may cause issues with reusability.
 
@@ -164,7 +164,7 @@
     - Forcing colVis and prefCol to .detail and .detailOnly, then back to doubleColumn & sidebar does not fix the issue.
     - The custom SidebarToggle button is working correctly, it successfully calls toggleSidebar() which prints 'tapped' and the current state of the columns.
  SOLUTION - NEEDS REVIEW:
- Added GeometryReader containing 'isLandscape' constant to LazyNavViewContent. Add an onChange Listener. This should force the view to regenerate itself each orientation change. Still need to make sure it doesn't cause memory/performance issues
+ Added GeometryReader containing 'isLandscape' constant to LazySplit. Add an onChange Listener. This should force the view to regenerate itself each orientation change. Still need to make sure it doesn't cause memory/performance issues
 
  
  TODO: NEEDS REVIEW: BUG #3 - 5/19/24 - Large Screen iPhone - Landscape:

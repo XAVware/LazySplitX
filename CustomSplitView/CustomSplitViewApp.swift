@@ -12,7 +12,7 @@ import SwiftUI
 struct CustomSplitViewApp: App {
     var body: some Scene {
         WindowGroup {
-            LazyNavViewContent()
+            LazySplit_Content()
         }
     }
 }
