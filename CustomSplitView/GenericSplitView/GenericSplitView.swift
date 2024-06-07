@@ -8,13 +8,40 @@
 import SwiftUI
 
 /*
- An option is to use a Generic Navigation Split View that toggles between `NavigationSplitView(sidebar:, detail:)` and `NavigationSplitView(sidebar:,content:,detail:)` so you have control over which views are displayed with three columns and which are displayed as detailOnly.
+ 5/19/24
+ An option is to use a Generic NavigationSplitView that toggles between `NavigationSplitView(sidebar:, detail:)` and `NavigationSplitView(sidebar:,content:,detail:)` so you have control over which views are displayed with three columns and which are displayed as detailOnly.
  
- There are a few things that work well with this approach. 1) the built in animations while switching from a detailOnly to a detailOnly view are flawless.
+ Using this approach instead of UIKitSplit has benefits, like how it provides the flawless built in animations while switching from a detailOnly to a detailOnly view, but it also brings drawbacks.
  
- The built in sidebar toggle button works well for the most part, but needs some minor tweaking to update the color of the button depending on which view it is over. In this case, the accent color is a dark purple which is used as the sidebar/menu background as well as the sidebarToggleButton's foreground color - resulting in an 'invisible' button when the menu is open.
+ NavigationSplitView's default sidebar toggle button works well for controlling which views are visible and the overall navigation, but is not perfect.
+    - The color of the button is based on the accent color. If the menu/sidebar uses the accent color as a background, the button will be 'invisible'.
+    - In some cases, we may want to run additional logic when the user opens the menu, or we may want to stop them from opening the menu entirely until certain conditions are met. The default sidebar toggle's code can not be easily appended to or modified.
+
  
- The main issues come in when the app transitions from a view that is detailOnly (such as Home) to a view that requires three columns (such as Settings) or vice versa. Since the generic split view is using two different NavigationSplitViews, the view change results in no animation for closing the menu. In addition, when the app is on a view that requires three columns, the default sidebarToggleButton disappears entirely when the menu is open, leaving you with tapping to the right of the middle column as your only option to close the menu.
+iPad Landscape
+ M = Menu
+ C = Content
+ D = Detail
+ 
+ Settings view layout with three columns
+    Menu open                                   Menu Closed
+     ---------------------------                 ---------------------------
+    |   M   |   C   |     D     |               |   C   |         D         |
+    |       |       |           |               |       |                   |
+    |       |       |           |               |       |                   |
+    |       |       |           |               |       |                   |
+    |       |       |           |               |       |                   |
+    |       |       |           |               |       |                   |
+     ---------------------------                 ---------------------------
+
+ 
+ Main Issues
+ The main issues come in when the app transitions from a view that is detailOnly (such as Home) to a view that requires three columns (such as Settings) or vice versa.
+        - Since the generic split view is using two different NavigationSplitViews, the view change results in no animation for closing the menu.
+            - SOLUTION 6/7/24: This was resolved
+ 
+        - When the app is on a view that requires three columns, the default sidebarToggleButton disappears entirely when the menu is open, leaving you with tapping to the right of the middle column as your only option to close the menu.
+            - SOLUTION 6/7/24: This was resolved
  */
 
 struct GenericSplitView: View {

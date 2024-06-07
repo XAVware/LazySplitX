@@ -8,13 +8,12 @@
 import SwiftUI
 
 
-
 public enum DisplayState: String, CaseIterable, Hashable {
     case home       = "Home"
     case otherView  = "Other"
     case settings   = "Settings"
 
-    
+    // TODO: Move to the MenuView because is only related to Menu UI components.
     var menuIconName: String {
         return switch self {
         case .home:        "house.fill"
@@ -27,7 +26,7 @@ public enum DisplayState: String, CaseIterable, Hashable {
     var primaryView: NavigationSplitViewVisibility {
         return switch self {
         case .settings:     .doubleColumn
-        default: .detailOnly
+        default:            .detailOnly
         }
     }
     

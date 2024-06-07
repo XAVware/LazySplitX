@@ -9,43 +9,47 @@ import SwiftUI
 
 struct LazyNavViewContent: View {
     @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
+    
     var body: some View {
-        NavigationStack(path: $vm.path) {
-            LazyNavView(layout: vm.mainDisplay == .settings ? .column : .full) {
-                MenuView2()
-            } content: {
-                Group {
-                    switch vm.mainDisplay {
-                    case .home:         HomeView()
-                    case .settings:     SettingsView()
-                    case .otherView:    OtherView()
+        GeometryReader { geo in
+            let isLandscape = geo.size.width > geo.size.height
+            
+            NavigationStack(path: $vm.path) {
+                LazyNavView(layout: vm.mainDisplay == .settings ? .column : .full) {
+                    MenuView()
+                } content: {
+                    Group {
+                        switch vm.mainDisplay {
+                        case .home:         HomeView()
+                        case .settings:     SettingsView()
+                        case .otherView:    OtherView()
+                        }
+                    }
+                } toolbar: {
+                    Group {
+                        switch vm.mainDisplay {
+                        case .home: homeToolbar
+                        default:    emptyToolbar
+                        }
                     }
                 }
-            } toolbar: {
-                Group {
-                    switch vm.mainDisplay {
-                    case .home: homeToolbar
-                    default:    emptyToolbar
+                .navigationDestination(for: DetailPath.self) { view in
+                    Group {
+                        switch view {
+                        case .detail:       DetailView()
+                        case .subdetail:    SubDetailView()
+                        }
                     }
                 }
+            } //: Navigation Stack
+            .onChange(of: isLandscape) { _, newValue in
+                vm.setLandscape(to: newValue)
             }
-            .navigationDestination(for: DetailPath.self) { view in
-                // For some reason the environment object isn't propogating into the destinations which is why DetailView needs its own env object.
-                Group {
-                    switch view {
-                    case .detail:
-                        DetailView()
-                    case .subdetail:
-                        SubDetailView()
-                    }
-                }
-                .environmentObject(vm)
+            .onAppear {
+                vm.setLandscape(to: isLandscape)
             }
             .environmentObject(vm)
-            .onChange(of: vm.prefCol) { oldValue, newValue in
-                
-            }
-        } //: Navigation Stack
+        }
     }
     
     @ToolbarContentBuilder var homeToolbar: some ToolbarContent {
@@ -56,7 +60,7 @@ struct LazyNavViewContent: View {
         }
     }
     
-    // Because toolbar is not optional, views that don't need a toolbar need to use this. Not ideal
+    // The toolbar is not optional, so views that don't need a toolbar need to use this.
     @ToolbarContentBuilder var emptyToolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             EmptyView()

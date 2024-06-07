@@ -1,5 +1,5 @@
 //
-//  MenuView.swift
+//  UIMenuView.swift
 //  CustomSplitView
 //
 //  Created by Ryan Smetana on 5/9/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MenuView: View {
+struct UIMenuView: View {
     weak var delegate: NavDelegate?
 //    @State var display: DisplayState
     

@@ -103,7 +103,7 @@ struct ViewWrapper: UIViewControllerRepresentable {
 
 
 public class SplitViewController: UISplitViewController, UISplitViewControllerDelegate {
-    var menuView: MenuView!
+    var menuView: UIMenuView!
     var myDelegate: NavDelegate?
     var contentView: UIViewController?
     
@@ -123,7 +123,7 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
     
     private func initializeSplitView() {
         print("Initializing Split View")
-        menuView = MenuView()
+        menuView = UIMenuView()
         menuView.delegate = myDelegate
                 
         let menuViewController = UIHostingController(rootView: menuView)

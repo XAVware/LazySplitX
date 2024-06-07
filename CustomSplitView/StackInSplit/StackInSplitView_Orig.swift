@@ -15,7 +15,7 @@ enum ViewPath: Identifiable, Hashable {
     case subDetail
 }
 
-@MainActor final class AltViewModel: ObservableObject {
+@MainActor final class StackInSplitViewModel_Orig: ObservableObject {
     @Published var navPath: [ViewPath] = []
     @Published var display: DisplayState = .home
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
@@ -53,9 +53,9 @@ enum ViewPath: Identifiable, Hashable {
     }
 }
 
-struct Alt: View {
+struct StackInSplitView_Orig: View {
     @Environment(\.horizontalSizeClass) var hor
-    @EnvironmentObject var vm: AltViewModel
+    @EnvironmentObject var vm: StackInSplitViewModel_Orig
     
 
     
@@ -204,6 +204,6 @@ struct Alt: View {
 }
 
 #Preview {
-    Alt()
-        .environmentObject(AltViewModel())
+    StackInSplitView_Orig()
+        .environmentObject(StackInSplitViewModel_Orig())
 }

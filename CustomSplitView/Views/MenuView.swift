@@ -1,5 +1,5 @@
 //
-//  MenuView2.swift
+//  MenuView.swift
 //  CustomSplitView
 //
 //  Created by Ryan Smetana on 5/19/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MenuView2: View {
+struct MenuView: View {
     @EnvironmentObject var vm: LazyNavViewModel
     var body: some View {
         VStack(spacing: 16) {
@@ -35,5 +35,5 @@ struct MenuView2: View {
 
 
 #Preview {
-    MenuView2()
+    MenuView()
 }
