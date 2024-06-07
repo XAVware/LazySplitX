@@ -31,7 +31,7 @@ Since the app is mostly SwiftUI, I want to keep the UIKit code to a minimum and 
 */
 
 struct Content_UIKitSplit: View {
-    @State var currentDisplay: DisplayState = .home
+    @State var currentDisplay: UIDisplayState = .home
     @State var menuIsHidden: Bool = true
     var body: some View {
         ViewWrapper(display: $currentDisplay, menuIsHidden: $menuIsHidden)

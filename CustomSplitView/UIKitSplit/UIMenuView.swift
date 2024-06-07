@@ -35,7 +35,7 @@ struct UIMenuView: View {
 //                .foregroundStyle(.white)
 //                .font(.title)
                 
-                ForEach(DisplayState.allCases, id: \.self) { display in
+                ForEach(UIDisplayState.allCases, id: \.self) { display in
                     
                     
                     Button {

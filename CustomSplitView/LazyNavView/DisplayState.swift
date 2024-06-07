@@ -7,8 +7,10 @@
 
 import SwiftUI
 
+// The String is used for the menu button title
+// CaseIterable is used to loop through and display all buttons in the menu
 
-public enum DisplayState: String, CaseIterable, Hashable {
+enum DisplayState: String, CaseIterable {
     case home       = "Home"
     case otherView  = "Other"
     case settings   = "Settings"

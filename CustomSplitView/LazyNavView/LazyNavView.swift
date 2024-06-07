@@ -120,6 +120,15 @@
  
  > On iPad, if the menu is open when the device orientation changes, the menu will be closed.
  
+ > I tried moving the generic LazyNavView directly into LazySplit but it did not work as intended on iPhone. Every view was layed out as .full, including settings which should have been a column layout. In addition, after navigation from settingsView to detailView with a NavigationLink, the back button jumped over the original settingsView and opened the menu directly.
+    > Looking closer, I noticed LazyNavView was being passed the displayState's layout. This probably caused it to reinitialize each time it changed, overall displaying the layout correctly.
+        - Instead of using getColumnLayout(), I moved the NavigationSplitView (for settings/column layouts) versus content (for full screen layout) logic into a group inside of the primary NavigationSplitView's detail and made it toggle based on whether or not mainDisplay is settings. This fixed both issues on iPhone.
+        - Works on iPad
+        - New bugs:
+            - On iPhone 12 Pro Max, after navigating from settingsView to detail with NavigationLink in portrait mode, then changing orientation to landscape, detailView closes. It's supposed to still be visible but in the right column.
+            - On iPhone 12 Pro Max, after navigating from settingsView to detail with NavigationLink in landscape mode, then to subDetail, then changing device to portrait and tapping the back button, the detail view is skipped and user is returned to settingsView.
+    > The benefit to this approach over using the LazyNavView inside the LazySplit is there is now only one generic to manage. It is more readable to help understand what the navigation architecture really is. And it allows for one GeometryReader instead of two.
+ 
  
  ------------------------------------------------
  ## Questions
@@ -131,7 +140,10 @@
     - For example, content([.first, .second, .third]) then check if content has children? 
       So if it has children then display should be `column`. Otherwise 'full'.
 
- 
+ 6/7/24
+ // What happens if I replace getColumnLayout with just content?
+ // - Replacing getColumnLayout with content entirely makes it so, on iPhone 12 Pro Max in portrait, after navigating from the settingsView to the detail with a NavigationLink, tapping the back button opens the menu and does not allow you to return to the settingsView.
+     // - Because of this, I should keep a reference to the child's colVis and prefCol in case they need to be manipulated and to help debug the current state of navigation.
  
  ------------------------------------------------
  ## Bug Log & To Dos
@@ -140,13 +152,11 @@
  side-by-side, as opposed to behaving like a NavigationStack.
  
  ### To Dos
- TODO: 6/7/24 - Make NavigationViewModel functionality, and possibly DisplayState, a protocol. This way any view model can conform to it and the child views will continue to work.
+ 5/22/24
+ TODO: Instead of storing mainDisplay in LazyNavViewModel, maybe add a NavigationSplitViewConfiguration property to DisplayState.
  
- TODO: 5/22/24 Instead of storing mainDisplay in LazyNavViewModel, maybe add a NavigationSplitViewConfiguration property to DisplayState.
- 
- TODO: 6/7/24 - Figure out better way to pass a toolbar to views that don't need a toolbar. It isn't ideal to force them to use a toolbar with an EmptyView as the item.
- 
- TODO: 5/30/24 Make toolbar optional
+ 5/30/24
+ TODO: Make toolbar optional
     - ATTEMPT: this is giving an error:
      extension LazyNavView where T == nil {
          init(layout: Layout = .full, sidebar: (() -> S), content: (() -> C)) {
@@ -156,6 +166,14 @@
              self.toolbarContent = nil
          }
      }
+
+ 
+ 6/7/24
+ TODO: Figure out better way to pass a toolbar to views that don't need a toolbar. It isn't ideal to force them to use a toolbar with an EmptyView as the item.
+ TODO: Figure out better way to pass navigationDestinations to LazySplit
+ TODO: Make NavigationViewModel functionality, and possibly DisplayState, a protocol. This way any view model can conform to it and the child views will continue to work.
+ 
+
 
  TODO: BUG #1 - 5/17/24 - iPad and Landscape large screen iPhone:
  Warning: "Failed to create 0x88 image slot (alpha=1 wide=0) (client=0xadfc4a28) [0x5 (os/kern) failure]"
@@ -219,95 +237,91 @@ import SwiftUI
 
 // D: `.toolbar(.hidden, for: .navigationBar)` is required on the child splitView's content to fully remove sidebar toggle from settings page.
 
-enum Layout { case full, column }
+//enum Layout { case full, column }
 
-struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
-    @EnvironmentObject var vm: LazyNavViewModel
-    @Environment(\.horizontalSizeClass) var horSize
-    @Environment(\.verticalSizeClass) var verSize
-    
-    let layout: Layout
-    let sidebar: S
-    let content: C
-    let toolbarContent: T
-    
-    init(layout: Layout = .full, sidebar: (() -> S), content: (() -> C), toolbar: (() -> T)) {
-        self.layout = layout
-        self.sidebar = sidebar()
-        self.content = content()
-        self.toolbarContent = toolbar()
-    }
-    
-    var body: some View {
-        GeometryReader { geo in
-            let isIphone = horSize == .compact || verSize == .compact // Move this to lazy split and pass it in.
-            NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
-                sidebar
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar(removing: .sidebarToggle)
-            } detail: {
-                getColumnLayout(for: content)
-                    .toolbar(.hidden, for: .navigationBar)
-            }
-            .tint(.accent) // fgColor default's to App's accent
-            .environmentObject(vm)
-            .navigationSplitViewStyle(.prominentDetail)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar(removing: .sidebarToggle)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                sidebarToggle
-                toolbarContent
-            }
-            .modifier(LazyNavMod(isProminent: isIphone && horSize != .regular))
-        }
-    } //: Body
-    
-    @ToolbarContentBuilder
-    var sidebarToggle: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            Button("Menu", systemImage: "sidebar.leading") {
-                vm.sidebarToggleTapped()
-            }
-        }
-    }
-    
-    struct LazyNavMod: ViewModifier {
-        let isProminent: Bool
-        func body(content: Content) -> some View {
-            if isProminent {
-                content
-                    .navigationSplitViewStyle(.prominentDetail)
-            } else {
-                content
-                    .navigationSplitViewStyle(.balanced)
-            }
-        }
-    }
-    
-    // What happens if I replace getColumnLayout with just content?
-    // - Replacing getColumnLayout with content entirely makes it so, on iPhone 12 Pro Max in portrait, after navigating from the settingsView to the detail with a NavigationLink, tapping the back button opens the menu and does not allow you to return to the settingsView.
-        // - Because of this, I should keep a reference to the child's colVis and prefCol in case they need to be manipulated and to help debug the current state of navigation.
-    
-    @State var childColVis: NavigationSplitViewVisibility = .doubleColumn
-    @State var childPrefCol: NavigationSplitViewColumn = .content
-
-    @ViewBuilder private func getColumnLayout(for content: C) -> some View {
-        if layout == .column {
-            NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
-                content
-                    .toolbar(.hidden, for: .navigationBar) // D
-            } detail: {
-                // Leave empty so content has a column to pass navigation views to.
-                // This may be where I need to fix BUG #4
-            }
-            .navigationSplitViewStyle(.balanced)
-            .toolbar(removing: .sidebarToggle)
-        } else {
-            content
-        }
-    }
-}
+//struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
+//    @EnvironmentObject var vm: LazyNavViewModel
+//    @Environment(\.horizontalSizeClass) var horSize
+//    @Environment(\.verticalSizeClass) var verSize
+//    
+//    @State var childColVis: NavigationSplitViewVisibility = .doubleColumn
+//    @State var childPrefCol: NavigationSplitViewColumn = .content
+//    
+//    let layout: Layout
+//    let sidebar: S
+//    let content: C
+//    let toolbarContent: T
+//    
+//    init(layout: Layout = .full, sidebar: (() -> S), content: (() -> C), toolbar: (() -> T)) {
+//        self.layout = layout
+//        self.sidebar = sidebar()
+//        self.content = content()
+//        self.toolbarContent = toolbar()
+//    }
+//    
+//    var body: some View {
+//        GeometryReader { geo in
+//            let isIphone = horSize == .compact || verSize == .compact // Move this to lazy split and pass it in.
+//            
+//            NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
+//                sidebar
+//                    .navigationBarTitleDisplayMode(.inline)
+//                    .toolbar(removing: .sidebarToggle)
+//            } detail: {
+//                getColumnLayout(for: content)
+//                    .toolbar(.hidden, for: .navigationBar)
+//            }
+//            .tint(.accent) // fgColor default's to App's accent
+//            .environmentObject(vm)
+//            .navigationSplitViewStyle(.prominentDetail)
+//            .navigationBarTitleDisplayMode(.inline)
+//            .toolbar(removing: .sidebarToggle)
+//            .navigationBarBackButtonHidden(true)
+//            .toolbar {
+//                sidebarToggle
+//                toolbarContent
+//            }
+//            .modifier(LazyNavMod(isProminent: isIphone && horSize != .regular))
+//        }
+//    } //: Body
+//    
+//    @ToolbarContentBuilder var sidebarToggle: some ToolbarContent {
+//        ToolbarItem(placement: .topBarLeading) {
+//            Button("Menu", systemImage: "sidebar.leading") {
+//                vm.sidebarToggleTapped()
+//            }
+//        }
+//    }
+//    
+//    struct LazyNavMod: ViewModifier {
+//        let isProminent: Bool
+//        func body(content: Content) -> some View {
+//            if isProminent {
+//                content
+//                    .navigationSplitViewStyle(.prominentDetail)
+//            } else {
+//                content
+//                    .navigationSplitViewStyle(.balanced)
+//            }
+//        }
+//    }
+//    
+//    @ViewBuilder private func getColumnLayout(for content: C) -> some View {
+//        if layout == .column {
+//            NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
+//                content
+//                    .toolbar(.hidden, for: .navigationBar) // D
+//            } detail: {
+//                // Leave empty so content has a column to pass navigation views to.
+//                // This may be where I need to fix BUG #4
+//            }
+//            .navigationSplitViewStyle(.balanced)
+//            .toolbar(removing: .sidebarToggle)
+//        } else {
+//            content
+//        }
+//    }
+//}
 
 
 

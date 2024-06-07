@@ -30,7 +30,7 @@
 import SwiftUI
 
 struct ViewWrapper: UIViewControllerRepresentable {
-    @Binding var display: DisplayState
+    @Binding var display: UIDisplayState
     @Binding var menuIsHidden: Bool
     typealias UIViewControllerType = SplitViewController
     
@@ -52,7 +52,7 @@ struct ViewWrapper: UIViewControllerRepresentable {
         Coordinator(self)
     }
     
-    func setDisplay(_ newDisplay: DisplayState) {
+    func setDisplay(_ newDisplay: UIDisplayState) {
         self.display = newDisplay
     }
     
@@ -69,17 +69,17 @@ struct ViewWrapper: UIViewControllerRepresentable {
             // Implement hideMenu logic here if needed
         }
         
-        func getDisplay() -> DisplayState {
+        func getDisplay() -> UIDisplayState {
             return parent.display
         }
         
-        func changeDisplay(to newDisplay: DisplayState) {
+        func changeDisplay(to newDisplay: UIDisplayState) {
             print("Changing display")
             parent.setDisplay(newDisplay) 
             print("Parent display is now \(parent.display)")
         }
         
-        func getCurrentDisplay() -> DisplayState {
+        func getCurrentDisplay() -> UIDisplayState {
             return parent.display
         }
         
@@ -162,12 +162,45 @@ public class SplitViewController: UISplitViewController, UISplitViewControllerDe
 
 public protocol NavDelegate: AnyObject {
     func hideMenu()
-    func changeDisplay(to: DisplayState)
-    func getDisplay() -> DisplayState
+    func changeDisplay(to: UIDisplayState)
+    func getDisplay() -> UIDisplayState
     func toggleSidebar()
     func displayModeChanged(to displayMode: UISplitViewController.DisplayMode)
 }
 
 #Preview {
     ViewWrapper(display: .constant(.home), menuIsHidden: .constant(true)).ignoresSafeArea()
+}
+
+// The String is used for the menu button title
+// CaseIterable is used to loop through and display all buttons in the menu
+// Enum is public because the public protocol used in the UISplitView
+// Hashable is used for... nothing?
+
+public enum UIDisplayState: String, CaseIterable, Hashable {
+    case home       = "Home"
+    case otherView  = "Other"
+    case settings   = "Settings"
+
+    // TODO: Move to the MenuView because is only related to Menu UI components.
+    var menuIconName: String {
+        return switch self {
+        case .home:        "house.fill"
+        case .otherView:   "figure.walk.motion"
+        case .settings:    "gearshape"
+        }
+    }
+    
+    /// Specify the views that will need three columns
+    var primaryView: NavigationSplitViewVisibility {
+        return switch self {
+        case .settings:     .doubleColumn
+        default:            .detailOnly
+        }
+    }
+    
+    /// The preferred compact column should always be the same as the `primaryView`
+    var prefCompColumn: NavigationSplitViewColumn {
+        return primaryView == .detailOnly ? .detail : .content
+    }
 }
