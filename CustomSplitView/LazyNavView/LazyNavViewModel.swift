@@ -7,9 +7,9 @@
 
 import SwiftUI
 
+/// mainDisplay is used by the rootView to determine which primary screen is being displayed. The resulting DisplayState's view is passed into LazyNavView's content, but NOT necessarily into a splitView's content.
 @MainActor final class LazyNavViewModel: ObservableObject {
     @Published var path: NavigationPath = .init()
-    /// mainDisplay is used by the rootView to determine which primary screen is being displayed. The resulting DisplayState's view is passed into LazyNavView's content, but NOT necessarily into a splitView's content.
     @Published var mainDisplay: DisplayState = .home
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
     @Published var prefCol: NavigationSplitViewColumn = .detail
@@ -45,11 +45,11 @@ import SwiftUI
         if isLandscape {
             colVis = .detailOnly
             prefCol = .detail
-//            showMenu()
         }
     }
     
     /// Used to show menu on orientation change (6/7/24)
+    /// Check if this is ever called...
     func showMenu() {
         colVis = .doubleColumn
         prefCol = .sidebar

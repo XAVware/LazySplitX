@@ -95,8 +95,8 @@
  
  
  ------------------------------------------------
- ## Notes & Decisions
- > The toolbar and navigationDestination(for:) use a Group because they are not 
+ ## Decisions, Default Behaviors, & Notes
+ > The toolbar and navigationDestination(for:) use a Group because they are not
  enclosed in a View.
     - Can I use @ViewBuilder some way instead?
  
@@ -118,6 +118,7 @@
  > Any view that will be pushing child views onto the screen needs to receive 
  LazyNavViewModel as an environment object.
  
+ > On iPad, if the menu is open when the device orientation changes, the menu will be closed.
  
  
  ------------------------------------------------
@@ -156,12 +157,12 @@
          }
      }
 
- TODO: BUG #1 - 5/17/24 - iPad only:
+ TODO: BUG #1 - 5/17/24 - iPad and Landscape large screen iPhone:
  Warning: "Failed to create 0x88 image slot (alpha=1 wide=0) (client=0xadfc4a28) [0x5 (os/kern) failure]"
     > 6/7/24
     - Using NavigationLink(value:label:) in DetailView does not fix BUG #1
     - CHECK: Using NavigationLink(destination:label:) in DetailView does not fix BUG #1
-    - Doesn't happen on iPhone
+    - Occurs when the path of the NavigationStack is modified
 
  
  TODO: BUG #2 - 5/29/24 - Both Large Screen iPhone and less frequently on iPad:
@@ -216,6 +217,8 @@
 
 import SwiftUI
 
+// D: `.toolbar(.hidden, for: .navigationBar)` is required on the child splitView's content to fully remove sidebar toggle from settings page.
+
 enum Layout { case full, column }
 
 struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
@@ -243,14 +246,8 @@ struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar(removing: .sidebarToggle)
             } detail: {
-                Group {
-                    if layout == .column {
-                        getColumnLayout(for: content)
-                    } else {
-                        content
-                    }
-                }
-                .toolbar(.hidden, for: .navigationBar)
+                getColumnLayout(for: content)
+                    .toolbar(.hidden, for: .navigationBar)
             }
             .tint(.accent) // fgColor default's to App's accent
             .environmentObject(vm)
@@ -275,7 +272,6 @@ struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
         }
     }
     
-
     struct LazyNavMod: ViewModifier {
         let isProminent: Bool
         func body(content: Content) -> some View {
@@ -289,26 +285,26 @@ struct LazyNavView<S: View, C: View, T: ToolbarContent>: View {
         }
     }
     
-    // These were being used to monitor if the SettingView's splitView ever changes configuration.
+    // What happens if I replace getColumnLayout with just content?
+    // - Replacing getColumnLayout with content entirely makes it so, on iPhone 12 Pro Max in portrait, after navigating from the settingsView to the detail with a NavigationLink, tapping the back button opens the menu and does not allow you to return to the settingsView.
+        // - Because of this, I should keep a reference to the child's colVis and prefCol in case they need to be manipulated and to help debug the current state of navigation.
+    
     @State var childColVis: NavigationSplitViewVisibility = .doubleColumn
     @State var childPrefCol: NavigationSplitViewColumn = .content
-    
-    private func getColumnLayout(for content: C) -> some View {
-        NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
-            // `.toolbar(.hidden, for: .navigationBar)` is required on the child splitView's content to fully remove sidebar toggle from settings page.
+
+    @ViewBuilder private func getColumnLayout(for content: C) -> some View {
+        if layout == .column {
+            NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
+                content
+                    .toolbar(.hidden, for: .navigationBar) // D
+            } detail: {
+                // Leave empty so content has a column to pass navigation views to.
+                // This may be where I need to fix BUG #4
+            }
+            .navigationSplitViewStyle(.balanced)
+            .toolbar(removing: .sidebarToggle)
+        } else {
             content
-                .toolbar(.hidden, for: .navigationBar)
-            
-        } detail: {
-            // Leave empty so content has a column to pass navigation views to.
-        }
-        .navigationSplitViewStyle(.balanced)
-        .toolbar(removing: .sidebarToggle)
-        .onChange(of: childColVis) { oldValue, newValue in
-            print("Child colVisChanged")
-        }
-        .onChange(of: childPrefCol) { oldValue, newValue in
-            print("Child Pref Col Changed")
         }
     }
 }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
     @EnvironmentObject var vm: LazyNavViewModel
-//    @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
     
     let layout: Layout
     let sidebar: S

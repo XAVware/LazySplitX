@@ -54,7 +54,11 @@ struct InvexRootView: View {
                         print("Sidebar appeared")
                     }
             } content: {
+                // == Testing
                 Text("Content")
+                
+                
+                // == From Invex
 //                Group {
 //                    switch navVM.mainDisplay {
 //                    case .makeASale: POSView(vm: posVM, cartState: $cartState, uiWidth: UI.width)

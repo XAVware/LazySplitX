@@ -67,7 +67,7 @@ import Combine
     }
     
     func configureSubscribers() {
-        service.$exists
+        service.$isAuthorized
             .sink { [weak self] exists in
                 self?.exists = exists
             }
@@ -142,7 +142,6 @@ enum LazySplitViewColumn { case left, center, right }
 // B: Adds the custom toggle to replace the default sidebar toggle
 // C: Hides the back button that appeaers on the detail of the iPhone 15 Pro in landscape
 
-// TODO: Menu button stops working sometimes when you open the menu by clicking the button, but close the menu by tapping to the right or dragging from the edge.
 struct InvexLazyNavView<S: View, C: View>: View {
     @EnvironmentObject var vm: InvexLazyNavViewModel
     @Environment(\.horizontalSizeClass) var horSize
