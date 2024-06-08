@@ -6,6 +6,11 @@
 //
 
 import SwiftUI
+/*
+ Overall working on iPad
+ 
+ Crashes on iPhone along with several other issues - See video
+ */
 
 enum ViewPath: Identifiable, Hashable {
     var id: ViewPath { return self }
@@ -15,11 +20,12 @@ enum ViewPath: Identifiable, Hashable {
     case subDetail
 }
 
-@MainActor final class StackInSplitViewModel_Orig: ObservableObject {
+@MainActor final class StackInSplitViewModel: ObservableObject {
     @Published var navPath: [ViewPath] = []
     @Published var display: DisplayState = .home
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
     @Published var prefCol: NavigationSplitViewColumn = .detail
+    @Published var showSidebarToggle: Bool = true
     
     func changeDisplay(to newDisplay: DisplayState) {
         let orig = self.colVis
@@ -28,20 +34,17 @@ enum ViewPath: Identifiable, Hashable {
         if orig != nextColVis {
             // Sleep to make animation smoother.
         }
+        
         display = newDisplay
         colVis = .detailOnly
         prefCol = colVis == .detailOnly ? .detail : .sidebar
     }
     
     func customSidebarTapped() {
-        print("Custom sidebar button tapped")
         colVis = colVis == .doubleColumn ? .detailOnly : .doubleColumn
         prefCol = colVis == .detailOnly ? .detail : .sidebar
-        print("New Col Vis: \(colVis)")
-        print("New Pref Col: \(prefCol)")
     }
     
-    @Published var showSidebarToggle: Bool = true
     
     func pushView(_ viewPath: ViewPath) {
         navPath.append(viewPath)
@@ -53,19 +56,15 @@ enum ViewPath: Identifiable, Hashable {
     }
 }
 
-struct StackInSplitView_Orig: View {
+struct StackInSplitView: View {
     @Environment(\.horizontalSizeClass) var hor
-    @EnvironmentObject var vm: StackInSplitViewModel_Orig
-    
-
+    @EnvironmentObject var vm: StackInSplitViewModel
     
     var body: some View {
         NavigationSplitView(columnVisibility: $vm.colVis, preferredCompactColumn: $vm.prefCol) {
             menu
                 .toolbar(removing: .sidebarToggle)
-                
         } detail: {
-            
             NavigationStack {
                 content
                     .navigationBarBackButtonHidden(true)
@@ -86,7 +85,6 @@ struct StackInSplitView_Orig: View {
                     }
                     .navigationDestination(for: ViewPath.self) { view in
                         switch view {
-//                        case .menu:                     menu
                         case .content:                  content
                         case .detail:       detail
                         case .subDetail: subDetail
@@ -94,9 +92,8 @@ struct StackInSplitView_Orig: View {
                         }
                     }
                 
-                
             }
-                .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationSplitViewStyle(.prominentDetail)
     }
@@ -171,13 +168,6 @@ struct StackInSplitView_Orig: View {
                         } label: {
                             Text("Go")
                         }
-                        
-                        //                    Button {
-                        //                        vm.colVis = .automatic
-                        //                        vm.prefCol = .sidebar
-                        //                    } label: {
-                        //                        Text("Show Menu")
-                        //                    }
                     }
                 }
             }
@@ -203,7 +193,14 @@ struct StackInSplitView_Orig: View {
     }
 }
 
+struct StackInSplitViewContent: View {
+    @StateObject var vm: StackInSplitViewModel = StackInSplitViewModel()
+    var body: some View {
+        StackInSplitView()
+            .environmentObject(vm)
+    }
+}
+
 #Preview {
-    StackInSplitView_Orig()
-        .environmentObject(StackInSplitViewModel_Orig())
+    StackInSplitViewContent()
 }

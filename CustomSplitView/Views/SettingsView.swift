@@ -13,6 +13,7 @@ struct SettingsView: View {
         ZStack {
             Color.yellow.opacity(0.3)
                 .font(.title3)
+            
             VStack {
                 Text("Settings View")
                     .font(.title3)

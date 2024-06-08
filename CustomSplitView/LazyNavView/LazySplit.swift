@@ -9,6 +9,11 @@ import SwiftUI
 // D: `.toolbar(.hidden, for: .navigationBar)` is required on the child splitView's content to fully remove sidebar toggle from settings page.
 enum Layout { case full, column }
 
+/// - Parameters
+///     - S: The view to be displayed in the left/sidebar column of the split view.
+///     - C: The view to be displayed in the middle/content column of the split view.
+///     - D: The view to be displayed in the right/detail column of the split view.
+///     - T: The toolbar content for the corresponding view.
 struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
     @EnvironmentObject var vm: LazyNavViewModel
     @Environment(\.horizontalSizeClass) var horSize
