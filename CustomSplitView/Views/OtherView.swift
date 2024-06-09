@@ -18,7 +18,7 @@ struct OtherView: View {
                     .font(.title3)
                 
                 Button {
-                    vm.pushView(.subdetail)
+                    vm.pushView(.detail)
                 } label: {
                     Text("Button: To Detail")
                         .frame(maxWidth: 420)

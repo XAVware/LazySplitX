@@ -23,4 +23,12 @@ enum DisplayState: String, CaseIterable {
         case .settings:    "gearshape"
         }
     }
+    
+    var viewTitle: String {
+        return switch self {
+        case .home:         "Home"
+        case .otherView:    "Other View"
+        case .settings:     ""
+        }
+    }
 }

@@ -36,6 +36,7 @@ import Combine
  Version 1.5
  - Setup LazySplitViewMod to toggle between balanced and prominent styles.
  - Dynamically change color and image of sidebar toggle
+ - I separated the responsibility of the
  
  Issues
  - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly. Seems to happen when the states are changed quickly.
@@ -48,6 +49,7 @@ import Combine
  - Add computed property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
     - Previous versions only layed the views out as columns if the display was Settings
  - Move MenuIconName from DisplayState to MenuView
+ - Possibly Add NavigationStack to SplitView's detail column so we have the option to push views onto the right hand column instead of the full screen
  */
 
 /// mainDisplay is used by the rootView to determine which primary screen is being displayed. The resulting DisplayState's view is passed into LazyNavView's content, but NOT necessarily into a splitView's content.
@@ -186,6 +188,7 @@ struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
                     }
                     .toolbar(.hidden, for: .navigationBar)
                 }
+                .navigationTitle(vm.mainDisplay.viewTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(removing: .sidebarToggle)
                 .navigationBarBackButtonHidden(true)
@@ -197,8 +200,13 @@ struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
                 .navigationDestination(for: DetailPath.self) { view in
                     Group {
                         switch view {
-                        case .detail:       DetailView()
-                        case .subdetail:    SubDetailView()
+                        case .detail:       
+                            DetailView()
+                                .navigationTitle("Detail View")
+                            
+                        case .subdetail:    
+                            SubDetailView()
+                                .navigationTitle("Sub Detail View")
                         }
                     }
                 }
