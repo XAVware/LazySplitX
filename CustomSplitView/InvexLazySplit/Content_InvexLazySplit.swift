@@ -26,6 +26,10 @@ struct Content_InvexLazySplit: View {
 ///     pickers/sliders to behave accordingly
 ///         -> i.e. if all prices end in 0, price pickers should not default to increments
 ///         less than 0.1
+///
+///
+/// 6/8/24
+/// To fix issue of losing reference to sidebar, maybe use a @ViewBuilder function that returns the NavigationStack for iPads but only the menu while on iPhone.
 
 struct InvexRootView: View {
     @StateObject var navVM: InvexLazyNavViewModel = InvexLazyNavViewModel()
