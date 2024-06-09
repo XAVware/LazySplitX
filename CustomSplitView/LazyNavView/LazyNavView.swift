@@ -85,8 +85,8 @@
 
 import SwiftUI
 
-struct LazySplitContent: View {
-    @StateObject var vm: LazyNavViewModel = LazyNavViewModel()
+struct RootView: View {
+    @StateObject var vm: LazySplitViewModel = LazySplitViewModel()
     
     var body: some View {
         LazySplit {
@@ -102,31 +102,23 @@ struct LazySplitContent: View {
         } toolbar: {
             Group {
                 switch vm.mainDisplay {
-                case .home: homeToolbar
-                default:    emptyToolbar
+                case .home: 
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Right Sidebar", systemImage: "sidebar.trailing") {
+                            vm.pushView(.detail)
+                        }
+                    }
+                    
+                default:         ToolbarItem(placement: .topBarTrailing) { EmptyView() }
+
                 }
             }
         }
         .environmentObject(vm)
     } //: Body
-    
-    
-    @ToolbarContentBuilder var homeToolbar: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            Button("Right Sidebar", systemImage: "sidebar.trailing") {
-                vm.pushView(.detail)
-            }
-        }
-    }
-    
-    // The toolbar is not optional, so views that don't need a toolbar need to use this.
-    @ToolbarContentBuilder var emptyToolbar: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            EmptyView()
-        }
-    }
+
 }
 
 #Preview {
-    LazySplitContent()
+    RootView()
 }

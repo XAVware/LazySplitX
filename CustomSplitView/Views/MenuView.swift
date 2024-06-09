@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MenuView: View {
-    @EnvironmentObject var vm: LazyNavViewModel
+    @EnvironmentObject var vm: LazySplitViewModel
     var body: some View {
         VStack(spacing: 16) {
             ForEach(DisplayState.allCases, id: \.self) { data in

@@ -11,7 +11,7 @@ import SwiftUI
 struct CustomSplitViewApp: App {
     var body: some Scene {
         WindowGroup {
-            LazySplitContent()
+            RootView()
         }
     }
 }

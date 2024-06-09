@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OtherView: View {
-    @EnvironmentObject var vm: LazyNavViewModel
+    @EnvironmentObject var vm: LazySplitViewModel
     
     var body: some View {
         ZStack {

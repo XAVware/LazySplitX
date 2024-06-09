@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DetailView: View {
-    @EnvironmentObject var vm: LazyNavViewModel
+    @EnvironmentObject var vm: LazySplitViewModel
     var body: some View {
         ZStack {
             Color.green.opacity(0.2)
