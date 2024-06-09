@@ -23,33 +23,6 @@ import Combine
  > iPhone bug of losing menu reference still occurs but is much easier for the end user to resolve compared to prominentDetail style
  > iPhone 12 pro max - When LazySplitMod changes between balanced and prominentDetail styles, there is an odd gray animation shown in the right hand column
  
- Version 1.2
- - Monitored & updated navigation column visibility and similar properties via didSet property observers.
- - I moved the previously generic LazyNavView into the parent so there is only one generic involved. Keep in mind that LazyNavView, when it was generic, was passed an isLandscape property from its parent.
- - Mostly used prominentDetail style
- - Added Combine authentication to view model to prep for Invex.
- 
- Issues
- - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly.
- 
- 
- Version 1.5
- - Setup LazySplitViewMod to toggle between balanced and prominent styles.
- - Dynamically change color and image of sidebar toggle
- - I separated the responsibility of the
- 
- Issues
- - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly. Seems to happen when the states are changed quickly.
-    - After some UX trials, users figure out how to solve the issue on their own much easier than prominent style.
- - There is lag after changing between balanced and prominent styles that initially makes the view size not fit the orientation's screen size. It also shows a gray layover next to the prominent view that appears with an unusual animation.
- 
- 
- Version 2.0
- - Change NavigationTitle based on the DisplayState
- - Add computed property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
-    - Previous versions only layed the views out as columns if the display was Settings
- - Move MenuIconName from DisplayState to MenuView
- - Possibly Add NavigationStack to SplitView's detail column so we have the option to push views onto the right hand column instead of the full screen
  */
 
 /// mainDisplay is used by the rootView to determine which primary screen is being displayed. The resulting DisplayState's view is passed into LazyNavView's content, but NOT necessarily into a splitView's content.

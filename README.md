@@ -266,3 +266,37 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
     - Links search for destinations in any surrounding NavigationStack, then within the same column of a NavigationSplitView.
     - SOLUTION: NavigationDestinations were moved out of LazyNavView, into the ContentView where they appear within the NavigationStack but outside the LazyNavView.
  
+
+
+## Versions
+
+ 
+ ### Version 1.2
+ - Monitored & updated navigation column visibility and similar properties via didSet property observers.
+ - I moved the previously generic LazyNavView into the parent so there is only one generic involved. Keep in mind that LazyNavView, when it was generic, was passed an isLandscape property from its parent.
+ - Mostly used prominentDetail style
+ - Added Combine authentication to view model to prep for Invex.
+ 
+ #### Issues
+ - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly.
+ 
+ 
+ ### Version 1.5
+ - Setup LazySplitViewMod to toggle between balanced and prominent styles.
+ - Dynamically change color and image of sidebar toggle
+ - I separated the responsibility of the
+ 
+ #### Issues
+ - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly. 
+    - Seems to happen when the states are changed quickly, it shouldn't come up in production frequently - only if the user is intentionally trying to 'break' the app or if they are working very quickly and anticipate exactly where on the menu (which button) they will be tapping next after they tap the sidebar toggle.
+    - After some UX trials, users figure out how to solve the issue on their own much easier than prominent style.
+ - There is lag after changing between balanced and prominent styles that initially makes the view size not fit the orientation's screen size. It also shows a gray layover next to the prominent view that appears with an unusual animation.
+ - On iPad, the app crashes after it is moved to the background followed by the device being locked.
+ 
+ 
+ ### Version 2.0
+ - Change NavigationTitle based on the DisplayState
+ - Add computed property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
+    - Previous versions only layed the views out as columns if the display was Settings
+ - Move MenuIconName from DisplayState to MenuView
+ - Possibly Add NavigationStack to SplitView's detail column so we have the option to push views onto the right hand column instead of the full screen
