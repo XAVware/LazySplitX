@@ -109,7 +109,7 @@ struct RootView: View {
                         }
                     }
                     
-                default:         ToolbarItem(placement: .topBarTrailing) { EmptyView() }
+                default: ToolbarItem(placement: .topBarTrailing) { EmptyView() }
 
                 }
             }

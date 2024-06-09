@@ -88,43 +88,6 @@ struct InvexRootView: View {
 //                    }
 //                }
             }
-            .fullScreenCover(isPresented: $showingOnboarding, content: {
-                NavigationStack(path: $navVM.contentPath) {
-                    VStack {
-                        Image("LandingImage")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(minWidth: 240, maxWidth: 420)
-                        
-//                        NavigationLink(value: DetailPath.company(CompanyEntity(), .onboarding)) {
-//                            Spacer()
-//                            Text("Continue")
-//                            Spacer()
-//                        }
-//                        .modifier(PrimaryButtonMod())
-
-                    } //: VStack
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    .navigationDestination(for: DetailPath.self) { view in
-//                            switch view {
-//                            case .company(let c, let t):
-//                                CompanyDetailView(company: c, detailType: t)
-//                                    .navigationTitle("Welcome!")
-//                                    .navigationBarTitleDisplayMode(.large)
-//                                
-//                            case .department(let d, let t): DepartmentDetailView(department: d, detailType: t)
-//                            case .item(let i, let t):       ItemDetailView(item: i, detailType: t)
-//                                
-//                            case .passcodePad(let p):
-//                                PasscodeView(processes: p) {
-//                                    navVM.pushView(DetailPath.department(nil, .onboarding))
-//                                }
-//
-//                            default: Color.black
-//                            }
-//                    }
-                }
-            })
             .onReceive(navVM.$exists, perform: { exists in
                 showingOnboarding = !exists
             })
@@ -133,9 +96,7 @@ struct InvexRootView: View {
  
     
     @ToolbarContentBuilder var emptyToolbar: some ToolbarContent {
-        ToolbarItem(placement: .topBarLeading) {
-            EmptyView()
-        }
+        ToolbarItem(placement: .topBarLeading) { EmptyView() }
     }
     
     @ToolbarContentBuilder var cutomBackButton: some ToolbarContent {
