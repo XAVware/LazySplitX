@@ -6,19 +6,48 @@
 //
 
 import SwiftUI
-
+import Combine
 
 /*
  Always initialize LazySplit to show detail column only.
-
+ 
+ 6/9/24
+ The onAppear and onDisappear functions attached to the sidebar view updates the ViewModel with the current UI visibility state of the menu. This was a solution for losing the menuReference randomly when larger screen iPhones (12 Pro Max) toggled between HomeView (full layout) and SettingsVeiw (column layout)
+ 
  Prominent Style
  > I noticed menuIsShowing changes to false immediately after tapping a menu button, but there is a slight delay if the menu is closed by tapping next to it.
-    - Maybe the issue of the menu randomly not disappearing when it should occurs if you attempt to close the menu or change mainDisplay before that slight delay passes?
+ - Maybe the issue of the menu randomly not disappearing when it should occurs if you attempt to close the menu or change mainDisplay before that slight delay passes?
  
  Balanced
  > iPad 11-inch Portrait, in SettingsView, with option selected (view is visible in third column) and menu opened makes the right column too small
  > iPhone bug of losing menu reference still occurs but is much easier for the end user to resolve compared to prominentDetail style
  > iPhone 12 pro max - When LazySplitMod changes between balanced and prominentDetail styles, there is an odd gray animation shown in the right hand column
+ 
+ Version 1.2
+ - Monitored & updated navigation column visibility and similar properties via didSet property observers.
+ - I moved the previously generic LazyNavView into the parent so there is only one generic involved. Keep in mind that LazyNavView, when it was generic, was passed an isLandscape property from its parent.
+ - Mostly used prominentDetail style
+ - Added Combine authentication to view model to prep for Invex.
+ 
+ Issues
+ - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly.
+ 
+ 
+ Version 1.5
+ - Setup LazySplitViewMod to toggle between balanced and prominent styles.
+ - Dynamically change color and image of sidebar toggle
+ 
+ Issues
+ - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly. Seems to happen when the states are changed quickly.
+    - After some UX trials, users figure out how to solve the issue on their own much easier than prominent style.
+ - There is lag after changing between balanced and prominent styles that initially makes the view size not fit the orientation's screen size. It also shows a gray layover next to the prominent view that appears with an unusual animation.
+ 
+ 
+ Version 2.0
+ - Change NavigationTitle based on the DisplayState
+ - Add computed property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
+    - Previous versions only layed the views out as columns if the display was Settings
+ - Move MenuIconName from DisplayState to MenuView
  */
 
 /// mainDisplay is used by the rootView to determine which primary screen is being displayed. The resulting DisplayState's view is passed into LazyNavView's content, but NOT necessarily into a splitView's content.
@@ -32,18 +61,14 @@ enum MenuVisibility {
 @MainActor final class LazySplitViewModel: ObservableObject {
     @Published var lastMenuViewState: MenuVisibility = .hidden
     @Published var path: NavigationPath = .init()
-
     @Published var mainDisplay: DisplayState = .home
-    
-    
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
-    
     @Published var prefCol: NavigationSplitViewColumn = .detail
     
     func changeDisplay(to newDisplay: DisplayState) {
         mainDisplay = newDisplay
         hideMenu()
-//        path = .init()
+        //        path = .init()
     }
     
     /// Used by the custom sidebar toggle button found in the parent NavigationSplitView's toolbar. The parent split view only has two columns, so when the columnVisibility is .doubleColumn the menu is open. When it's .detailOnly it is closed.
@@ -52,8 +77,6 @@ enum MenuVisibility {
         print("> Sidebar toggle tapped")
         colVis = colVis == .doubleColumn ? .detailOnly : .doubleColumn
         prefCol = colVis == .detailOnly ? .detail : .sidebar
-        
-        // To fix disappearing issue, use hideMenu or showMenu based on lastMenuVisState
     }
     
     /// Used to push a view onto to main NavigationStack, covering the entire screen and showing the back button. (6/7/24)
@@ -77,8 +100,22 @@ enum MenuVisibility {
         prefCol = .detail
     }
     
-    deinit {
-        print("Lazy Nav View Model deinitialized")
+    // MARK: - Authentication / Onboarding
+    private let service = AuthService.shared
+    private var cancellables = Set<AnyCancellable>()
+    
+    @Published var exists: Bool = false
+    
+    init() {
+        configureSubscribers()
+    }
+    
+    func configureSubscribers() {
+        service.$isAuthorized
+            .sink { [weak self] exists in
+                self?.exists = exists
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -115,55 +152,48 @@ struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
     var body: some View {
         GeometryReader { geo in
             let isLandscape = geo.size.width > geo.size.height
-            let isIphone = horSize == .compact || verSize == .compact // Move this to lazy split and pass it in.
-
+            
             NavigationStack(path: $vm.path) {
-                
-                //TODO: Remove this geometryReader
-                GeometryReader { geo in
-                    
-                    NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
-                        sidebar
-                            .onAppear {
-                                print("Menu appeared")
-                                vm.lastMenuViewState = .visible
-                            }
-                            .onDisappear {
-                                print("Menu disappeared")
-                                vm.lastMenuViewState = .hidden
-                            }
-                            .navigationBarTitleDisplayMode(.inline)
-                            .toolbar(removing: .sidebarToggle)
-                    } detail: {
-                        // Layout view in split or full based on the ViewModel's current mainDisplay.
-                        Group {
-                            if vm.mainDisplay == .settings {
-                                NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
-                                    content
-                                        .toolbar(.hidden, for: .navigationBar) // D
-                                    // To display the first option by default, maybe add .onAppear { path append }
-                                } detail: {
-                                    // Leave empty so content has a column to pass navigation views to.
-                                    // This may be where I need to fix BUG #4
-                                }
-                                /// Using balanced her resolves the issue of losing track of the menu.
-                                .navigationSplitViewStyle(.balanced)
-                                .toolbar(removing: .sidebarToggle)
-                            } else {
-                                content
-                            }
+                NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
+                    sidebar
+                        .onAppear {
+                            print("Menu appeared")
+                            vm.lastMenuViewState = .visible
                         }
-                        .toolbar(.hidden, for: .navigationBar)
+                        .onDisappear {
+                            print("Menu disappeared")
+                            vm.lastMenuViewState = .hidden
+                        }
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar(removing: .sidebarToggle)
+                } detail: {
+                    // Layout view in split or full based on the ViewModel's current mainDisplay.
+                    Group {
+                        if vm.mainDisplay == .settings {
+                            NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
+                                content
+                                    .toolbar(.hidden, for: .navigationBar) // D
+                                // To display the first option by default, maybe add .onAppear { path append }
+                            } detail: {
+                                // Leave empty so content has a column to pass navigation views to.
+                                // This may be where I need to fix BUG #4
+                            }
+                            .navigationSplitViewStyle(.balanced)
+                            .toolbar(removing: .sidebarToggle)
+                        } else {
+                            content
+                        }
                     }
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar(removing: .sidebarToggle)
-                    .navigationBarBackButtonHidden(true)
-                    .toolbar {
-                        sidebarToggle
-                        toolbarContent
-                    }
-                    .modifier(LazyNavMod(isProminent: !isLandscape))
+                    .toolbar(.hidden, for: .navigationBar)
                 }
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar(removing: .sidebarToggle)
+                .navigationBarBackButtonHidden(true)
+                .toolbar {
+                    sidebarToggle
+                    toolbarContent
+                }
+                .modifier(LazySplitMod(isProminent: !isLandscape))
                 .navigationDestination(for: DetailPath.self) { view in
                     Group {
                         switch view {
@@ -179,21 +209,27 @@ struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
                     vm.hideMenu()
                 }
             }
+            .onReceive(vm.$lastMenuViewState, perform: { newState in
+                print("Last menu state changed to: \(newState)")
+            })
             .environmentObject(vm)
-
+            
         }
     } //: Body
     
     
     @ToolbarContentBuilder var sidebarToggle: some ToolbarContent {
+        let isIphone = horSize == .compact || verSize == .compact
+        let isXmark = isIphone && vm.lastMenuViewState == .visible && vm.prefCol == .sidebar
+        
         ToolbarItem(placement: .topBarLeading) {
-            Button("Menu", systemImage: "sidebar.leading") {
+            Button("Close", systemImage: isXmark ? "xmark" : "sidebar.leading") {
                 vm.sidebarToggleTapped()
             }
         }
     }
     
-    struct LazyNavMod: ViewModifier {
+    struct LazySplitMod: ViewModifier {
         let isProminent: Bool
         func body(content: Content) -> some View {
             if isProminent {

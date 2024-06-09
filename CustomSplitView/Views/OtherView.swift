@@ -20,8 +20,14 @@ struct OtherView: View {
                 Button {
                     vm.pushView(.subdetail)
                 } label: {
-                    Text("Go to detail with Button")
+                    Text("Button: To Detail")
+                        .frame(maxWidth: 420)
+                        .frame(height: 48)
                 }
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 1)
+                .padding()
             } //: VStack
         } //: ZStack
     }

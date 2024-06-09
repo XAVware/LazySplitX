@@ -16,11 +16,28 @@ struct DetailView: View {
                 Text("Detail View")
                     .font(.title3)
                 
+//                NavigationLink {
+//                    DetailView()
+//                } label: {
+//                    Text("NavigationLink: To Subdetail")
+//                        .frame(maxWidth: 420)                        .frame(height: 48)
+//                }
+//                .background(.white)
+//                .clipShape(RoundedRectangle(cornerRadius: 8))
+//                .shadow(radius: 1)
+//                .padding()
+                
                 Button {
                     vm.pushView(.subdetail)
                 } label: {
-                    Text("Go to subdetail with Button")
+                    Text("Button: To Subdetail")
+                        .frame(maxWidth: 420)
+                        .frame(height: 48)
                 }
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 1)
+                .padding()
             } //: VStack
         } //: ZStack
     }

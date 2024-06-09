@@ -22,22 +22,34 @@ struct SettingsView: View {
                 NavigationLink {
                     DetailView()
                 } label: {
-                    Text("Go to Detail with destination nav link")
+                    Text("NavigationLink: To Detail")
+                        .frame(maxWidth: 420)
+                        .frame(height: 48)
                 }
-                .padding(.vertical)
-                
-                Divider()
-                    .padding(.vertical)
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 1)
+                .padding()
 
 
                 // Use pushView to display view through main navigation stack, replacing the current full screen.
                 Button {
                     vm.pushView(DetailPath.detail)
                 } label: {
-                    Text("Go to detail with button")
+                    Text("Button: To Detail")
+                        .frame(maxWidth: 420)
+                        .frame(height: 48)
                 }
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 1)
+                .padding()
 
             }
         }
     }
+}
+
+#Preview {
+    SettingsView()
 }

@@ -11,6 +11,7 @@ struct MenuView: View {
     @EnvironmentObject var vm: LazySplitViewModel
     var body: some View {
         VStack(spacing: 16) {
+            Spacer()
             ForEach(DisplayState.allCases, id: \.self) { data in
                 Button {
                     vm.changeDisplay(to: data)
@@ -24,12 +25,12 @@ struct MenuView: View {
                     .fontDesign(.rounded)
                     .padding()
                     .frame(maxHeight: 64)
-                    .foregroundStyle(Color.white.opacity(data == vm.mainDisplay ? 1.0 : 0.6))
+                    .foregroundStyle(Color.accentColor.opacity(data == vm.mainDisplay ? 1.0 : 0.6))
                 }
             } //: For Each
             Spacer()
         } //: VStack
-        .background(.accent.opacity(0.9))
+        .background(.lightAccent)
     }
 }
 

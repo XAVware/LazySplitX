@@ -23,17 +23,4 @@ enum DisplayState: String, CaseIterable {
         case .settings:    "gearshape"
         }
     }
-    
-    /// Specify the views that will need three columns
-    var primaryView: NavigationSplitViewVisibility {
-        return switch self {
-        case .settings:     .doubleColumn
-        default:            .detailOnly
-        }
-    }
-    
-    /// The preferred compact column should always be the same as the `primaryView`
-    var prefCompColumn: NavigationSplitViewColumn {
-        return primaryView == .detailOnly ? .detail : .content
-    }
 }

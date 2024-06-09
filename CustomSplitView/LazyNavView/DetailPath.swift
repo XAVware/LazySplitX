@@ -13,4 +13,11 @@ enum DetailPath: Identifiable, Hashable {
     var id: DetailPath { return self }
     case detail
     case subdetail
+    
+    var viewTitle: String {
+        return switch self {
+        case .detail:       "Detail"
+        case .subdetail:    "SubDetail"
+        }
+    }
 }

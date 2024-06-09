@@ -12,6 +12,38 @@ import SwiftUI
  Crashes on iPhone along with several other issues - See video
  */
 
+
+// The String is used for the menu button title
+// CaseIterable is used to loop through and display all buttons in the menu
+
+enum StackInSplitDisplayState: String, CaseIterable {
+    case home       = "Home"
+    case otherView  = "Other"
+    case settings   = "Settings"
+
+    // TODO: Move to the MenuView because is only related to Menu UI components.
+    var menuIconName: String {
+        return switch self {
+        case .home:        "house.fill"
+        case .otherView:   "figure.walk.motion"
+        case .settings:    "gearshape"
+        }
+    }
+    
+    /// Specify the views that will need three columns
+    var primaryView: NavigationSplitViewVisibility {
+        return switch self {
+        case .settings:     .doubleColumn
+        default:            .detailOnly
+        }
+    }
+    
+    /// The preferred compact column should always be the same as the `primaryView`
+    var prefCompColumn: NavigationSplitViewColumn {
+        return primaryView == .detailOnly ? .detail : .content
+    }
+}
+
 enum ViewPath: Identifiable, Hashable {
     var id: ViewPath { return self }
     case menu
@@ -22,12 +54,12 @@ enum ViewPath: Identifiable, Hashable {
 
 @MainActor final class StackInSplitViewModel: ObservableObject {
     @Published var navPath: [ViewPath] = []
-    @Published var display: DisplayState = .home
+    @Published var display: StackInSplitDisplayState = .home
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
     @Published var prefCol: NavigationSplitViewColumn = .detail
     @Published var showSidebarToggle: Bool = true
     
-    func changeDisplay(to newDisplay: DisplayState) {
+    func changeDisplay(to newDisplay: StackInSplitDisplayState) {
         let orig = self.colVis
         let nextColVis = newDisplay.primaryView
         
@@ -126,7 +158,7 @@ struct StackInSplitView: View {
         VStack(spacing: 16) {
             Spacer()
             
-            ForEach(DisplayState.allCases, id: \.self) { data in
+            ForEach(StackInSplitDisplayState.allCases, id: \.self) { data in
                 Button {
                     vm.changeDisplay(to: data)
                 } label: {

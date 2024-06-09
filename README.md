@@ -1,22 +1,64 @@
- # LazyNavView
+ # Deep Dive Into SwiftUI Navigation
  
-  ## Overview
- 
- iPad Landscape
-  M = Menu
-  C = Content
-  D = Detail
-  
-  Settings view layout with three columns
-     Menu open                                   Menu Closed
-      ---------------------------                 ---------------------------
-     |   M   |   C   |     D     |               |   C   |         D         |
-     |       |       |           |               |       |                   |
-     |       |       |           |               |       |                   |
-     |       |       |           |               |       |                   |
-     |       |       |           |               |       |                   |
-     |       |       |           |               |       |                   |
-      ---------------------------                 ---------------------------
+ ## Overview
+Navigation is something that I've struggled with one way or another with nearly every app that I've made. I have not agreed with myself on any best practice, even though many apps that I've made have similar navigation structures. When it comes to more complicated layouts, there are many times you may want to put views next to each other or use the standard navigation stack behavior from any view in the app but to be able to access the properties required to adjust the navigation from child's views, I found it requires a lot of property injection, and binding properties through multiple views. These binding properties muddy up views and view models, even though they're only related to navigation. I wanted to create a package that I can use from now on that offers a view functions to access and manipulate the navigation from any view without needing to store bound properties in the view itself. In addition, the navigation stack and navigation split view the Apple provides are great if you're working on an app that has navigation architecture that fits the needs of each navigation type, but they're very limiting when it comes to creating apps that have custom layouts and navigation behavior. When it comes to making custom layouts that behave similar to apples navigation, I found that it requires a lot of heavy, lifting monitoring, device orientation screen with view states, etc. This package is intended to solve that problem.
+
+Navigation is also something that, not only do I not want to spend time developing for every app that I make, but since it's a core piece of every app, in this day and age I don't think I should need to. There should be an easy solution to achieve what I want to do.
+
+## Apple's Pre-Built Solutions & Their Limitations
+### NavigationStack
+In most cases, I use NavigationStack, especially since they came out with .navigationDestination(for:). The issue that I run into is on larger devices, I want to display a few side-by-side similar to apples NavigationSplitView. We were previously able to do this with NavigationView and .navigationViewStyle(.doubleColumn) but NavigationView was deprecated and we are now directed. To get this side-by-side behavior so users can interact with the navigation similar to what they're used to with Apple, the only option is to use a NavigationSplitView
+
+### NavigationSplitView
+NavigationSplitView works if your app has no more than three layers of views. If you app has more than three layers, if it becomes very difficult to control which views are being displayed and how they're being laid out. Trying to build a custom layout with a NavigationSplitView as a backbone often times loses track of the sidebar, resulting in broken navigation. 
+
+#### Issues
+    - The NavigationSplitView styles that we are provided, prominentDetail and balanced, are not easily changed dynamically.
+    - The color of the button is based on the accent color. If the menu/sidebar uses the accent color as a background, the button will be 'invisible'.
+    - In some cases, we may want to run additional logic when the user opens the menu, or we may want to stop them from opening the menu entirely until certain conditions are met. The default sidebar toggle's code can not be easily appended to or modified.
+
+
+## The Problem
+When it comes to using navigation split view or navigation stack, there are a lot of tutorials available online whether there through Apple or third-party, but they only cover using these out of the solutions with simple app examples that don't require custom layouts. Several people have asked for solutions to achieve behavior that was previously available through navigation view and is currently available in UI kits UI split view controller. Apple states that these NavigationViews work best with other out of the box solutions like Lists. Many times I, and other developers and UX designers, just want more flexibility.
+
+### UISplitViewController
+Compared to the tools available on SwiftUI, the UI kits UI split view controller offers several more options when it comes to which views are displayed and how. 
+https://developer.apple.com/documentation/uikit/uisplitviewcontroller
+
+Just like NavigationSplitView, it offers three view columns: primary, supplementary, and secondary. However, these views can be layed out with different DisplayModes that we don't really have access to in SwiftUI, such as (check apple documentation for visuals):
+- SecondaryOnly
+- OneBesidesSecondary
+- OneOverSecondary
+- TwoDisplaceSecondary
+- TwoBesidesSecondary
+
+It also offers three different behaviors:
+- Tile
+- Overlay
+- Displace
+
+### Similar requests
+https://stackoverflow.com/questions/77464914/navigationstack-inside-navigationsplitview-detail-in-swiftui
+This stack overflow post is the closest I found to what I was looking for for Invex, but a solution is not really provided. I think the biggest thing that I and the author of the post are looking for his weighted display the detail on an iPad, so we have the option to hide the menu and the left-hand column as needed.
+
+### A few more
+https://stackoverflow.com/questions/73279601/swiftui-navigationstack-inside-navigationsplitview-not-working-on-iphone-and-ipa
+https://stackoverflow.com/questions/76338957/path-of-navigationstack-inside-navigationsplitview-emptied-on-change
+https://stackoverflow.com/questions/57211380/collapse-a-doublecolumn-navigationview-detail-in-swiftui-like-with-collapsed-on
+https://www.reddit.com/r/iOSProgramming/comments/n6271u/strange_behaviour_on_split_view_in_swift_ui_stack/
+
+### The 'Randomly stops working' bug
+Like me, people run into the issue of navigation randomly not working when trying to work around the UI limitations of NavigationSplitView and NavigationStack.
+https://stackoverflow.com/questions/73564156/swiftui-on-ipados-navigation-randomly-stops-working-when-in-split-view
+https://stackoverflow.com/questions/65645703/swiftui-sidebar-doesnt-remember-screen
+https://forums.developer.apple.com/forums/thread/735672
+https://forums.developer.apple.com/forums/thread/708440
+
+I found this to be related to the navigation losing track of the sidebar and not fully tracking changes in navigation views when they are updated by different sources -- 
+    - Prominent sidebars can be closed by tapping a button, tapping to the right of the sidebar, tapping the sidebar toggle, or dragging.
+    - Size classes can change at any point in the process and the switch seems to confuse the NavigationSplitView
+
+
 
  ## Brainstorming Possible Options
  - Use UIViewControllerDelegate to create the NavigationSplitView in UIKit using UISplitViewController.
@@ -53,14 +95,6 @@
  
  ## Performance Comparison
  I'm only using the iPhone 15 Pro Max and the iPad Pro (11-inch) (3rd Generation) simulators. I'll screen record the simulators running different versions next to the Memory and CPU Usage highlights so I can make the videos brief and look back at usage later.
- 
- 
- 
- ## First, A Closer Look At Apple's NavigationSplitView
- NavigationSplitView's default sidebar toggle button works well for controlling which views are visible and the overall navigation, but is not perfect.
-    - The color of the button is based on the accent color. If the menu/sidebar uses the accent color as a background, the button will be 'invisible'.
-    - In some cases, we may want to run additional logic when the user opens the menu, or we may want to stop them from opening the menu entirely until certain conditions are met. The default sidebar toggle's code can not be easily appended to or modified.
- 
  
  
  ## Building Blocks, Components, & Evolutions
