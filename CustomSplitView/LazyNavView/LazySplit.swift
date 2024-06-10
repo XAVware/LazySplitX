@@ -49,6 +49,9 @@ import Combine
  I don't think it has happened when switching between Home and Other
  If the nav style is balanced, you can fix it by going to a detail view then back. Maybe this forces it to reinitialize?
  It seems to more frequently happen when switching from Settings to Home
+ It happens with prominentDetail style also
+ 
+ May need to force a short pause before the user is allowed to toggle 
  
  - Maybe try adding closure to sidebarToggleTapped() and setting menuVisibility from VIEW after
  
@@ -299,7 +302,8 @@ struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
                     sidebarToggle
                     toolbarContent
                 }
-                .modifier(LazySplitMod(isProminent: !isLandscape))
+                .navigationSplitViewStyle(.automatic)
+//                .modifier(LazySplitMod(isProminent: !isLandscape))
                 .navigationDestination(for: DetailPath.self) { view in
                     Group {
                         switch view {
@@ -410,12 +414,7 @@ struct LazySplit<S: View, C: View, T: ToolbarContent>: View {
         ToolbarItem(placement: .topBarLeading) {
             Button("Close", systemImage: isXmark ? "xmark" : "sidebar.leading") {
                 print("VIEW \(Date().formatted(date: .omitted, time: .complete)): Sidebar toggle tapped")
-                if isXmark {
-                    vm.hideMenu()
-                } else {
-                    vm.showMenu()
-                }
-//                vm.sidebarToggleTapped()
+                vm.sidebarToggleTapped()
             }
         }
     }
