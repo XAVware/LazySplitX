@@ -54,8 +54,19 @@
     - Once the menu is opened via swiping then closed, the toggle works correctly.
     - Forcing colVis and prefCol to .detail and .detailOnly, then back to doubleColumn & sidebar does not fix the issue.
     - The custom SidebarToggle button is working correctly, it successfully calls toggleSidebar() which prints 'tapped' and the current state of the columns.
+ 
+ A similar bug, probably related:
+ Menu button stops working sometimes when you open the menu by clicking the button, but close the menu by tapping to the right or dragging from the edge. Maybe listen for changes to colVis and track the menu's visibility state?
+ 
  SOLUTION - NEEDS REVIEW:
  Added GeometryReader containing 'isLandscape' constant to LazySplit. Add an onChange Listener. This should force the view to regenerate itself each orientation change. Still need to make sure it doesn't cause memory/performance issues
+ 
+ SOLUTION:
+ I seperated out some of the logic controlling how the menu shows and hides itself. In LazySplit, the menu now uses onAppear and onDisappear functions to notify the ViewModel which tracks the menu's most recent state. Toggling the menu uses the most recent menu state to decide what how it should display next. Taking this approach instead of directly modifying the columnVisibility and prefCol ensures that the ViewModel is accounting for any delays that occur in the UI before the menu's visibility 'officially' changes.
+        - onAppear is called immediately when the menu begins animating onto the screen, but onDisappear isn't called until the menu completely disappears from the screen and deinitializes*
+            - I'm pretty sure the sidebar in NavigationSplitViews deinitializes by default once it is no longer visible. You can check by adding some positive x offset to a NavigationSplitView which will allow you to see what happens to the sidebar when it is, normally, off of the screen.
+ 
+ As of version 1.5, this seems to only occur when the user rapidly changes between showing the menu and changing views repetatively. It is probably safe for production because it will not appear with normal use at a casual pace => It looks like, in order for it to break, the user would need to tap the sidebar toggle then a menu button within 500-600 ms of eachother.
 
  
  TODO: NEEDS REVIEW: BUG #3 - 5/19/24 - Large Screen iPhone - Landscape:
@@ -66,6 +77,7 @@
  
  TODO: BUG #4 - 6/7/24 - iPad:
  While in settings view, if you navigate to the detail view with a navigation link then rotate the device, the detail is closed.
+    - 6/9/24 This is probably because as of version 1.5, the inner NavigationSplitView does not have a NavigationStack. The orientation change causes the view to re-initialize to its original state which has an empty detail view.
  
  
  TODO: BUG #5 - 6/5/24 - iPad:
@@ -77,8 +89,19 @@
  
  TODO: BUG #8 - 5/30/24:
  The LazyNavViewModifier creates lag when tapping a menu button from a screen that is balanced to a screen that is prominent.
-    - IDEA: Maybe try forcing a delay so the change happens when the menu is closed?
+    - Maybe try forcing a delay so the change happens when the menu is closed?
+    - Maybe add some withAnimation logic to the modifier or the property that the modifier is using to dictate the style?
  
+ Here's how I forced a pause for menu changes in the past.
+ //    func setMenuVisFor(wasLandscape: Bool, willBeLandscape: Bool) async {
+ //        if mainDisplay.prefCol == .left && wasLandscape && !willBeLandscape {
+ //            print("Forcing menu to show in 1 second")
+ //            try? await Task.sleep(nanoseconds: 750_000_000)
+ //            print("Showing now")
+ //            colVis = .doubleColumn
+ //            prefCol = .sidebar
+ //        }
+ //    }
  
  
  */

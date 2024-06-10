@@ -294,9 +294,15 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
  - On iPad, the app crashes after it is moved to the background followed by the device being locked.
  
  
+ #### Notes on Importing to Invex
+ - Minor adjustments had to be made to Invex's DisplayState. I added a popView function to LazySplitViewModel so detail views can call it after executing their async functions.
+ - I need to figure out a better way to pass the lazy split few model when it's passes an environment object it causes issues with some of the child views that also need a different type of environment object
+ - Inline NavigationTitles don't stay in the middle of the right-hand column when the menu is opened. They remain in the center of the screen.
+ 
+ 
  ### Version 2.0
  - Change NavigationTitle based on the DisplayState
- - Add computed property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
+ - Add computed LazySplitDisplayMode property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
     - Previous versions only layed the views out as columns if the display was Settings
- - Move MenuIconName from DisplayState to MenuView
- - Possibly Add NavigationStack to SplitView's detail column so we have the option to push views onto the right hand column instead of the full screen
+ - Control menu buttons through array and a tuple to be able to remove menu related data from DisplayState
+ - Removed Layout enum because it was unused.
