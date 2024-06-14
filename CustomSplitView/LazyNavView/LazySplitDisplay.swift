@@ -11,7 +11,8 @@ import SwiftUI
 
 enum LazySplitDisplayMode { case detailOnly, besideDetail }
 
-enum DisplayState: CaseIterable {
+// The first case will be the default view.
+enum LazySplitDisplay: CaseIterable {
     case home
     case otherView
     case settings
@@ -26,8 +27,8 @@ enum DisplayState: CaseIterable {
     
     var displayMode: LazySplitDisplayMode {
         return switch self {
-        case .settings: .besideDetail
-        default:        .detailOnly
+        case .settings:     .besideDetail
+        default:            .detailOnly
         }
     }
 }

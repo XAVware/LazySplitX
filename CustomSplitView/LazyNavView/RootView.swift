@@ -47,26 +47,7 @@
     - Occurs when the path of the NavigationStack is modified
 
  
- TODO: BUG #2 - 5/29/24 - Both Large Screen iPhone and less frequently on iPad:
- Custom Sidebar Toggle stops working when device orientation changes.
-    > 5/29/24
-    - When orientation changes from portrait to landscape, the NavigationSplitView loses track of the sidebar and requires user to swipe/drag from left side of the screen instead of being able to tap the toggle.
-    - Once the menu is opened via swiping then closed, the toggle works correctly.
-    - Forcing colVis and prefCol to .detail and .detailOnly, then back to doubleColumn & sidebar does not fix the issue.
-    - The custom SidebarToggle button is working correctly, it successfully calls toggleSidebar() which prints 'tapped' and the current state of the columns.
  
- A similar bug, probably related:
- Menu button stops working sometimes when you open the menu by clicking the button, but close the menu by tapping to the right or dragging from the edge. Maybe listen for changes to colVis and track the menu's visibility state?
- 
- SOLUTION - NEEDS REVIEW:
- Added GeometryReader containing 'isLandscape' constant to LazySplit. Add an onChange Listener. This should force the view to regenerate itself each orientation change. Still need to make sure it doesn't cause memory/performance issues
- 
- SOLUTION:
- I seperated out some of the logic controlling how the menu shows and hides itself. In LazySplit, the menu now uses onAppear and onDisappear functions to notify the ViewModel which tracks the menu's most recent state. Toggling the menu uses the most recent menu state to decide what how it should display next. Taking this approach instead of directly modifying the columnVisibility and prefCol ensures that the ViewModel is accounting for any delays that occur in the UI before the menu's visibility 'officially' changes.
-        - onAppear is called immediately when the menu begins animating onto the screen, but onDisappear isn't called until the menu completely disappears from the screen and deinitializes*
-            - I'm pretty sure the sidebar in NavigationSplitViews deinitializes by default once it is no longer visible. You can check by adding some positive x offset to a NavigationSplitView which will allow you to see what happens to the sidebar when it is, normally, off of the screen.
- 
- As of version 1.5, this seems to only occur when the user rapidly changes between showing the menu and changing views repetatively. It is probably safe for production because it will not appear with normal use at a casual pace => It looks like, in order for it to break, the user would need to tap the sidebar toggle then a menu button within 500-600 ms of eachother.
 
  
  TODO: NEEDS REVIEW: BUG #3 - 5/19/24 - Large Screen iPhone - Landscape:
@@ -106,13 +87,53 @@
  
  */
 
+
+/*
+ From Invex document:
+ 
+ I changed from storing all logic in the LazySplitViewModel to using a singleton LazyNavService. LazySplitViewModel subscribes to the LazyNavService with Combine. Lazy split view then receives notifications when the view changes so it knows when to hide the menu.
+
+ There's a bit of lag when opening closing the menu in Index, but it might be because of the Async/Await RealmActor
+
+ 6/10/24
+ From SettingsView, using LazySplitService.pushView will add a view to the detail, but won't remove it after tapping back.
+
+
+ 6/11/24
+ Note: When the inner split view detail contains a NavigationStack with an EmptyView as the root, using a button from the SettingsView to push a view onto detailPath results in the detail being pushed into the second stack position and therefore shows the back button. The path never fully clears though and will result in one view being appended the first time, two views being appended the second time, etc.
+
+ Correct technique: The inner split view should have an empty NavigationStack. From views that appear besideDetail, like SettingsView, call LazySplitService.pushDetail() with a button to place the detail view in the right-hand column.
+     - If the detail is empty and a Button using LazySplitService.pushView(to detail) is tapped, the view won't appear in the detail column. This is okay. Buttons should only be used to push views onto the main stack*?
+     
+ After tapping a NavigationLink(value:label:), the view will appear in the detail column. That detailView can contain more navigationLinks and navigationDestinations. Tapping these links will push views onto to detail column like a navigationStack
+
+ On iPad orientation change, if the detail column has a detail view, the views in the navigationStack are lost. Probably from re-initialization resulting from style change.
+
+ I added a detailRoot to LazySplitService an LazySplitViewModel that acts as the root view for the inner NavigationSplitView's detail column stack. This allows the detail view to be passed to LazySplitView as a generic from RootView. Once a detailRoot exists, LazySplitService pushes the new detail into the detailPath bound to the detail's NavigationStack.
+
+
+ ** Don't use NavigationLink unless you want the view to use its own NavigationStack.
+ Views that are besideDetail should call LazySplitService.setDetailRoot to make a view appear in the right-hand column on iPads, without the slide in animation. Inside the detail root, if you need to push more views onto the detail column, use LazySplitService.pushDetail
+
+ NavigationLinks in detailViews only work if the navigationDestination is in the detailView or SettingsView. This will separate the stack from the original detail column's NavigationStack* check this.
+
+ - The bug where the detail view disappeared on orientation changes is fixed. Storing the detailRoot and detailPath in LazySplitViewModel fixed it because the data remains when the view re-initializes.
+
+ Getting 'Found no UIEvent for backing event of type: 11; contextId: 0xB1D57B9' after closing app on ipad.
+
+ Known Issues:
+ - 6.11.24 Difficult to make a two views share the same view model when one of the views are passed through LazySplitView. EnvironmentObject can only be used if no view in the LazySplit uses a different type of EnvironmentObject. I had trouble passing a StateObject through the DisplayState enum.
+
+
+ */
+
 import SwiftUI
 
 struct RootView: View {
     @StateObject var vm: LazySplitViewModel = LazySplitViewModel()
     
     var body: some View {
-        LazySplit {
+        LazySplit(viewModel: vm) {
             MenuView()
         } content: {
             Group {
@@ -122,13 +143,15 @@ struct RootView: View {
                 case .otherView:    OtherView()
                 }
             }
-        } toolbar: {
+        } contentToolbar: {
             Group {
                 switch vm.mainDisplay {
                 case .home: 
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Right Sidebar", systemImage: "sidebar.trailing") {
-                            vm.pushView(.detail)
+                    if vm.prefCol != .sidebar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Right Sidebar", systemImage: "sidebar.right") {
+                                LazyNavService.shared.pushPrimary(.detail)
+                            }
                         }
                     }
                     
@@ -136,8 +159,16 @@ struct RootView: View {
 
                 }
             }
+            
+        } detail: {
+            Group {
+                switch vm.detailRoot {
+                case .detail:           DetailView()
+                case .subdetail(let s): SubDetailView(dataString: s)
+                default:                EmptyView()
+                }
+            }
         }
-        .environmentObject(vm)
     } //: Body
 
 }

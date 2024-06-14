@@ -19,10 +19,24 @@ struct SettingsView: View {
                     .font(.title3)
                 
                 // Use navigation link to display view in the right column, while on a device large enough to display columns side by side.
-                NavigationLink {
-                    DetailView()
+//                NavigationLink {
+//                    DetailView()
+//                } label: {
+//                    Text("NavigationLink: To Detail")
+//                        .frame(maxWidth: 420)
+//                        .frame(height: 48)
+//                }
+//                .background(.white)
+//                .clipShape(RoundedRectangle(cornerRadius: 8))
+//                .shadow(radius: 1)
+//                .padding()
+
+                
+                
+                Button {
+                    LazyNavService.shared.setDetailRoot(.detail)
                 } label: {
-                    Text("NavigationLink: To Detail")
+                    Text("Button: To Primary Detail")
                         .frame(maxWidth: 420)
                         .frame(height: 48)
                 }
@@ -30,13 +44,12 @@ struct SettingsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .shadow(radius: 1)
                 .padding()
-
-
+                
                 // Use pushView to display view through main navigation stack, replacing the current full screen.
                 Button {
-                    vm.pushView(DetailPath.detail)
+                    LazyNavService.shared.pushPrimary(.detail)
                 } label: {
-                    Text("Button: To Detail")
+                    Text("Button: To Primary Detail")
                         .frame(maxWidth: 420)
                         .frame(height: 48)
                 }

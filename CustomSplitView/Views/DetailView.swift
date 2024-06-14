@@ -7,8 +7,10 @@
 
 import SwiftUI
 
+/// Company detail view is being placed in the inner split view as the root of the NavigationStack, so the navigationDestinations for this funnel need to be included here. You need to use NavigationLink(value:label:) to push the detail views
+
+
 struct DetailView: View {
-    @EnvironmentObject var vm: LazySplitViewModel
     var body: some View {
         ZStack {
             Color.green.opacity(0.2)
@@ -16,19 +18,8 @@ struct DetailView: View {
                 Text("Detail View")
                     .font(.title3)
                 
-//                NavigationLink {
-//                    DetailView()
-//                } label: {
-//                    Text("NavigationLink: To Subdetail")
-//                        .frame(maxWidth: 420)                        .frame(height: 48)
-//                }
-//                .background(.white)
-//                .clipShape(RoundedRectangle(cornerRadius: 8))
-//                .shadow(radius: 1)
-//                .padding()
-                
                 Button {
-                    vm.pushView(.subdetail)
+                    LazyNavService.shared.pushDetail(view: DetailPath.subdetail("Yeehaw"))
                 } label: {
                     Text("Button: To Subdetail")
                         .frame(maxWidth: 420)
@@ -38,8 +29,15 @@ struct DetailView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .shadow(radius: 1)
                 .padding()
+                
             } //: VStack
         } //: ZStack
+//        .navigationDestination(for: DetailPath.self) { detail in
+//            switch detail {
+//            case .detail:           DetailView()
+//            case .subdetail(let s): SubDetailView(dataString: s)
+//            }
+//        }
     }
 }
 

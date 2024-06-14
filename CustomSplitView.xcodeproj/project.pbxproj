@@ -19,8 +19,9 @@
 		941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62692BF9E1150040DC6C /* DetailPath.swift */; };
 		941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A626B2BF9E1530040DC6C /* MenuView.swift */; };
 		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
+		944324B02C1793DE001D9C2A /* Bug2Diagnosis in Resources */ = {isa = PBXBuildFile; fileRef = 944324AF2C1793DE001D9C2A /* Bug2Diagnosis */; };
 		94462F5A2BF5A46300D0068F /* GenSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F572BF5A46300D0068F /* GenSplitView.swift */; };
-		94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* DisplayState.swift */; };
+		94462F5B2BF5A46300D0068F /* LazySplitDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* LazySplitDisplay.swift */; };
 		9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */; };
 		945453712BED3C5F004762C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453702BED3C5F004762C0 /* Assets.xcassets */; };
 		945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453732BED3C5F004762C0 /* Preview Assets.xcassets */; };
@@ -28,11 +29,6 @@
 		9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454539C2BEEE670004762C0 /* UIDetailView.swift */; };
 		94790D5B2C124A5000059189 /* UIColorOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D5A2C124A5000059189 /* UIColorOverride.swift */; };
 		94790D5D2C124ADC00059189 /* Content_UIKitSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D5C2C124ADC00059189 /* Content_UIKitSplit.swift */; };
-		94790D612C124B0A00059189 /* Content_InvexLazySplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D602C124B0A00059189 /* Content_InvexLazySplit.swift */; };
-		94790D652C12B5D300059189 /* InvexLazySplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D642C12B5D300059189 /* InvexLazySplitView.swift */; };
-		94790D672C12B64400059189 /* ResponsiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D662C12B64400059189 /* ResponsiveView.swift */; };
-		94790D692C12B6E000059189 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D682C12B6E000059189 /* AuthService.swift */; };
-		94790D6B2C12B7EB00059189 /* InvexDetailPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D6A2C12B7EB00059189 /* InvexDetailPath.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,8 +45,9 @@
 		941A62692BF9E1150040DC6C /* DetailPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPath.swift; sourceTree = "<group>"; };
 		941A626B2BF9E1530040DC6C /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
+		944324AF2C1793DE001D9C2A /* Bug2Diagnosis */ = {isa = PBXFileReference; lastKnownFileType = text; path = Bug2Diagnosis; sourceTree = "<group>"; };
 		94462F572BF5A46300D0068F /* GenSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenSplitView.swift; sourceTree = "<group>"; };
-		94462F582BF5A46300D0068F /* DisplayState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayState.swift; sourceTree = "<group>"; };
+		94462F582BF5A46300D0068F /* LazySplitDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazySplitDisplay.swift; sourceTree = "<group>"; };
 		945453692BED3C5E004762C0 /* CustomSplitView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomSplitView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSplitViewApp.swift; sourceTree = "<group>"; };
 		945453702BED3C5F004762C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -59,11 +56,6 @@
 		9454539C2BEEE670004762C0 /* UIDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDetailView.swift; sourceTree = "<group>"; };
 		94790D5A2C124A5000059189 /* UIColorOverride.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorOverride.swift; sourceTree = "<group>"; };
 		94790D5C2C124ADC00059189 /* Content_UIKitSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content_UIKitSplit.swift; sourceTree = "<group>"; };
-		94790D602C124B0A00059189 /* Content_InvexLazySplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content_InvexLazySplit.swift; sourceTree = "<group>"; };
-		94790D642C12B5D300059189 /* InvexLazySplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvexLazySplitView.swift; sourceTree = "<group>"; };
-		94790D662C12B64400059189 /* ResponsiveView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResponsiveView.swift; sourceTree = "<group>"; };
-		94790D682C12B6E000059189 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		94790D6A2C12B7EB00059189 /* InvexDetailPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvexDetailPath.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +89,8 @@
 				941A62672BF9E10F0040DC6C /* LazySplitViewModel.swift */,
 				941A626B2BF9E1530040DC6C /* MenuView.swift */,
 				941A62692BF9E1150040DC6C /* DetailPath.swift */,
-				94462F582BF5A46300D0068F /* DisplayState.swift */,
+				94462F582BF5A46300D0068F /* LazySplitDisplay.swift */,
+				944324AF2C1793DE001D9C2A /* Bug2Diagnosis */,
 			);
 			path = LazyNavView;
 			sourceTree = "<group>";
@@ -123,7 +116,6 @@
 			isa = PBXGroup;
 			children = (
 				94F2FF772C13F04800C72F0C /* PastVersions */,
-				94790D592C124A3300059189 /* InvexLazySplit */,
 				941A62662BF9E1010040DC6C /* LazyNavView */,
 				9405E3F72BF83DF5001E059D /* Views */,
 				9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */,
@@ -151,18 +143,6 @@
 				94790D5C2C124ADC00059189 /* Content_UIKitSplit.swift */,
 			);
 			path = UIKitSplit;
-			sourceTree = "<group>";
-		};
-		94790D592C124A3300059189 /* InvexLazySplit */ = {
-			isa = PBXGroup;
-			children = (
-				94790D602C124B0A00059189 /* Content_InvexLazySplit.swift */,
-				94790D662C12B64400059189 /* ResponsiveView.swift */,
-				94790D682C12B6E000059189 /* AuthService.swift */,
-				94790D6A2C12B7EB00059189 /* InvexDetailPath.swift */,
-				94790D642C12B5D300059189 /* InvexLazySplitView.swift */,
-			);
-			path = InvexLazySplit;
 			sourceTree = "<group>";
 		};
 		94F2FF772C13F04800C72F0C /* PastVersions */ = {
@@ -235,6 +215,7 @@
 			files = (
 				945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */,
 				945453712BED3C5F004762C0 /* Assets.xcassets in Resources */,
+				944324B02C1793DE001D9C2A /* Bug2Diagnosis in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,27 +229,22 @@
 				9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */,
 				9405E3F92BF83DFE001E059D /* HomeView.swift in Sources */,
 				9405E3F42BF7EB55001E059D /* StackInSplitView.swift in Sources */,
-				94790D652C12B5D300059189 /* InvexLazySplitView.swift in Sources */,
 				9405E4032BF84028001E059D /* DetailView.swift in Sources */,
 				9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */,
 				9454537D2BED406E004762C0 /* UIMenuView.swift in Sources */,
-				94790D672C12B64400059189 /* ResponsiveView.swift in Sources */,
 				941A62682BF9E10F0040DC6C /* LazySplitViewModel.swift in Sources */,
 				94462F5A2BF5A46300D0068F /* GenSplitView.swift in Sources */,
 				9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */,
 				940C97092BFEECC700A0BEAF /* LazySplit.swift in Sources */,
-				94790D6B2C12B7EB00059189 /* InvexDetailPath.swift in Sources */,
 				9405E3F62BF83BA3001E059D /* RootView.swift in Sources */,
 				94790D5B2C124A5000059189 /* UIColorOverride.swift in Sources */,
 				941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */,
-				94462F5B2BF5A46300D0068F /* DisplayState.swift in Sources */,
+				94462F5B2BF5A46300D0068F /* LazySplitDisplay.swift in Sources */,
 				94790D5D2C124ADC00059189 /* Content_UIKitSplit.swift in Sources */,
-				94790D692C12B6E000059189 /* AuthService.swift in Sources */,
 				941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */,
 				9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */,
 				9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */,
 				9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */,
-				94790D612C124B0A00059189 /* Content_InvexLazySplit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

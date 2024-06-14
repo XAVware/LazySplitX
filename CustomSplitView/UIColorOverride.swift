@@ -18,6 +18,7 @@ import SwiftUI
 extension UIColor {
     static let classInit: Void = {
         let orig = class_getClassMethod(UIColor.self, #selector(getter: opaqueSeparator))
+//        let orig = class_getClassMethod(UIColor.self, #selector(getter: separator))
         let new = class_getClassMethod(UIColor.self, #selector(getter: customDividerColor))
         method_exchangeImplementations(orig!, new!)
     }()

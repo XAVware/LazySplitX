@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-struct MenuView: View {
-    @EnvironmentObject var vm: LazySplitViewModel
+struct MenuView: View {    
+    let menuButtons: [LazySplitDisplay] = [.home, .otherView, .settings]
     
-    let menuButtons: [DisplayState] = [.home, .otherView, .settings]
-    
-    func getButtonData(for display: DisplayState) -> (String, String) {
+    func getButtonData(for display: LazySplitDisplay) -> (String, String) {
         return switch display {
         case .home:        ("Home", "house.fill")
         case .otherView:    ("Other", "figure.walk.motion")
@@ -25,8 +23,8 @@ struct MenuView: View {
         VStack(spacing: 16) {
             ForEach(menuButtons, id: \.self) { display in
                 Button {
-                    print("MENU VIEW \(Date().formatted(date: .omitted, time: .complete)): Change Display button tapped")
-                    vm.changeDisplay(to: display)
+//                    vm.changeDisplay(to: display)
+                    LazyNavService.shared.changeDisplay(to: display)
                 } label: {
                     let data = getButtonData(for: display)
                     HStack(spacing: 16) {
@@ -38,7 +36,7 @@ struct MenuView: View {
                     .fontDesign(.rounded)
                     .padding()
                     .frame(maxHeight: 64)
-                    .foregroundStyle(Color.accentColor.opacity(display == vm.mainDisplay ? 1.0 : 0.6))
+                    .foregroundStyle(Color.accentColor.opacity(display == LazyNavService.shared.primaryRoot ? 1.0 : 0.6))
                 }
             } //: For Each
             Spacer()

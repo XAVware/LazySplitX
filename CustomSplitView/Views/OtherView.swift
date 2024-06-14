@@ -18,7 +18,7 @@ struct OtherView: View {
                     .font(.title3)
                 
                 Button {
-                    vm.pushView(.detail)
+                    LazyNavService.shared.pushPrimary(.detail)
                 } label: {
                     Text("Button: To Detail")
                         .frame(maxWidth: 420)

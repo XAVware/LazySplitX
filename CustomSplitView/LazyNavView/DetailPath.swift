@@ -9,15 +9,17 @@ import Foundation
 
 // DetailPath should include all views that are not primary/main views.
 /// Used to push views onto the primary/main NavigationStack, covering the entire screen on iPad and providing a back button to pop the view.
+// When using LazySplitService, the first case will be the default.
+/// Variables can be given to the enums to pass data down the NavigationStack.
 enum DetailPath: Identifiable, Hashable {
     var id: DetailPath { return self }
     case detail
-    case subdetail
+    case subdetail(String)
     
     var viewTitle: String {
         return switch self {
-        case .detail:       "Detail"
-        case .subdetail:    "SubDetail"
+        case .detail:           "Detail"
+        case .subdetail(let s): "Here's your data: \(s)"
         }
     }
 }

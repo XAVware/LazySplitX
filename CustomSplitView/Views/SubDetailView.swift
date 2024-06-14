@@ -8,15 +8,20 @@
 import SwiftUI
 
 struct SubDetailView: View {
+    let dataString: String
     var body: some View {
         ZStack {
             Color.gray.opacity(0.1)
-            Text("Sub detail")
-                .font(.title3)
+            VStack {
+                Text("Sub detail")
+                    .font(.title3)
+                
+                Text("Your data is: \(dataString)")
+            }
         }
     }
 }
 
-#Preview {
-    SubDetailView()
-}
+//#Preview {
+//    SubDetailView()
+//}

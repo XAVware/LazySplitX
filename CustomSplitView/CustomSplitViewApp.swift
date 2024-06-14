@@ -9,6 +9,9 @@ import SwiftUI
 
 @main
 struct CustomSplitViewApp: App {
+//    init() {
+//        UIColor.classInit
+//    }
     var body: some Scene {
         WindowGroup {
             RootView()
