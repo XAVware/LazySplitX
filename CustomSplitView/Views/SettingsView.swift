@@ -34,7 +34,7 @@ struct SettingsView: View {
                 
                 
                 Button {
-                    LazyNavService.shared.setDetailRoot(.detail)
+                    LazySplitService.shared.setDetailRoot(.detail)
                 } label: {
                     Text("Button: To Primary Detail")
                         .frame(maxWidth: 420)
@@ -47,7 +47,7 @@ struct SettingsView: View {
                 
                 // Use pushView to display view through main navigation stack, replacing the current full screen.
                 Button {
-                    LazyNavService.shared.pushPrimary(.detail)
+                    LazySplitService.shared.pushPrimary(.detail)
                 } label: {
                     Text("Button: To Primary Detail")
                         .frame(maxWidth: 420)

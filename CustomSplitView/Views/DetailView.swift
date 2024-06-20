@@ -19,9 +19,21 @@ struct DetailView: View {
                     .font(.title3)
                 
                 Button {
-                    LazyNavService.shared.pushDetail(view: DetailPath.subdetail("Yeehaw"))
+                    LazySplitService.shared.pushDetail(DetailPath.subdetail("Yeehaw"))
                 } label: {
-                    Text("Button: To Subdetail")
+                    Text("Button: pushDetail To Subdetail")
+                        .frame(maxWidth: 420)
+                        .frame(height: 48)
+                }
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .shadow(radius: 1)
+                .padding()
+                
+                Button {
+                    LazySplitService.shared.pushPrimary(DetailPath.subdetail("Yeehaw"))
+                } label: {
+                    Text("Button: pushPrimary To Subdetail")
                         .frame(maxWidth: 420)
                         .frame(height: 48)
                 }

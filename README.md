@@ -270,8 +270,7 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
 
 ## Versions
 
- 
- ### Version 1.2
+ ### Version 1.1
  - Monitored & updated navigation column visibility and similar properties via didSet property observers.
  - I moved the previously generic LazyNavView into the parent so there is only one generic involved. Keep in mind that LazyNavView, when it was generic, was passed an isLandscape property from its parent.
  - Mostly used prominentDetail style
@@ -281,7 +280,7 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
  - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly.
  
  
- ### Version 1.5
+ ### Version 1.2
  - Setup LazySplitViewMod to toggle between balanced and prominent styles.
  - Dynamically change color and image of sidebar toggle
  - I separated the responsibility of the
@@ -296,13 +295,22 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
  
  #### Notes on Importing to Invex
  - Minor adjustments had to be made to Invex's DisplayState. I added a popView function to LazySplitViewModel so detail views can call it after executing their async functions.
- - I need to figure out a better way to pass the lazy split few model when it's passes an environment object it causes issues with some of the child views that also need a different type of environment object
+ - I need to figure out a better way to pass LazySplitViewModel. When it's passed an environment object it causes issues with some of the child views that also need a different type of environment object
  - Inline NavigationTitles don't stay in the middle of the right-hand column when the menu is opened. They remain in the center of the screen.
  
  
- ### Version 2.0
+ ### Version 1.3
  - Change NavigationTitle based on the DisplayState
  - Add computed LazySplitDisplayMode property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
     - Previous versions only layed the views out as columns if the display was Settings
  - Control menu buttons through array and a tuple to be able to remove menu related data from DisplayState
  - Removed Layout enum because it was unused.
+ - Add generic contentToolbar parameter to LazySplit which allows the toolbar items to be passed in from the rootView
+ - Attempt to fix lag when changing between .balanced and .prominentDetail styles with animations.
+
+### Version 1.4
+To get to this version, I took version 1.3 and imported it into Invex. I had to make a few changes to make LazySplit work in Invex, so any changes that made sense to remain with LazySplit I pulled into version 1.4.
+
+- LazySplit initializer parameters changed to @ViewBuilder so views that are sent through conditionals from RootView are not required to be wrapped in a Group.
+- Column width added to sidebar. Seems to stop working on SettingsView
+- Removed animations from LazySplit style

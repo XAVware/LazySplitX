@@ -12,10 +12,9 @@ struct MenuView: View {
     
     func getButtonData(for display: LazySplitDisplay) -> (String, String) {
         return switch display {
-        case .home:        ("Home", "house.fill")
+        case .home:         ("Home", "house.fill")
         case .otherView:    ("Other", "figure.walk.motion")
-        case .settings:         ("Settings", "gearshape")
-//        default:                ("","")
+        case .settings:     ("Settings", "gearshape")
         }
     }
     
@@ -23,8 +22,7 @@ struct MenuView: View {
         VStack(spacing: 16) {
             ForEach(menuButtons, id: \.self) { display in
                 Button {
-//                    vm.changeDisplay(to: display)
-                    LazyNavService.shared.changeDisplay(to: display)
+                    LazySplitService.shared.changeDisplay(to: display)
                 } label: {
                     let data = getButtonData(for: display)
                     HStack(spacing: 16) {
@@ -36,7 +34,7 @@ struct MenuView: View {
                     .fontDesign(.rounded)
                     .padding()
                     .frame(maxHeight: 64)
-                    .foregroundStyle(Color.accentColor.opacity(display == LazyNavService.shared.primaryRoot ? 1.0 : 0.6))
+                    .foregroundStyle(Color.accentColor.opacity(display == LazySplitService.shared.primaryRoot ? 1.0 : 0.6))
                 }
             } //: For Each
             Spacer()
