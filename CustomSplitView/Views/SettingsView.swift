@@ -17,20 +17,7 @@ struct SettingsView: View {
             VStack {
                 Text("Settings View")
                     .font(.title3)
-                
-                // Use navigation link to display view in the right column, while on a device large enough to display columns side by side.
-//                NavigationLink {
-//                    DetailView()
-//                } label: {
-//                    Text("NavigationLink: To Detail")
-//                        .frame(maxWidth: 420)
-//                        .frame(height: 48)
-//                }
-//                .background(.white)
-//                .clipShape(RoundedRectangle(cornerRadius: 8))
-//                .shadow(radius: 1)
-//                .padding()
-
+      
                 
                 
                 Button {
@@ -60,6 +47,7 @@ struct SettingsView: View {
 
             }
         }
+        
     }
 }
 

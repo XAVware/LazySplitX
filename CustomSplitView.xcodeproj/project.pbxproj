@@ -15,7 +15,6 @@
 		9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FE2BF83E9F001E059D /* OtherView.swift */; };
 		9405E4032BF84028001E059D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4022BF84028001E059D /* DetailView.swift */; };
 		940C97092BFEECC700A0BEAF /* LazySplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C97082BFEECC700A0BEAF /* LazySplit.swift */; };
-		941A62682BF9E10F0040DC6C /* LazySplitViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62672BF9E10F0040DC6C /* LazySplitViewModel.swift */; };
 		941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62692BF9E1150040DC6C /* DetailPath.swift */; };
 		941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A626B2BF9E1530040DC6C /* MenuView.swift */; };
 		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
@@ -41,7 +40,6 @@
 		9405E4022BF84028001E059D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		940C97072BFEEC0400A0BEAF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		940C97082BFEECC700A0BEAF /* LazySplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySplit.swift; sourceTree = "<group>"; };
-		941A62672BF9E10F0040DC6C /* LazySplitViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySplitViewModel.swift; sourceTree = "<group>"; };
 		941A62692BF9E1150040DC6C /* DetailPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPath.swift; sourceTree = "<group>"; };
 		941A626B2BF9E1530040DC6C /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
@@ -56,6 +54,8 @@
 		9454539C2BEEE670004762C0 /* UIDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDetailView.swift; sourceTree = "<group>"; };
 		94790D5A2C124A5000059189 /* UIColorOverride.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorOverride.swift; sourceTree = "<group>"; };
 		94790D5C2C124ADC00059189 /* Content_UIKitSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content_UIKitSplit.swift; sourceTree = "<group>"; };
+		94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iPhone15ProMax_LazySplit_v1.5.mov; sourceTree = "<group>"; };
+		94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iPadPro11Inch_LazySplit_v1.5.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,7 +86,6 @@
 			children = (
 				940C97082BFEECC700A0BEAF /* LazySplit.swift */,
 				9405E3F52BF83BA3001E059D /* RootView.swift */,
-				941A62672BF9E10F0040DC6C /* LazySplitViewModel.swift */,
 				941A626B2BF9E1530040DC6C /* MenuView.swift */,
 				941A62692BF9E1150040DC6C /* DetailPath.swift */,
 				94462F582BF5A46300D0068F /* LazySplitDisplay.swift */,
@@ -98,6 +97,8 @@
 		945453602BED3C5E004762C0 = {
 			isa = PBXGroup;
 			children = (
+				94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */,
+				94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */,
 				940C97072BFEEC0400A0BEAF /* README.md */,
 				9454536B2BED3C5E004762C0 /* CustomSplitView */,
 				9454536A2BED3C5E004762C0 /* Products */,
@@ -232,7 +233,6 @@
 				9405E4032BF84028001E059D /* DetailView.swift in Sources */,
 				9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */,
 				9454537D2BED406E004762C0 /* UIMenuView.swift in Sources */,
-				941A62682BF9E10F0040DC6C /* LazySplitViewModel.swift in Sources */,
 				94462F5A2BF5A46300D0068F /* GenSplitView.swift in Sources */,
 				9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */,
 				940C97092BFEECC700A0BEAF /* LazySplit.swift in Sources */,

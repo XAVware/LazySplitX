@@ -1,7 +1,114 @@
- # Deep Dive Into SwiftUI Navigation
+ # LazySplit
  
  ## Overview
-Navigation is something that I've struggled with one way or another with nearly every app that I've made. I have not agreed with myself on any best practice, even though many apps that I've made have similar navigation structures. When it comes to more complicated layouts, there are many times you may want to put views next to each other or use the standard navigation stack behavior from any view in the app but to be able to access the properties required to adjust the navigation from child's views, I found it requires a lot of property injection, and binding properties through multiple views. These binding properties muddy up views and view models, even though they're only related to navigation. I wanted to create a package that I can use from now on that offers a view functions to access and manipulate the navigation from any view without needing to store bound properties in the view itself. In addition, the navigation stack and navigation split view the Apple provides are great if you're working on an app that has navigation architecture that fits the needs of each navigation type, but they're very limiting when it comes to creating apps that have custom layouts and navigation behavior. When it comes to making custom layouts that behave similar to apples navigation, I found that it requires a lot of heavy, lifting monitoring, device orientation screen with view states, etc. This package is intended to solve that problem.
+ This is still a work in progress. My goal here is to create a navigation architecture in SwiftUI that acts more similarly to UIKit, giving us the ability to display views .twoBesidesSecondary or .twoDisplacesSecondary (see https://developer.apple.com/documentation/uikit/uisplitviewcontroller).
+ 
+ ## How to use
+ Setup your LazySplitDisplay enum to control which views are being displayed. Any view that you need to appear simiar to a NavigationSplitView's sidebar, but in between the menu and the detail, should be marked as .besidesDetail.
+ 
+ ```swift
+ enum LazySplitDisplay: CaseIterable {
+    case home
+    case otherView
+    case settings
+
+    var displayMode: LazySplitDisplayMode {
+        return switch self {
+        case .settings:     .besideDetail
+        default:            .detailOnly
+        }
+    }
+}
+ ```
+ 
+ In your @main app file, display your RootView
+ 
+ ```swift
+ var body: some Scene {
+    WindowGroup {
+        RootView()
+    }
+}
+ ```
+ 
+ In your RootView, pass LazySplit your menu view in the sidebar column, your primary views in the content column, and any supplemental detail views in the detail column. Don't forget to initialize LazySplit's view model as a StateObject and pass it in.
+ 
+ 
+ ```swift
+ struct RootView: View {
+    @StateObject var vm: LazySplitViewModel = LazySplitViewModel()
+    
+    var body: some View {
+        LazySplit(viewModel: vm) {
+            MenuView()
+        } content: {
+            switch vm.mainDisplay {
+            case .home:         HomeView()
+            case .settings:     SettingsView()
+            case .otherView:    OtherView()
+            }
+        } detail: {
+            switch vm.detailRoot {
+            case .detail:           DetailView()
+            case .subdetail(let s): SubDetailView(dataString: s)
+            default:                EmptyView()
+            }
+            
+        }
+    }
+}
+ ```
+ 
+ LazySplit includes a sidebar toggle by default that will appear in the top left position of every view. This sidebar toggle is not the one that is included with NavigationSplitView, but it replicates the behavior. This allows you to add additional logic when the sidebar toggle is tapped. Any addtional toolbar items or navigation titles can be controlled as usual inside the view itself.
+ 
+ LazySplitService is a singleton that the view model subscribes to through Combine. It offers a few ways to present views. Take a look in the Views folder to see specific examples.
+ - pushPrimary() will display a view on top of the primary stack, just like a NavigationStack.
+ - Calling setDetailRoot() from a view that is .besideDetail will display the view in the right/detail column, while keeping the content displayed in the left/content column and keeping the menu accessible.
+ - Once a detail root is set, you can call pushDetail() to push views onto the detail column's stack. 
+ 
+ ## Other Features
+ - Programmatically toggle between .balanced and .prominentDetail navigation styles.
+ - Fixes issues of navigation 'losing track' of its views or randomly not working as mentioned in the following forums:
+    https://stackoverflow.com/questions/73564156/swiftui-on-ipados-navigation-randomly-stops-working-when-in-split-view
+    https://stackoverflow.com/questions/65645703/swiftui-sidebar-doesnt-remember-screen
+    https://forums.developer.apple.com/forums/thread/735672
+    https://forums.developer.apple.com/forums/thread/708440
+ 
+ ## Known Bugs
+ I need to overide the detail views' back button to ensure it is popping the view from the NavigationPath in the ViewModel. Right now when you tap back it will sometimes display the same view because the view was previously pushed onto the stack.
+ 
+ 
+ ## Bonus - Hide the NavigationSplitView separator
+ As of ~April 2024, the separator between the columns of NavigationSplitView is `opaqueSeparator` color. Extend UIColor with the following:
+ 
+ ```swift
+ extension UIColor {
+    static let classInit: Void = {
+        let orig = class_getClassMethod(UIColor.self, #selector(getter: opaqueSeparator))
+        let new = class_getClassMethod(UIColor.self, #selector(getter: customDividerColor))
+        method_exchangeImplementations(orig!, new!)
+    }()
+
+    /// Replaces the `orig` color with a clear color.
+    @objc open class var customDividerColor: UIColor {
+        return UIColor(Color.clear)
+    }
+}
+ ```
+ 
+ Then in your @main app file's initializer add:
+ ```swift
+ init() {
+    UIColor.classInit
+}
+ ```
+ 
+ Just like that, you now have a clear separator between the columns.
+ 
+ 
+ # Running notes - Deep Dive Into SwiftUI Navigation
+ ## Overview
+Navigation is something that I've struggled with one way or another with nearly every app that I've made. I have not agreed with myself on any best practice, even though many apps that I've made have similar navigation structures. When it comes to more complicated layouts, there are times you may want to put views next to each other or use the standard navigation stack behavior from any view in the app but to be able to access the properties required to adjust the navigation from child's views, I found it requires a lot of property injection, and binding properties through multiple views. These binding properties muddy up views and view models, even though they're only related to navigation. I wanted to create a package that I can use from now on that offers functions to access and manipulate the navigation from any view without needing to inject and store bound properties throughout the app. In addition, the NavigationStack and NavigationSplitView that Apple provides are great if you're working on an app that has navigation architecture that fits the mold of each navigation type, but they're very limiting when it comes to creating custom layouts and navigation behavior. Custom layouts that behave similar to Apple's navigation, I found that it requires a lot of heavy, lifting monitoring, device orientation screen with view states, etc. This package is intended to solve that problem.
 
 Navigation is also something that, not only do I not want to spend time developing for every app that I make, but since it's a core piece of every app, in this day and age I don't think I should need to. There should be an easy solution to achieve what I want to do.
 
@@ -15,11 +122,11 @@ NavigationSplitView works if your app has no more than three layers of views. If
 #### Issues
     - The NavigationSplitView styles that we are provided, prominentDetail and balanced, are not easily changed dynamically.
     - The color of the button is based on the accent color. If the menu/sidebar uses the accent color as a background, the button will be 'invisible'.
-    - In some cases, we may want to run additional logic when the user opens the menu, or we may want to stop them from opening the menu entirely until certain conditions are met. The default sidebar toggle's code can not be easily appended to or modified.
+    - In some cases, we may want to run additional logic when the user opens the menu, or we may want to stop them from opening the menu entirely until certain conditions are met. The default sidebar toggle's code can not be easily appended to or modified, so the only option we are left with is to listen for changes to the column visibility which would become very bulky very quick.
 
 
 ## The Problem
-When it comes to using navigation split view or navigation stack, there are a lot of tutorials available online whether there through Apple or third-party, but they only cover using these out of the solutions with simple app examples that don't require custom layouts. Several people have asked for solutions to achieve behavior that was previously available through navigation view and is currently available in UI kits UI split view controller. Apple states that these NavigationViews work best with other out of the box solutions like Lists. Many times I, and other developers and UX designers, just want more flexibility.
+When it comes to using NavigationSplitView or navigation stack, there are a lot of tutorials available online whether there through Apple or third-party, but they only cover using these out of the solutions with simple app examples that don't require custom layouts. Several people have asked for solutions to achieve behavior that was previously available through navigation view and is currently available in UI kits UI split view controller. Apple states that these NavigationViews work best with other out of the box solutions like Lists. Many times I, and other developers and UX designers, just want more flexibility.
 
 ### UISplitViewController
 Compared to the tools available on SwiftUI, the UI kits UI split view controller offers several more options when it comes to which views are displayed and how. 

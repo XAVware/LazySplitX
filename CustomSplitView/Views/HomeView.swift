@@ -14,6 +14,14 @@ struct HomeView: View {
             Text("Home View")
                 .font(.title3)
         }
+        .navigationTitle("Home")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Right Sidebar", systemImage: "sidebar.right") {
+                    LazySplitService.shared.pushPrimary(.detail)
+                }
+            }
+        }
     }
 }
 

@@ -69,6 +69,7 @@ class LazySplitService {
     func pushPrimary(_ display: DetailPath) {
 //        primaryPath.send(display)
         primaryPath.append(display)
+        detailPath = .init()
     }
     
     func setDetailRoot(_ view: DetailPath) {
@@ -90,6 +91,7 @@ class LazySplitService {
     func popDetail() {
         if detailPath.isEmpty {
             detailRoot = nil
+            detailPath = .init()
         } else {
             detailPath.removeLast()
         }
@@ -176,6 +178,7 @@ class LazySplitService {
 }
 
 /*
+ 
  Overview of .toolbar(removing:), .toolbar(.hidden,for:), and .hidesBackButton modifiers
  
  A: Without this, a second sidebar toggle is shown when the menu is open
@@ -183,9 +186,10 @@ class LazySplitService {
  C: Without this, a default sidebar toggle will appear on a view that is .besidesPrimary (e.g. SettingsView). The default behavior of this button will show and hide the view that is .besidesPrimary. (Regular hor. size class only)
  D: Doesn't do anything unless the sidebar has a navigationTitle - Test this
  E: Same behavior as C. Will show large navigation bar without the default button on compact hor. size.
- F: Displays back button on all screens. Tapping it opens the menu but causes glitching. Also shows large navigation bar without the default button on regular hor. size.
+ F: Displays back button on all screens. Tapping it opens the menu but causes glitching. Also shows large navigation bar without the default button on regular hor. size. If you want to pass ToolbarItems from the view themselves, this is the toolbar they will land on.
  G: Doesn't seem to do anything on any device. Doesn't matter if navigationBackButton is hidden or visible
  H: Doesn't seem to do anything on any device.
+ 
  */
 
 
@@ -194,9 +198,8 @@ class LazySplitService {
 ///     - S: The view to be displayed in the left/sidebar column of the split view.
 ///     - C: The view to be displayed in the middle/content column of the split view.
 ///     - D: The view to be displayed in the right/detail column of the split view.
-///     - T: The toolbar content for the corresponding view.
 
-struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
+struct LazySplit<S: View, C: View, D: View>: View {
     @StateObject var vm: LazySplitViewModel
     @Environment(\.horizontalSizeClass) var horSize
     @Environment(\.verticalSizeClass) var verSize
@@ -206,22 +209,16 @@ struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
     
     let sidebar: S
     let content: C
-    let contentToolbar: T
     let detail: D
-    
-    enum LazySplitStyle { case balanced, prominentDetail }
-    @State var style: LazySplitStyle = .balanced
     
     init(viewModel: LazySplitViewModel,
          @ViewBuilder sidebar: (() -> S),
          @ViewBuilder content: (() -> C),
-         @ViewBuilder detail: (() -> D),
-         @ToolbarContentBuilder contentToolbar: (() -> T)
+         @ViewBuilder detail: (() -> D)
     ) {
         self._vm = StateObject(wrappedValue: viewModel)
         self.sidebar = sidebar()
         self.content = content()
-        self.contentToolbar = contentToolbar()
         self.detail = detail()
     }
         
@@ -234,6 +231,15 @@ struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
                     sidebar
                         .navigationBarTitleDisplayMode(.inline) // B
                         .toolbar(removing: .sidebarToggle) // A
+                        .toolbar {
+                            if horSize == .compact {
+                                ToolbarItem(placement: .topBarLeading) {
+                                    Button("Close", systemImage: "xmark") {
+                                        vm.sidebarToggleTapped()
+                                    }
+                                }
+                            }
+                        }
                         .navigationSplitViewColumnWidth(240)
                 } detail: {
                     Group {
@@ -245,13 +251,15 @@ struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
                             } detail: {
                                 NavigationStack(path: $vm.detailPath) {
                                     detail
-                                }
-                                .navigationDestination(for: DetailPath.self) { detail in
-                                    switch detail {
-                                    case .subdetail(let s): SubDetailView(dataString: s)
-                                    default:                Color.blue
-                                    }
-                                    
+                                        .onAppear {
+                                            LazySplitService.shared.popDetail()
+                                        }
+                                        .navigationDestination(for: DetailPath.self) { detail in
+                                            switch detail {
+                                            case .subdetail(let s): SubDetailView(dataString: s)
+                                            default:                Color.blue
+                                            }
+                                        }
                                 }
                             }
                             .navigationBarTitleDisplayMode(.inline) // D
@@ -265,8 +273,18 @@ struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
                         // This fixes the issue with first pushing one primaryView, then going back, then the second time pushing 2.
                         // Should probably reset instead.
                         LazySplitService.shared.popPrimary()
+                        LazySplitService.shared.popDetail()
                     }
-                    .toolbar(.hidden, for: .navigationBar) // F
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button("Close", systemImage: "sidebar.leading") {
+                                vm.sidebarToggleTapped()
+                            }
+                        }
+                    }
+                    .navigationBarBackButtonHidden() // I: Hides back button resulting from moving toolbar control back to views.
+//                    .toolbar(.hidden, for: .navigationBar) // F
+                    .navigationBarTitleDisplayMode(.inline)
                 }
                 .navigationDestination(for: DetailPath.self) { detail in
                     switch detail {
@@ -274,14 +292,15 @@ struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
                     case .subdetail(let s): SubDetailView(dataString: s)
                     }
                 }
-                .navigationTitle(vm.mainDisplay.viewTitle)
+//                .navigationTitle(vm.mainDisplay.viewTitle)
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar(removing: .sidebarToggle) // G
-                .navigationBarBackButtonHidden(true) // H
-                .toolbar {
-                    sidebarToggle
-                    contentToolbar
-                }
+                .toolbar(.hidden, for: .navigationBar)
+//                .toolbar(removing: .sidebarToggle) // G
+//                .navigationBarBackButtonHidden(true) // H
+//                .toolbar {
+//                    sidebarToggle
+//                    contentToolbar
+//                }
                 .modifier(LazySplitMod(isProminent: horSize == .compact && !isLandscape))
                 .overlay(
                     // Used to disable the swipe gesture that shows the menu. Perhaps the NavigationSplitView monitors the velocity of a swipe during the first pixel of the screen that isn't in the safe area?
@@ -310,16 +329,16 @@ struct LazySplit<S: View, C: View, T: ToolbarContent, D: View>: View {
     } //: Body
     
     
-    @ToolbarContentBuilder var sidebarToggle: some ToolbarContent {
-        let isIphone = horSize == .compact || verSize == .compact
-        let isXmark = isIphone && vm.prefCol == .sidebar
-        
-        ToolbarItem(placement: .topBarLeading) {
-            Button("Close", systemImage: isXmark ? "xmark" : "sidebar.leading") {
-                vm.sidebarToggleTapped()
-            }
-        }
-    }
+//    @ToolbarContentBuilder var sidebarToggle: some ToolbarContent {
+//        let isIphone = horSize == .compact || verSize == .compact
+//        let isXmark = isIphone && vm.prefCol == .sidebar
+//        
+//        ToolbarItem(placement: .topBarLeading) {
+//            Button("Close", systemImage: isXmark ? "xmark" : "sidebar.leading") {
+//                vm.sidebarToggleTapped()
+//            }
+//        }
+//    }
     
     struct LazySplitMod: ViewModifier {
         let isProminent: Bool

@@ -165,24 +165,8 @@ struct RootView: View {
             default:                EmptyView()
             }
             
-        } contentToolbar: {
-            switch vm.mainDisplay {
-            case .home:
-                if vm.prefCol != .sidebar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Right Sidebar", systemImage: "sidebar.right") {
-                            LazySplitService.shared.pushPrimary(.detail)
-                        }
-                    }
-                }
-                
-            default: ToolbarItem(placement: .topBarTrailing) { EmptyView() }
-
-            }
-            
         }
-    } //: Body
-
+    }
 }
 
 #Preview {
