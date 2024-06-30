@@ -3,6 +3,11 @@
  ## Overview
  This is still a work in progress. My goal here is to create a navigation architecture in SwiftUI that acts more similarly to UIKit, giving us the ability to display views .twoBesidesSecondary or .twoDisplacesSecondary (see https://developer.apple.com/documentation/uikit/uisplitviewcontroller).
  
+
+ If you're like me you probably wanted to create one page that appears as a NavigationSplitView (width a list-type view in the larger column ~30% of the screen's width on the left), and others that display as a NavigationStack, but you wanted to control navigation from a single point. Or maybe you just don't like how Apple's NavigationSplitView behaves, lacking the ability to for large screen devices, like iPads, to push views filling the full width of the screen.
+ 
+
+ 
  ## How to use
  Setup your LazySplitDisplay enum to control which views are being displayed. Any view that you need to appear simiar to a NavigationSplitView's sidebar, but in between the menu and the detail, should be marked as .besidesDetail.
  
@@ -167,9 +172,9 @@ I found this to be related to the navigation losing track of the sidebar and not
 
 
 
- ## Brainstorming Possible Options
- - Use UIViewControllerDelegate to create the NavigationSplitView in UIKit using UISplitViewController.
- - Use a Generic NavigationSplitView that toggles between `NavigationSplitView(sidebar:, detail:)` and `NavigationSplitView(sidebar:,content:,detail:)` so you have control over which views are displayed with three columns and which are displayed as detailOnly.
+ ## Choosing the right foundation
+ - I could UIViewControllerDelegate to create the NavigationSplitView in UIKit using UISplitViewController.
+ - I could a Generic NavigationSplitView that toggles between `NavigationSplitView(sidebar:, detail:)` and `NavigationSplitView(sidebar:,content:,detail:)` so you have control over which views are displayed with three columns and which are displayed as detailOnly.
  
 
 
@@ -390,7 +395,7 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
  ### Version 1.2
  - Setup LazySplitViewMod to toggle between balanced and prominent styles.
  - Dynamically change color and image of sidebar toggle
- - I separated the responsibility of the
+ - I separated the responsibility of the menu showing/hiding from the view model. It is now monitored by the view and triggered via view model function.
  
  #### Issues
  - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly. 
@@ -419,5 +424,6 @@ I'm hoping the NavigationStack is smart enough to see that Position A is empty a
 To get to this version, I took version 1.3 and imported it into Invex. I had to make a few changes to make LazySplit work in Invex, so any changes that made sense to remain with LazySplit I pulled into version 1.4.
 
 - LazySplit initializer parameters changed to @ViewBuilder so views that are sent through conditionals from RootView are not required to be wrapped in a Group.
-- Column width added to sidebar. Seems to stop working on SettingsView
+- Column width added to sidebar. 
+    - Seems to stop working on SettingsView
 - Removed animations from LazySplit style

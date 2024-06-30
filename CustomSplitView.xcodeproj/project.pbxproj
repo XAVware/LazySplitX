@@ -20,7 +20,7 @@
 		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
 		944324B02C1793DE001D9C2A /* Bug2Diagnosis in Resources */ = {isa = PBXBuildFile; fileRef = 944324AF2C1793DE001D9C2A /* Bug2Diagnosis */; };
 		94462F5A2BF5A46300D0068F /* GenSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F572BF5A46300D0068F /* GenSplitView.swift */; };
-		94462F5B2BF5A46300D0068F /* LazySplitDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* LazySplitDisplay.swift */; };
+		94462F5B2BF5A46300D0068F /* LazySplitViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */; };
 		9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */; };
 		945453712BED3C5F004762C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453702BED3C5F004762C0 /* Assets.xcassets */; };
 		945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453732BED3C5F004762C0 /* Preview Assets.xcassets */; };
@@ -45,7 +45,7 @@
 		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
 		944324AF2C1793DE001D9C2A /* Bug2Diagnosis */ = {isa = PBXFileReference; lastKnownFileType = text; path = Bug2Diagnosis; sourceTree = "<group>"; };
 		94462F572BF5A46300D0068F /* GenSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenSplitView.swift; sourceTree = "<group>"; };
-		94462F582BF5A46300D0068F /* LazySplitDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazySplitDisplay.swift; sourceTree = "<group>"; };
+		94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazySplitViewConfig.swift; sourceTree = "<group>"; };
 		945453692BED3C5E004762C0 /* CustomSplitView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomSplitView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSplitViewApp.swift; sourceTree = "<group>"; };
 		945453702BED3C5F004762C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 				9405E3F52BF83BA3001E059D /* RootView.swift */,
 				941A626B2BF9E1530040DC6C /* MenuView.swift */,
 				941A62692BF9E1150040DC6C /* DetailPath.swift */,
-				94462F582BF5A46300D0068F /* LazySplitDisplay.swift */,
+				94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */,
 				944324AF2C1793DE001D9C2A /* Bug2Diagnosis */,
 			);
 			path = LazyNavView;
@@ -239,7 +239,7 @@
 				9405E3F62BF83BA3001E059D /* RootView.swift in Sources */,
 				94790D5B2C124A5000059189 /* UIColorOverride.swift in Sources */,
 				941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */,
-				94462F5B2BF5A46300D0068F /* LazySplitDisplay.swift in Sources */,
+				94462F5B2BF5A46300D0068F /* LazySplitViewConfig.swift in Sources */,
 				94790D5D2C124ADC00059189 /* Content_UIKitSplit.swift in Sources */,
 				941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */,
 				9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */,
@@ -391,7 +391,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = xavware.CustomSplitView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -421,7 +421,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = xavware.CustomSplitView;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

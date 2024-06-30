@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// Company detail view is being placed in the inner split view as the root of the NavigationStack, so the navigationDestinations for this funnel need to be included here. You need to use NavigationLink(value:label:) to push the detail views
+/// v1.2 Detail view is being placed in the child split view as the root of the NavigationStack, so the navigationDestinations for this funnel need to be included here. You need to use NavigationLink(value:label:) to push the detail views
 
 
 struct DetailView: View {
@@ -40,16 +40,27 @@ struct DetailView: View {
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
                 .shadow(radius: 1)
-                .padding()
+                .padding() 
                 
             } //: VStack
         } //: ZStack
-//        .navigationDestination(for: DetailPath.self) { detail in
-//            switch detail {
-//            case .detail:           DetailView()
-//            case .subdetail(let s): SubDetailView(dataString: s)
-//            }
-//        }
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            if LazySplitService.shared.getShouldShowBackButton() {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        LazySplitService.shared.backButtonTapped()
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "chevron.left")
+                                .fontWeight(.semibold)
+                                .padding(.vertical, 2)
+                            Text("Back")
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

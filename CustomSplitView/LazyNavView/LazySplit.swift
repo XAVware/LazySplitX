@@ -8,48 +8,10 @@
 import SwiftUI
 import Combine
 
-/*
- Always initialize LazySplit to show detail column only - unless for some reason you want the app to land users on the menu.
- LazySplitViewModel and LazySplitService are final to prevent third-party changes after publication.
- 
- 6/9/24
- The onAppear and onDisappear functions attached to the sidebar view updates the ViewModel with the current UI visibility state of the menu (`menuIsShowing`). This was a solution for losing the menuReference randomly when larger screen iPhones (12 Pro Max) toggled between HomeView (full layout) and SettingsVeiw (column layout)
- 
- Prominent Style
- > I noticed menuIsShowing changes to false immediately after tapping a menu button, but there is a slight delay if the menu is closed by tapping next to it.
- - Maybe the issue of the menu randomly not disappearing when it should occurs if you attempt to close the menu or change mainDisplay before that slight delay passes?
- 
- Balanced
- > iPad 11-inch Portrait, in SettingsView, with option selected (view is visible in third column) and menu opened makes the right column too small
- > iPhone bug of losing menu reference still occurs but is much easier for the end user to resolve compared to prominentDetail style
- > iPhone 12 pro max - When LazySplitMod changes between balanced and prominentDetail styles, there is an odd gray animation shown in the right hand column
- 
- 
- Version 1.3 ToDos
- - Add NavigationStack to SplitView's detail column so we have the option to push views onto the right hand column instead of the full screen.
- - Figure out better way to pass navigationDestinations
- - Make view model logic a protocol
- - Don't pass LazySplitViewModel as an environmentObject
- 
- 
- Does LazySplitService need to be a main actor?
-    - It doesn't need to be as of v1.3. Are there performance benefits?
- 
-
-
- */
-
-
-
-enum Layout { case full, column }
-
-// MARK: - Lazy Split Service
 class LazySplitService {
-
-    @Published var primaryRoot: LazySplitDisplay
+    @Published var primaryRoot: LazySplitViewConfig
     @Published var detailRoot: DetailPath?
     
-    // TODO: Make these passthrough?
     @Published var primaryPath: NavigationPath = .init()
     //    let primaryPath = PassthroughSubject<DetailPath?, Never>()
     @Published var detailPath: NavigationPath = .init()
@@ -57,13 +19,22 @@ class LazySplitService {
     static let shared = LazySplitService()
     
     init() {
-        self.primaryRoot = LazySplitDisplay.allCases.first ?? .settings
+        self.primaryRoot = LazySplitViewConfig.allCases.first ?? .settings
     }
     
-    func changeDisplay(to newDisplay: LazySplitDisplay) {
+    func changeDisplay(to newDisplay: LazySplitViewConfig) {
         detailPath = .init()
 //        primaryPath = .init()
         primaryRoot = newDisplay
+    }
+    
+    func resetPaths() {
+        primaryPath = .init()
+        print("Primary path reset")
+//        if detailRoot == nil {
+            detailPath = .init()
+            print("Detail path reset")
+//        }
     }
     
     func pushPrimary(_ display: DetailPath) {
@@ -81,14 +52,32 @@ class LazySplitService {
         detailPath.append(view)
     }
     
-    func popPrimary() {
+    func getShouldShowBackButton() -> Bool {
+        // The back button shouldn't show when there is just a root view displayed. It should only show when there are views in the navigation paths.
+        return !(detailPath.isEmpty && primaryPath.isEmpty)
+    }
+    
+    func backButtonTapped() {
+        print("Back button tapped")
+        if !primaryPath.isEmpty {
+            print("Popping primary path")
+            popPrimary()
+        } else if !detailPath.isEmpty {
+            print("Popping detail path")
+            popDetail()
+        } else if detailPath.isEmpty && detailRoot != nil {
+            print("Detail path is empty and detail root is not nil")
+        }
+    }
+    
+    private func popPrimary() {
 //        primaryPath.send(nil)
         if primaryPath.count > 0 {
             primaryPath.removeLast()
         }
     }
     
-    func popDetail() {
+    private func popDetail() {
         if detailPath.isEmpty {
             detailRoot = nil
             detailPath = .init()
@@ -101,10 +90,17 @@ class LazySplitService {
 
 // MARK: - Lazy Split View Model
 @MainActor final class LazySplitViewModel: ObservableObject {
+    private let navService = LazySplitService.shared
+    
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
     @Published var prefCol: NavigationSplitViewColumn = .detail
     
     @Published var detailPath: NavigationPath = .init()
+    @Published var mainDisplay: LazySplitViewConfig = .home
+    @Published var detailRoot: DetailPath?
+    @Published var path: NavigationPath = .init()
+    //        let path = PassthroughSubject<NavigationPath, Never>()
+    
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -112,7 +108,7 @@ class LazySplitService {
     }
     
     // MARK: - Menu
-    /// The default sidebar toggle is removed for the primary NavigationSplitView, so the state of the menu needs to be manually updated and tracked. When a user taps the sidebar toggle from the primary view, their intention is to open the menu. If they tap it when the menu is open, their intention is to close the menu. The primary split view only has two columns, so when the colVis is .doubleColumn the menu is open. When it's .detailOnly it is closed. When the menu is open, we want users on smaller devices to only see the menu. Making prefCol toggle between detail and sidebar allows users on smaller devices to close the menu by tapping the same button they used to open it. If prefCol were always set to sidebar after tap, the menu wont close on iPhones.
+    /// v1.1 The default sidebar toggle is removed for the primary NavigationSplitView, so the state of the menu needs to be manually updated and tracked. When a user taps the sidebar toggle from the primary view, their intention is to open the menu. If they tap it when the menu is open, their intention is to close the menu. The primary split view only has two columns, so when the colVis is .doubleColumn the menu is open. When it's .detailOnly it is closed. When the menu is open, we want users on smaller devices to only see the menu. Making prefCol toggle between detail and sidebar allows users on smaller devices to close the menu by tapping the same button they used to open it. If prefCol were always set to sidebar after tap, the menu wont close on iPhones.
     func sidebarToggleTapped() {
         colVis = colVis == .doubleColumn ? .detailOnly : .doubleColumn
         prefCol = colVis == .detailOnly ? .detail : .sidebar
@@ -131,12 +127,6 @@ class LazySplitService {
         prefCol = .detail
     }
     
-    // MARK: - Navigation Subscriptions
-    private let navService = LazySplitService.shared
-    @Published var mainDisplay: LazySplitDisplay = .home
-    @Published var detailRoot: DetailPath?
-    @Published var path: NavigationPath = .init()
-    //        let path = PassthroughSubject<NavigationPath, Never>()
     
     func configNavSubscribers() {
         navService.$primaryRoot
@@ -211,11 +201,7 @@ struct LazySplit<S: View, C: View, D: View>: View {
     let content: C
     let detail: D
     
-    init(viewModel: LazySplitViewModel,
-         @ViewBuilder sidebar: (() -> S),
-         @ViewBuilder content: (() -> C),
-         @ViewBuilder detail: (() -> D)
-    ) {
+    init(viewModel: LazySplitViewModel, @ViewBuilder sidebar: (() -> S), @ViewBuilder content: (() -> C), @ViewBuilder detail: (() -> D)) {
         self._vm = StateObject(wrappedValue: viewModel)
         self.sidebar = sidebar()
         self.content = content()
@@ -232,6 +218,7 @@ struct LazySplit<S: View, C: View, D: View>: View {
                         .navigationBarTitleDisplayMode(.inline) // B
                         .toolbar(removing: .sidebarToggle) // A
                         .toolbar {
+                            // This toolbar appears on the menu.
                             if horSize == .compact {
                                 ToolbarItem(placement: .topBarLeading) {
                                     Button("Close", systemImage: "xmark") {
@@ -251,12 +238,12 @@ struct LazySplit<S: View, C: View, D: View>: View {
                             } detail: {
                                 NavigationStack(path: $vm.detailPath) {
                                     detail
-                                        .onAppear {
-                                            LazySplitService.shared.popDetail()
-                                        }
+                                        .frame(width: geo.size.width)
                                         .navigationDestination(for: DetailPath.self) { detail in
                                             switch detail {
-                                            case .subdetail(let s): SubDetailView(dataString: s)
+                                            case .subdetail(let s): 
+                                                SubDetailView(dataString: s)
+                                                
                                             default:                Color.blue
                                             }
                                         }
@@ -268,12 +255,6 @@ struct LazySplit<S: View, C: View, D: View>: View {
                         } else {
                             content
                         }
-                    }
-                    .onAppear {
-                        // This fixes the issue with first pushing one primaryView, then going back, then the second time pushing 2.
-                        // Should probably reset instead.
-                        LazySplitService.shared.popPrimary()
-                        LazySplitService.shared.popDetail()
                     }
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
@@ -292,8 +273,8 @@ struct LazySplit<S: View, C: View, D: View>: View {
                     case .subdetail(let s): SubDetailView(dataString: s)
                     }
                 }
-//                .navigationTitle(vm.mainDisplay.viewTitle)
                 .navigationBarTitleDisplayMode(.inline)
+                // The toolbar here was used up to v1.5. Hiding this and gave control of the toolbar to the views.
                 .toolbar(.hidden, for: .navigationBar)
 //                .toolbar(removing: .sidebarToggle) // G
 //                .navigationBarBackButtonHidden(true) // H
@@ -310,36 +291,28 @@ struct LazySplit<S: View, C: View, D: View>: View {
                     , alignment: .leading
                 )
             } //: Navigation Stack
-            // I intentionally put the hide/show menu functions in the view. I think it was causing issues with the menu animations, but it should be tested & compared to calling from VM.
+            // v1.3 - Monitor orientation changes in the view and notify the view model when changed.
             .onChange(of: isLandscape) { prev, landscape in
                 if landscape {
                     vm.hideMenu()
                 }
             }
             .onReceive(vm.$mainDisplay) { newDisplay in
-                // Without this in the view itself, the show/hide functionality of the menu randomly stops working.
+                // v1.4 - Without this in the view itself, the show/hide functionality of the menu randomly stops working.
+                // Hide the menu when the main display changes.
                 vm.hideMenu()
             }
             .onReceive(vm.$detailRoot) { detailRoot in
+                // The preferred compact column of the NavigationSplitView
                 // Pushing a view into the detail column by itself only works for iPad. childPrefCol needs to toggle between content and detail for iPhone.
                 // This should be added to VM because I'm getting an error for updating preferred column multiple times per frame.
+                // - 6/29/24 this warning might've been solved by Feature 8.
                 self.childPrefCol = detailRoot != nil ? .detail : .content
             }
         }
     } //: Body
     
-    
-//    @ToolbarContentBuilder var sidebarToggle: some ToolbarContent {
-//        let isIphone = horSize == .compact || verSize == .compact
-//        let isXmark = isIphone && vm.prefCol == .sidebar
-//        
-//        ToolbarItem(placement: .topBarLeading) {
-//            Button("Close", systemImage: isXmark ? "xmark" : "sidebar.leading") {
-//                vm.sidebarToggleTapped()
-//            }
-//        }
-//    }
-    
+    // #F2-
     struct LazySplitMod: ViewModifier {
         let isProminent: Bool
         func body(content: Content) -> some View {

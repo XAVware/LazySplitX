@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+// TODO: Enable or disable scroll based on content height.
+ 
 struct MenuView: View {    
-    let menuButtons: [LazySplitDisplay] = [.home, .otherView, .settings]
+    @State var scrollDisabled: Bool = true
+    let menuButtons: [LazySplitViewConfig] = [.home, .otherView, .settings]
     
-    func getButtonData(for display: LazySplitDisplay) -> (String, String) {
+    func getButtonData(for display: LazySplitViewConfig) -> (String, String) {
         return switch display {
         case .home:         ("Home", "house.fill")
         case .otherView:    ("Other", "figure.walk.motion")
@@ -19,30 +22,40 @@ struct MenuView: View {
     }
     
     var body: some View {
-        VStack(spacing: 16) {
-            ForEach(menuButtons, id: \.self) { display in
-                Button {
-                    LazySplitService.shared.changeDisplay(to: display)
-                } label: {
-                    let data = getButtonData(for: display)
-                    HStack(spacing: 16) {
-                        Text(data.0)
-                        Spacer()
-                        Image(systemName: data.1)
-                    }
-                    .font(.title3)
-                    .fontDesign(.rounded)
-                    .padding()
-                    .frame(maxHeight: 64)
-                    .foregroundStyle(Color.accentColor.opacity(display == LazySplitService.shared.primaryRoot ? 1.0 : 0.6))
-                }
-            } //: For Each
-            Spacer()
-        } //: VStack
-        .padding(.vertical)
-        .background(.lightAccent)
+        VStack {
+            // Header
+            
+            
+            // Content -  Menu Buttons
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(menuButtons, id: \.self) { display in
+                        Button {
+                            LazySplitService.shared.changeDisplay(to: display)
+                        } label: {
+                            let data = getButtonData(for: display)
+                            HStack(spacing: 16) {
+                                Text(data.0)
+                                Spacer()
+                                Image(systemName: data.1)
+                            } //: HStack
+                            .font(.title3)
+                            .fontDesign(.rounded)
+                            .padding()
+                            .foregroundStyle(Color.accentColor.opacity(display == LazySplitService.shared.primaryRoot ? 1.0 : 0.6)) // I don't think this works
+                        }
+                    } //: For Each
+                    Spacer()
+                } //: VStack
+                .padding(.vertical)
+            } //: Scroll
+            .background(.lightAccent)
+            .scrollDisabled(scrollDisabled)
+        }
     }
 }
+
+
 
 
 #Preview {

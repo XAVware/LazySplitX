@@ -18,8 +18,6 @@ struct SettingsView: View {
                 Text("Settings View")
                     .font(.title3)
       
-                
-                
                 Button {
                     LazySplitService.shared.setDetailRoot(.detail)
                 } label: {

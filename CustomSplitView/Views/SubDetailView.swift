@@ -19,6 +19,21 @@ struct SubDetailView: View {
                 Text("Your data is: \(dataString)")
             }
         }
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    LazySplitService.shared.backButtonTapped()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                            .fontWeight(.semibold)
+                            .padding(.vertical, 2)
+                        Text("Back")
+                    }
+                }
+            }
+        }
     }
 }
 
