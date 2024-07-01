@@ -1,4 +1,4 @@
- # LazySplit
+ # LazySplitX
  
  ## Overview
  This is still a work in progress. My goal here is to create a navigation architecture in SwiftUI that acts more similarly to UIKit, giving us the ability to display views .twoBesidesSecondary or .twoDisplacesSecondary (see https://developer.apple.com/documentation/uikit/uisplitviewcontroller).
@@ -71,21 +71,12 @@
  - Calling setDetailRoot() from a view that is .besideDetail will display the view in the right/detail column, while keeping the content displayed in the left/content column and keeping the menu accessible.
  - Once a detail root is set, you can call pushDetail() to push views onto the detail column's stack. 
  
- ## Other Features
- - Programmatically toggle between .balanced and .prominentDetail navigation styles.
- - Fixes issues of navigation 'losing track' of its views or randomly not working as mentioned in the following forums:
-    https://stackoverflow.com/questions/73564156/swiftui-on-ipados-navigation-randomly-stops-working-when-in-split-view
-    https://stackoverflow.com/questions/65645703/swiftui-sidebar-doesnt-remember-screen
-    https://forums.developer.apple.com/forums/thread/735672
-    https://forums.developer.apple.com/forums/thread/708440
- 
- ## Known Bugs
- I need to overide the detail views' back button to ensure it is popping the view from the NavigationPath in the ViewModel. Right now when you tap back it will sometimes display the same view because the view was previously pushed onto the stack.
- 
- 
- ## Bonus - Hide the NavigationSplitView separator
- As of ~April 2024, the separator between the columns of NavigationSplitView is `opaqueSeparator` color. Extend UIColor with the following:
- 
+ ## Feature List
+ ### FEAT-1: LSXModifier - Programmatically toggle between .balanced and .prominentDetail navigation styles.
+ ### FEAT-2: UIColorOverride - Hide the NavigationSplitView separator that appears between the content and detail columns on iPad.
+  As of ~April 2024, the separator between the columns of NavigationSplitView is `opaqueSeparator` color. Extend UIColor with the following:
+  Note: This also changes the color resulting from Bug #14, so I don't recommend using any color other than clear.
+  
  ```swift
  extension UIColor {
     static let classInit: Void = {
@@ -102,13 +93,29 @@
  ```
  
  Then in your @main app file's initializer add:
+ 
  ```swift
  init() {
     UIColor.classInit
 }
  ```
  
- Just like that, you now have a clear separator between the columns.
+ 
+ ### FEAT-4: Fixes issues of navigation 'losing track' of its views or randomly not working as mentioned in the following forums:
+    https://stackoverflow.com/questions/73564156/swiftui-on-ipados-navigation-randomly-stops-working-when-in-split-view
+    https://stackoverflow.com/questions/65645703/swiftui-sidebar-doesnt-remember-screen
+    https://forums.developer.apple.com/forums/thread/735672
+    https://forums.developer.apple.com/forums/thread/708440
+    
+ ### FEAT-8: LazyBackButton - overriding the default back button on all views with a button that pops the views through LazySplitService and can include addtional logic. The visibility is controlled by whether any navigation path has objects.
+ 
+ 
+ 
+ ## Known Bugs
+ I need to overide the detail views' back button to ensure it is popping the view from the NavigationPath in the ViewModel. Right now when you tap back it will sometimes display the same view because the view was previously pushed onto the stack.
+ 
+ 
+ 
  
  
  # Running notes - Deep Dive Into SwiftUI Navigation
@@ -258,54 +265,41 @@ I found this to be related to the navigation losing track of the sidebar and not
              self.detail = detail()
          }
      }
+     
+ ### Lazy Split Config Concept
+ LazySplitConfig is an enum that manages the apps views. This should be customized to meet the needs of the specific app. Each case of the enum should correlate to one of the app's views and there should be a case for every view that needs to be displayed. Each case should be assigned a LazySplitViewType
  
+ ### Generic Split View Concept
+ The core idea behind the Generic Split View is that, no matter what device the app is running on, the same sequence of views should appear in the app. On smaller (.compact) screen widths like an iPhone in portrait orientation, the views will always be displayed like a NavigationStack. But on larger (.regular) screen width devices like the iPad, it should be up to the view to decide if it's going to take up the entire screen or display in NavigationSplitView columns.
  
+ To meet this requirement I created a generic view with 4 parameters: the view model, a view to be placed in the sidebar column (the 'main menu'), a view with the main content of the app, and a view used to display any downstream detail views pushed from the content.
  
- ## SplitInSplitView
- #### Overview
+ A @StateObject of LazySplitViewModel should be initialized in the RootView, then injected into LazySplitX. Making it accessible by the RootView allows you to use a `switch` in the content and detail columns of LazySplitX to control which views are being displayed based on the view model's current LazySplitViewConfig.
+ 
+ This makes for a very clean RootView so you can focus on the non-navigation code. 
+ 
+ ### View Model & LSXService
+ LSXService is a singleton that contains functions that can be used by any view that needs to change nearly anything related to navigation. It is the entry point for changing the primary display, pushing and popping views, hiding the menu, etc. When changing or pushing a view, the functions take a LazySplitViewConfig and add the view to the appropriate `@Published NavigationPath` depending on the `LazySplitViewType` it's assigned.
+ 
+ Using Combine, the view model subscribes to LSXService's PassthroughSubject path property.
+ 
+ ## LazySplitX Layouts
+ The `NavigationStacks` and `NavigationSplitViews` in LazySplitX are bound to their corresponding `@Published NavigationPaths` in the view model.
+
+ ### Child / Inner NavigationSplitView
  SplitInSplitView was a predecessor and building block for LazyNavView. It was used
  to build and test navigation internal to LazyNavView
  
- #### Simplified Structure
- 
- 
- #### Notes
- NavigationSplitView inside of NavigationSplitView only works normally if the style
- is .prominentDetail. When it is .balanced and the view changes from 3 columns to 2,
- the dark overlay from the prominent style shows briefly while the views are changing.
-    - This may have been fixed with the LazyNavViewModifier
- 
- ## StackInSplit
- This approach tried to use a NavigationSplitView that only had a sidebar and detail, but in the detail column there is a NavigationStack which controlled any further navigation.
- 
- ### Questions
- Q: What happens if you create a NavigationSplitView with a NavigationStack in the sidebar column, but leave the content and detail columns empty? Like this:
- 
- NavigationSplitView {
-    NavigationStack {
-        Menu()
-    }
- } content: {
-    // Position A
- } detail: {
-    // Position B
- }
- 
-I'm hoping the NavigationStack is smart enough to see that Position A is empty and passes the selected view into Position A, then the next selected view into Position B, and so on.
- I tested this by using the structure of StackInSplitView, leaving the content and detail columns empty, but in the sidebar column putting a NavigationStack with a NavigationLink inside of a NavigationLink inside of... 4 times. This can be found in the 'StackInSplit' file (NOT StackInSplit_Orig) from older commits.
- 
- A: If you put a button in the sidebar column that uses vm.pushView, the navigation only occurs in the sidebar column. The other columns remain empty.
-    - Using NavigationLink instead works better, but not exactly how I wanted. 4 navigationLinks inside of eachother, pushing detail 1, detail 2, detail 3, detail 4 will end up pushing detail 1 onto the content column (correct), detail 2 is pushed onto the detail column (correct), then detail 2 is replaced with detail 3 (incorrect) and so on.
-    - IDEAL: Detail 2 wouldve replaced detail 1 in the content column when detail 3 replaces 2 in the detail column.
- 
- 
 
- ## UIKitSplit
+ 
+ ## Alternatives
+
+ ### UIKitSplit
  Attempted to create a UIKit based version of the NavigationSplitView. Most parts are
  working but needs further review. Animations are not as smooth as SwiftUI
 
  
- ## InvexLazySplit
+ ### InvexLazySplit
  Attempted to make the sidebar a navigation stack and the detail a navigation stack
  Works on iPad but on iPhone the sidebar reference is lost after navigating through a 
  detail stack then back to the root.

@@ -15,13 +15,12 @@
 		9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FE2BF83E9F001E059D /* OtherView.swift */; };
 		9405E4032BF84028001E059D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4022BF84028001E059D /* DetailView.swift */; };
 		940C97092BFEECC700A0BEAF /* LazySplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C97082BFEECC700A0BEAF /* LazySplit.swift */; };
-		941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A62692BF9E1150040DC6C /* DetailPath.swift */; };
 		941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A626B2BF9E1530040DC6C /* MenuView.swift */; };
 		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
 		944324B02C1793DE001D9C2A /* Bug2Diagnosis in Resources */ = {isa = PBXBuildFile; fileRef = 944324AF2C1793DE001D9C2A /* Bug2Diagnosis */; };
 		94462F5A2BF5A46300D0068F /* GenSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F572BF5A46300D0068F /* GenSplitView.swift */; };
 		94462F5B2BF5A46300D0068F /* LazySplitViewConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */; };
-		9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */; };
+		9454536D2BED3C5E004762C0 /* LazySplitXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454536C2BED3C5E004762C0 /* LazySplitXApp.swift */; };
 		945453712BED3C5F004762C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453702BED3C5F004762C0 /* Assets.xcassets */; };
 		945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453732BED3C5F004762C0 /* Preview Assets.xcassets */; };
 		9454537D2BED406E004762C0 /* UIMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454537C2BED406E004762C0 /* UIMenuView.swift */; };
@@ -40,14 +39,14 @@
 		9405E4022BF84028001E059D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		940C97072BFEEC0400A0BEAF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		940C97082BFEECC700A0BEAF /* LazySplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySplit.swift; sourceTree = "<group>"; };
-		941A62692BF9E1150040DC6C /* DetailPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPath.swift; sourceTree = "<group>"; };
 		941A626B2BF9E1530040DC6C /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
 		944324AF2C1793DE001D9C2A /* Bug2Diagnosis */ = {isa = PBXFileReference; lastKnownFileType = text; path = Bug2Diagnosis; sourceTree = "<group>"; };
 		94462F572BF5A46300D0068F /* GenSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenSplitView.swift; sourceTree = "<group>"; };
 		94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazySplitViewConfig.swift; sourceTree = "<group>"; };
+		944FAA722C32645100EC45EF /* ProjectNotes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ProjectNotes.md; sourceTree = "<group>"; };
 		945453692BED3C5E004762C0 /* LazySplitX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LazySplitX.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSplitViewApp.swift; sourceTree = "<group>"; };
+		9454536C2BED3C5E004762C0 /* LazySplitXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySplitXApp.swift; sourceTree = "<group>"; };
 		945453702BED3C5F004762C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		945453732BED3C5F004762C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9454537C2BED406E004762C0 /* UIMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIMenuView.swift; sourceTree = "<group>"; };
@@ -81,25 +80,13 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		941A62662BF9E1010040DC6C /* LazyNavView */ = {
-			isa = PBXGroup;
-			children = (
-				940C97082BFEECC700A0BEAF /* LazySplit.swift */,
-				9405E3F52BF83BA3001E059D /* RootView.swift */,
-				941A626B2BF9E1530040DC6C /* MenuView.swift */,
-				941A62692BF9E1150040DC6C /* DetailPath.swift */,
-				94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */,
-				944324AF2C1793DE001D9C2A /* Bug2Diagnosis */,
-			);
-			path = LazyNavView;
-			sourceTree = "<group>";
-		};
 		945453602BED3C5E004762C0 = {
 			isa = PBXGroup;
 			children = (
 				94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */,
 				94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */,
 				940C97072BFEEC0400A0BEAF /* README.md */,
+				944FAA722C32645100EC45EF /* ProjectNotes.md */,
 				9454536B2BED3C5E004762C0 /* LazySplitX */,
 				9454536A2BED3C5E004762C0 /* Products */,
 			);
@@ -116,11 +103,15 @@
 		9454536B2BED3C5E004762C0 /* LazySplitX */ = {
 			isa = PBXGroup;
 			children = (
-				94F2FF772C13F04800C72F0C /* PastVersions */,
-				941A62662BF9E1010040DC6C /* LazyNavView */,
-				9405E3F72BF83DF5001E059D /* Views */,
-				9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */,
+				9454536C2BED3C5E004762C0 /* LazySplitXApp.swift */,
+				9405E3F52BF83BA3001E059D /* RootView.swift */,
+				940C97082BFEECC700A0BEAF /* LazySplit.swift */,
+				941A626B2BF9E1530040DC6C /* MenuView.swift */,
+				94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */,
 				94790D5A2C124A5000059189 /* UIColorOverride.swift */,
+				944324AF2C1793DE001D9C2A /* Bug2Diagnosis */,
+				94F2FF772C13F04800C72F0C /* PastVersions */,
+				9405E3F72BF83DF5001E059D /* Views */,
 				945453702BED3C5F004762C0 /* Assets.xcassets */,
 				945453722BED3C5F004762C0 /* Preview Content */,
 			);
@@ -238,11 +229,10 @@
 				940C97092BFEECC700A0BEAF /* LazySplit.swift in Sources */,
 				9405E3F62BF83BA3001E059D /* RootView.swift in Sources */,
 				94790D5B2C124A5000059189 /* UIColorOverride.swift in Sources */,
-				941A626A2BF9E1150040DC6C /* DetailPath.swift in Sources */,
 				94462F5B2BF5A46300D0068F /* LazySplitViewConfig.swift in Sources */,
 				94790D5D2C124ADC00059189 /* Content_UIKitSplit.swift in Sources */,
 				941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */,
-				9454536D2BED3C5E004762C0 /* CustomSplitViewApp.swift in Sources */,
+				9454536D2BED3C5E004762C0 /* LazySplitXApp.swift in Sources */,
 				9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */,
 				9405E3FF2BF83E9F001E059D /* OtherView.swift in Sources */,
 			);

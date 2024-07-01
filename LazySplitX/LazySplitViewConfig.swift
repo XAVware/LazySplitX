@@ -7,11 +7,32 @@
 
 import SwiftUI
 
+/*
+ Layouts offered in UIKit
+ 
+ Tile
+ UISplitViewController.DisplayMode.secondaryOnly
+ UISplitViewController.DisplayMode.oneBesideSecondary
+ UISplitViewController.DisplayMode.twoBesideSecondary
+ 
+ Overlay
+ UISplitViewController.DisplayMode.secondaryOnly
+ UISplitViewController.DisplayMode.oneOverSecondary
+ UISplitViewController.DisplayMode.twoOverSecondary
+ 
+ Displace
+ UISplitViewController.DisplayMode.secondaryOnly
+ UISplitViewController.DisplayMode.oneBesideSecondary
+ UISplitViewController.DisplayMode.twoDisplaceSecondary
+ */
+
+
 // v1.2 CaseIterable is used by the MenuView to display all primary views as buttons.
 // v1.3 - LazySplitViewConfig only seems to be using CaseIterable to initialize LazySplitService.primaryRoot with a default value.
 
 
 enum LazySplitDisplayMode { case detailOnly, besideDetail }
+enum LazySplitViewType { case primary, detail }
 
 // v1.3 - When using LazySplitService, the first case will be the default.
 // v1.4 - Removed `Hashable` conformance
