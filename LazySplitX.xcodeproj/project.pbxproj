@@ -46,7 +46,7 @@
 		944324AF2C1793DE001D9C2A /* Bug2Diagnosis */ = {isa = PBXFileReference; lastKnownFileType = text; path = Bug2Diagnosis; sourceTree = "<group>"; };
 		94462F572BF5A46300D0068F /* GenSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenSplitView.swift; sourceTree = "<group>"; };
 		94462F582BF5A46300D0068F /* LazySplitViewConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazySplitViewConfig.swift; sourceTree = "<group>"; };
-		945453692BED3C5E004762C0 /* CustomSplitView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomSplitView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		945453692BED3C5E004762C0 /* LazySplitX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LazySplitX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9454536C2BED3C5E004762C0 /* CustomSplitViewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSplitViewApp.swift; sourceTree = "<group>"; };
 		945453702BED3C5F004762C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		945453732BED3C5F004762C0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 				94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */,
 				94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */,
 				940C97072BFEEC0400A0BEAF /* README.md */,
-				9454536B2BED3C5E004762C0 /* CustomSplitView */,
+				9454536B2BED3C5E004762C0 /* LazySplitX */,
 				9454536A2BED3C5E004762C0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,12 +108,12 @@
 		9454536A2BED3C5E004762C0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				945453692BED3C5E004762C0 /* CustomSplitView.app */,
+				945453692BED3C5E004762C0 /* LazySplitX.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9454536B2BED3C5E004762C0 /* CustomSplitView */ = {
+		9454536B2BED3C5E004762C0 /* LazySplitX */ = {
 			isa = PBXGroup;
 			children = (
 				94F2FF772C13F04800C72F0C /* PastVersions */,
@@ -124,7 +124,7 @@
 				945453702BED3C5F004762C0 /* Assets.xcassets */,
 				945453722BED3C5F004762C0 /* Preview Content */,
 			);
-			path = CustomSplitView;
+			path = LazySplitX;
 			sourceTree = "<group>";
 		};
 		945453722BED3C5F004762C0 /* Preview Content */ = {
@@ -159,9 +159,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		945453682BED3C5E004762C0 /* CustomSplitView */ = {
+		945453682BED3C5E004762C0 /* LazySplitX */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 945453772BED3C5F004762C0 /* Build configuration list for PBXNativeTarget "CustomSplitView" */;
+			buildConfigurationList = 945453772BED3C5F004762C0 /* Build configuration list for PBXNativeTarget "LazySplitX" */;
 			buildPhases = (
 				945453652BED3C5E004762C0 /* Sources */,
 				945453662BED3C5E004762C0 /* Frameworks */,
@@ -171,9 +171,9 @@
 			);
 			dependencies = (
 			);
-			name = CustomSplitView;
+			name = LazySplitX;
 			productName = CustomSplitView;
-			productReference = 945453692BED3C5E004762C0 /* CustomSplitView.app */;
+			productReference = 945453692BED3C5E004762C0 /* LazySplitX.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -191,7 +191,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 945453642BED3C5E004762C0 /* Build configuration list for PBXProject "CustomSplitView" */;
+			buildConfigurationList = 945453642BED3C5E004762C0 /* Build configuration list for PBXProject "LazySplitX" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -204,7 +204,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				945453682BED3C5E004762C0 /* CustomSplitView */,
+				945453682BED3C5E004762C0 /* LazySplitX */,
 			);
 		};
 /* End PBXProject section */
@@ -377,7 +377,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CustomSplitView/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"LazySplitX/Preview Content\"";
 				DEVELOPMENT_TEAM = B7G7S38G7L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -392,7 +392,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = xavware.CustomSplitView;
+				PRODUCT_BUNDLE_IDENTIFIER = xavware.LazySplitX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -407,7 +407,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"CustomSplitView/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"LazySplitX/Preview Content\"";
 				DEVELOPMENT_TEAM = B7G7S38G7L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -422,7 +422,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = xavware.CustomSplitView;
+				PRODUCT_BUNDLE_IDENTIFIER = xavware.LazySplitX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -433,7 +433,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		945453642BED3C5E004762C0 /* Build configuration list for PBXProject "CustomSplitView" */ = {
+		945453642BED3C5E004762C0 /* Build configuration list for PBXProject "LazySplitX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				945453752BED3C5F004762C0 /* Debug */,
@@ -442,7 +442,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		945453772BED3C5F004762C0 /* Build configuration list for PBXNativeTarget "CustomSplitView" */ = {
+		945453772BED3C5F004762C0 /* Build configuration list for PBXNativeTarget "LazySplitX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				945453782BED3C5F004762C0 /* Debug */,
