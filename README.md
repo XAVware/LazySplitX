@@ -1,5 +1,6 @@
  # LazySplitX
  
+ 
  ## Overview
  This is still a work in progress. My goal here is to create a navigation architecture in SwiftUI that acts more similarly to UIKit, giving us the ability to display views .twoBesidesSecondary or .twoDisplacesSecondary (see https://developer.apple.com/documentation/uikit/uisplitviewcontroller).
  
@@ -99,7 +100,10 @@
     UIColor.classInit
 }
  ```
+  ### FEAT-3: Custom Sidebar Toggle Button
+ The default sidebar toggle is removed on all views so the custom button can handle additional logic. In other words, the sidebar toggle button included with the NavigationSplitView is overwritten with a custom sidebar toggle button that appears identically to the default in size & color.
  
+ Aside from functionality to make LazyNavView work, the custom button gives flexibility for dynamically adjusting the color of the button in addition to adding additional logic when the back button is tapped or when the menu shows.
  
  ### FEAT-4: Fixes issues of navigation 'losing track' of its views or randomly not working as mentioned in the following forums:
     https://stackoverflow.com/questions/73564156/swiftui-on-ipados-navigation-randomly-stops-working-when-in-split-view
@@ -217,21 +221,8 @@ I found this to be related to the navigation losing track of the sidebar and not
  
  
  ## Building Blocks, Components, & Evolutions
- ### Primary / Main Views
- Menu, Home, Settings, Other, Detail, SubDetail are simple basic views that can
- be differentiated by their background color and their text. They are used to
- emulate various different layouts and scenarios that could be found in an app.
  
- 
- ### Custom Sidebar Toggle Button
- The default sidebar toggle is removed on all views so the custom button can handle
- additional logic. In other words, the sidebar toggle button included with the
- NavigationSplitView is overwritten with a custom sidebar toggle button that appears
- identically to the default in size & color.
- 
- Aside from functionality to make LazyNavView work, the custom button gives flexability
- for dynamically adjusting the color of the button in addition to adding additional logic
- when the back button is tapped or when the menu shows.
+
  
  
  ## GenSplitView
@@ -266,6 +257,94 @@ I found this to be related to the navigation losing track of the sidebar and not
          }
      }
      
+     
+ I originally tried using an if-else to toggle between two different navigation split views like this:
+ 
+ ```swift
+     var body: some View {
+        if vm.display.prefCompColumn == .detail {
+            NavigationSplitView(columnVisibility: $vm.colVis, preferredCompactColumn: $vm.prefCol) {
+                sidebar
+            } detail: {
+                wrappedContent
+            }
+            .navigationSplitViewStyle(.prominentDetail)
+        } else {
+            NavigationSplitView(columnVisibility: $vm.colVis, preferredCompactColumn: $vm.prefCol) {
+                sidebar
+            } content: {
+                wrappedContent
+                    .navigationBarBackButtonHidden(true)
+                    .toolbar(removing: .sidebarToggle)
+                    .toolbar {
+                        if horSize == .compact {
+                            ToolbarItem(placement: .topBarLeading) {
+                                sidebarButton
+                            }
+                        }
+                    }
+                    .toolbarTitleDisplayMode(.inline)
+            } detail: {
+
+            }
+            .navigationBarBackButtonHidden(true)
+            .navigationSplitViewStyle(.balanced)
+        }
+    } 
+    
+    @ViewBuilder var wrappedContent: some View {
+        content
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                if horSize == .compact {
+                    ToolbarItem(placement: .topBarLeading) {
+                        sidebarButton
+                    }
+                }
+            }
+    }
+ 
+ ```
+     
+     
+ 
+
+ 
+ 
+ ## Decisions, Default Behaviors, & Notes
+ > The toolbar and navigationDestination(for:) use a Group because they are not enclosed in a View.
+    - Can I use @ViewBuilder some way instead?
+ 
+ > The NavigationDestination(for:) is used in LazySplit instead of inside  LazyNavView because Swift uses the destinations closest to the root. Adding them here may cause issues with reusability.
+
+ > 5/20/24: NEEDS REVIEW: If you use NavigationLink(destination:label:), in a view (e.g.  DetailView) that isn't in the column/content (e.g. SettingsView) layout, it covers the full screen and wont allow you to go back.
+ 
+ > DetailPath should include all views that are not primary/main views.
+    - Why does it need Hashable and Identifiable?
+    - 7/1/24 - Conforming to Identifiable helps in cases where the UI for the current view needs to be displayed differently than the non selected views (e.g. the menu buttons, the current view's button appears highlighted while the others do not)
+             - Conforming to Hashable allows you to set the id for the Identifiable protocol to the enum itself. 
+ 
+ > DisplayState has a computed primaryView property which corresponds to the  columnVisibility of the LazyNavView. It has a computed prefCompColumn property, based on itself, that corresponds to the LazyNavView's preferred compact column
+ 
+ > Any view that will be pushing child views onto the screen needs to receive LazyNavViewModel as an environment object.
+ 
+ > On iPad, if the menu is open when the device orientation changes, the menu will be closed.
+ 
+ > I tried moving the generic LazyNavView directly into LazySplit but it did not work as intended on iPhone. Every view was layed out as .full, including settings which should have been a column layout. In addition, after navigation from settingsView to detailView with a NavigationLink, the back button jumped over the original settingsView and opened the menu directly.
+    > Looking closer, I noticed LazyNavView was being passed the displayState's layout. This probably caused it to reinitialize each time it changed, overall displaying the layout correctly.
+        - Instead of using getColumnLayout(), I moved the NavigationSplitView (for settings/column layouts) versus content (for full screen layout) logic into a group inside of the primary NavigationSplitView's detail and made it toggle based on whether or not mainDisplay is settings. This fixed both issues on iPhone.
+        - Works on iPad
+        - New bugs:
+            - On iPhone 12 Pro Max, after navigating from settingsView to detail with NavigationLink in portrait mode, then changing orientation to landscape, detailView closes. It's supposed to still be visible but in the right column.
+            - On iPhone 12 Pro Max, after navigating from settingsView to detail with NavigationLink in landscape mode, then to subDetail, then changing device to portrait and tapping the back button, the detail view is skipped and user is returned to settingsView.
+    > The benefit to this approach over using the LazyNavView inside the LazySplit is there is now only one generic to manage. It is more readable to help understand what the navigation architecture really is. And it allows for one GeometryReader instead of two.
+ 
+ 
+
+ 
+  
+ ------------------------------------------------
+ ## Background
  ### Lazy Split Config Concept
  LazySplitConfig is an enum that manages the apps views. This should be customized to meet the needs of the specific app. Each case of the enum should correlate to one of the app's views and there should be a case for every view that needs to be displayed. Each case should be assigned a LazySplitViewType
  
@@ -291,7 +370,7 @@ I found this to be related to the navigation losing track of the sidebar and not
  to build and test navigation internal to LazyNavView
  
 
- 
+------------------------------------------------
  ## Alternatives
 
  ### UIKitSplit
@@ -303,95 +382,25 @@ I found this to be related to the navigation losing track of the sidebar and not
  Attempted to make the sidebar a navigation stack and the detail a navigation stack
  Works on iPad but on iPhone the sidebar reference is lost after navigating through a 
  detail stack then back to the root.
-
- 
- 
- ## Decisions, Default Behaviors, & Notes
- > The toolbar and navigationDestination(for:) use a Group because they are not
- enclosed in a View.
-    - Can I use @ViewBuilder some way instead?
- 
- > The NavigationDestination(for:) is used in LazySplit instead of inside 
- LazyNavView because Swift uses the destinations closest to the root. Adding them here
- may cause issues with reusability.
-
- > 5/20/24: NEEDS REVIEW: If you use NavigationLink(destination:label:), in a view (e.g. 
- DetailView) that isn't in the column/content (e.g. SettingsView) layout, it covers the
- full screen and wont allow you to go back.
- 
- > DetailPath should include all views that are not primary/main views.
-    - Why does it need Hashable and Identifiable?
- 
- > DisplayState has a computed primaryView property which corresponds to the 
- columnVisibility of the LazyNavView. It has a computed prefCompColumn property , based
- on itself, that corresponds to the LazyNavView's preferred compact column
- 
- > Any view that will be pushing child views onto the screen needs to receive 
- LazyNavViewModel as an environment object.
- 
- > On iPad, if the menu is open when the device orientation changes, the menu will be closed.
- 
- > I tried moving the generic LazyNavView directly into LazySplit but it did not work as intended on iPhone. Every view was layed out as .full, including settings which should have been a column layout. In addition, after navigation from settingsView to detailView with a NavigationLink, the back button jumped over the original settingsView and opened the menu directly.
-    > Looking closer, I noticed LazyNavView was being passed the displayState's layout. This probably caused it to reinitialize each time it changed, overall displaying the layout correctly.
-        - Instead of using getColumnLayout(), I moved the NavigationSplitView (for settings/column layouts) versus content (for full screen layout) logic into a group inside of the primary NavigationSplitView's detail and made it toggle based on whether or not mainDisplay is settings. This fixed both issues on iPhone.
-        - Works on iPad
-        - New bugs:
-            - On iPhone 12 Pro Max, after navigating from settingsView to detail with NavigationLink in portrait mode, then changing orientation to landscape, detailView closes. It's supposed to still be visible but in the right column.
-            - On iPhone 12 Pro Max, after navigating from settingsView to detail with NavigationLink in landscape mode, then to subDetail, then changing device to portrait and tapping the back button, the detail view is skipped and user is returned to settingsView.
-    > The benefit to this approach over using the LazyNavView inside the LazySplit is there is now only one generic to manage. It is more readable to help understand what the navigation architecture really is. And it allows for one GeometryReader instead of two.
- 
  
  ------------------------------------------------
- ## Questions
- > 5/17/24 What happens if you use a NavigationLink(value:label:) in a view that has a 
- content/column layout (e.g. SettingsView)? What about from a partial or full screen detail?
- 
- > 5/18/24 - Can I do something like: pass array of Navpaths with their content/view as 
- a computed property?
-    - For example, content([.first, .second, .third]) then check if content has children? 
-      So if it has children then display should be `column`. Otherwise 'full'.
-
- 6/6/24
- // What happens if I replace getColumnLayout with just content?
- // - Replacing getColumnLayout with content entirely makes it so, on iPhone 12 Pro Max in portrait, after navigating from the settingsView to the detail with a NavigationLink, tapping the back button opens the menu and does not allow you to return to the settingsView.
-     // - Because of this, I should keep a reference to the child's colVis and prefCol in case they need to be manipulated and to help debug the current state of navigation.
-        - I might've fixed this on 6/7/24. Needs further review.
- 
- 
- ### Historic / Fixed Bugs
- BUG #6 - 5/18/24:
- Menu closes on device orientation change
-    - Fixed before importing first version of LazyNavView into Invex
- 
- 
- BUG #7 - 5/22/24:
- EnvironmentObject isn't propogating into the NavigationDestinations pushed onto the NavigationStack. Crashes on vertical iphone when DetailView tries to appear. No ObservableObject of type LazyNavViewModel found. A View.environmentObject(_:) for LazyNavViewModel may be missing as an ancestor of this view.
-    - 5/23/24 - Fixed by moving the environmentObject outside of the NavigationStack in LazyNavView
- 
- BUG #9 - 5/17/24: NavigationLink in SettingsView doesn't work because "A NavigationLink is presenting a value of type “DetailPath” but there is no matching navigationDestination declaration visible from the location of the link. The link cannot be activated."
-    - Links search for destinations in any surrounding NavigationStack, then within the same column of a NavigationSplitView.
-    - SOLUTION: NavigationDestinations were moved out of LazyNavView, into the ContentView where they appear within the NavigationStack but outside the LazyNavView.
- 
-
-
-## Versions
-
- ### Version 1.1
+ # Versions
+ ## Version 1.1
  - Monitored & updated navigation column visibility and similar properties via didSet property observers.
  - I moved the previously generic LazyNavView into the parent so there is only one generic involved. Keep in mind that LazyNavView, when it was generic, was passed an isLandscape property from its parent.
  - Mostly used prominentDetail style
  - Added Combine authentication to view model to prep for Invex.
  
- #### Issues
+ ### Issues
  - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly.
  
  
- ### Version 1.2
+ ## Version 1.2
  - Setup LazySplitViewMod to toggle between balanced and prominent styles.
  - Dynamically change color and image of sidebar toggle
  - I separated the responsibility of the menu showing/hiding from the view model. It is now monitored by the view and triggered via view model function.
  
- #### Issues
+ ### Issues
  - The menu randomly stops working (show/hide) after changing between Home and Settings repeatedly. 
     - Seems to happen when the states are changed quickly, it shouldn't come up in production frequently - only if the user is intentionally trying to 'break' the app or if they are working very quickly and anticipate exactly where on the menu (which button) they will be tapping next after they tap the sidebar toggle.
     - After some UX trials, users figure out how to solve the issue on their own much easier than prominent style.
@@ -399,13 +408,13 @@ I found this to be related to the navigation losing track of the sidebar and not
  - On iPad, the app crashes after it is moved to the background followed by the device being locked.
  
  
- #### Notes on Importing to Invex
+ ### Notes on Importing to Invex
  - Minor adjustments had to be made to Invex's DisplayState. I added a popView function to LazySplitViewModel so detail views can call it after executing their async functions.
  - I need to figure out a better way to pass LazySplitViewModel. When it's passed an environment object it causes issues with some of the child views that also need a different type of environment object
  - Inline NavigationTitles don't stay in the middle of the right-hand column when the menu is opened. They remain in the center of the screen.
  
  
- ### Version 1.3
+ ## Version 1.3
  - Change NavigationTitle based on the DisplayState
  - Add computed LazySplitDisplayMode property to DisplayState to control whether each display is layed out in side-by-side columns or the full screen
     - Previous versions only layed the views out as columns if the display was Settings
@@ -414,7 +423,8 @@ I found this to be related to the navigation losing track of the sidebar and not
  - Add generic contentToolbar parameter to LazySplit which allows the toolbar items to be passed in from the rootView
  - Attempt to fix lag when changing between .balanced and .prominentDetail styles with animations.
 
-### Version 1.4
+
+## Version 1.4
 To get to this version, I took version 1.3 and imported it into Invex. I had to make a few changes to make LazySplit work in Invex, so any changes that made sense to remain with LazySplit I pulled into version 1.4.
 
 - LazySplit initializer parameters changed to @ViewBuilder so views that are sent through conditionals from RootView are not required to be wrapped in a Group.

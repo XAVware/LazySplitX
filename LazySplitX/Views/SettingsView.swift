@@ -8,18 +8,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @EnvironmentObject var vm: LazySplitViewModel
     var body: some View {
         ZStack {
             Color.yellow.opacity(0.3)
                 .font(.title3)
             
             VStack {
-                Text("Settings View")
-                    .font(.title3)
-      
                 Button {
-                    LazySplitService.shared.setDetailRoot(.detail)
+//                    LazySplitService.shared.setDetailRoot(.detail)
+                    LazySplitService.shared.update(newDisplay: .detail)
                 } label: {
                     Text("Button: To Primary Detail")
                         .frame(maxWidth: 420)
@@ -32,7 +29,8 @@ struct SettingsView: View {
                 
                 // Use pushView to display view through main navigation stack, replacing the current full screen.
                 Button {
-                    LazySplitService.shared.pushPrimary(.detail)
+//                    LazySplitService.shared.pushPrimary(.detail)
+                    LazySplitService.shared.update(newDisplay: .detail)
                 } label: {
                     Text("Button: To Primary Detail")
                         .frame(maxWidth: 420)
@@ -45,10 +43,18 @@ struct SettingsView: View {
 
             }
         }
+        .navigationTitle("Settings View")
+        .navigationBarTitleDisplayMode(.large)
         
     }
 }
 
 #Preview {
-    SettingsView()
+    LazySplit(viewModel: LazySplitViewModel()) {
+        MenuView()
+    } content: {
+        SettingsView()
+    } detail: {
+        EmptyView()
+    }
 }

@@ -11,13 +11,14 @@ import SwiftUI
  
 struct MenuView: View {    
     @State var scrollDisabled: Bool = true
-    let menuButtons: [LazySplitViewConfig] = [.home, .otherView, .settings]
+    let menuButtons: [LSXDisplay] = [.home, .otherView, .settings]
     
-    func getButtonData(for display: LazySplitViewConfig) -> (String, String) {
+    func getButtonData(for display: LSXDisplay) -> (String, String)? {
         return switch display {
         case .home:         ("Home", "house.fill")
         case .otherView:    ("Other", "figure.walk.motion")
         case .settings:     ("Settings", "gearshape")
+        default: nil
         }
     }
     
@@ -30,19 +31,22 @@ struct MenuView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     ForEach(menuButtons, id: \.self) { display in
-                        Button {
-                            LazySplitService.shared.changeDisplay(to: display)
-                        } label: {
-                            let data = getButtonData(for: display)
-                            HStack(spacing: 16) {
-                                Text(data.0)
-                                Spacer()
-                                Image(systemName: data.1)
-                            } //: HStack
-                            .font(.title3)
-                            .fontDesign(.rounded)
-                            .padding()
-                            .foregroundStyle(Color.accentColor.opacity(display == LazySplitService.shared.primaryRoot ? 1.0 : 0.6)) // I don't think this works
+                        if let data = getButtonData(for: display) {
+                            Button {
+//                                LazySplitService.shared.changeDisplay(to: display)
+                                LazySplitService.shared.update(newDisplay: display)
+                            } label: {
+//                                let data = getButtonData(for: display)
+                                HStack(spacing: 16) {
+                                    Text(data.0)
+                                    Spacer()
+                                    Image(systemName: data.1)
+                                } //: HStack
+                                .font(.title3)
+                                .fontDesign(.rounded)
+                                .padding()
+//                                .foregroundStyle(Color.accentColor.opacity(display == LazySplitService.shared.primaryRoot ? 1.0 : 0.6)) // I don't think this works
+                            }
                         }
                     } //: For Each
                     Spacer()

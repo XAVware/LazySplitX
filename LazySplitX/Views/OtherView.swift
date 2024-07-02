@@ -18,7 +18,8 @@ struct OtherView: View {
                     .font(.title3)
                 
                 Button {
-                    LazySplitService.shared.pushPrimary(.detail)
+//                    LazySplitService.shared.pushPrimary(.detail)
+                    LazySplitService.shared.update(newDisplay: .detail)
                 } label: {
                     Text("Button: To Detail")
                         .frame(maxWidth: 420)
@@ -34,5 +35,11 @@ struct OtherView: View {
 }
 
 #Preview {
-    OtherView()
+    LazySplit(viewModel: LazySplitViewModel()) {
+        MenuView()
+    } content: {
+        OtherView()
+    } detail: {
+        EmptyView()
+    }
 }

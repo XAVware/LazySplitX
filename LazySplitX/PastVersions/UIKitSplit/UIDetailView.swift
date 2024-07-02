@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct UIDetailView: View {
-    @State var display: LazySplitViewConfig
+    @State var display: LSXDisplay
     
-    init(display: LazySplitViewConfig) {
+    init(display: LSXDisplay) {
         self.display = display
     }
     

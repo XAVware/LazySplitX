@@ -18,7 +18,8 @@ struct HomeView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Right Sidebar", systemImage: "sidebar.right") {
-                    LazySplitService.shared.pushPrimary(.detail)
+//                    LazySplitService.shared.pushPrimary(.detail)
+                    LazySplitService.shared.update(newDisplay: .detail)
                 }
             }
         }

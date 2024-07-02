@@ -57,6 +57,7 @@ import Combine
  - Could this be related to the warning?
  - If is serious issue, maybe force LazyNavView into a NavigationStack on change of app moving to background and vice versa?
  > 6/20/24 This did not happen in Invex after importing version 1.3. Perhaps it's related to an older version of this?
+ > 7/2/24 This might be fixed with v1.7
  
  [] TODO: BUG #8 - 5/30/24:
  The LazyNavViewModifier creates lag when tapping a menu button from a screen that is balanced to a screen that is prominent. The screen freezes 
@@ -70,6 +71,19 @@ import Combine
         - This change could be the first time the child split view is initialized if all other views were .compact.
 
  
+ 
+ [x] BUG #6 - 5/18/24:
+ Menu closes on device orientation change
+    - Fixed before importing first version of LazyNavView into Invex
+ 
+ 
+ [x] BUG #7 - 5/22/24:
+ EnvironmentObject isn't propogating into the NavigationDestinations pushed onto the NavigationStack. Crashes on vertical iphone when DetailView tries to appear. No ObservableObject of type LazyNavViewModel found. A View.environmentObject(_:) for LazyNavViewModel may be missing as an ancestor of this view.
+    - 5/23/24 - Fixed by moving the environmentObject outside of the NavigationStack in LazyNavView
+ 
+ [x] BUG #9 - 5/17/24: NavigationLink in SettingsView doesn't work because "A NavigationLink is presenting a value of type “DetailPath” but there is no matching navigationDestination declaration visible from the location of the link. The link cannot be activated."
+    - Links search for destinations in any surrounding NavigationStack, then within the same column of a NavigationSplitView.
+    - SOLUTION: NavigationDestinations were moved out of LazyNavView, into the ContentView where they appear within the NavigationStack but outside the LazyNavView.
  
  ---------------------
  VERSION 1.2
@@ -151,8 +165,8 @@ import Combine
     - NavigationDestinations for the detail column are located in LazySplit itself. This allows you to keep the destination code out of the views themselves, but requires you to make related changes in LazySplit
         -> If a NavigationDestination is found inside a detail view, a warning will be thrown and it will be ignored.
     - LazySplitService is a singleton that uses Combine to sink changes into LazySplitViewModel. It's functions can be called from any view and does not require the View to inject any dependencies or conform to any protocols.
-    - The primaryView is automatically set to the first case appearing in the LazySplitViewConfig enum
-    - The menu uses a tuple to control which LazySplitDisplays are to appear as a menu button. The tuple attaches the button title and icon directly in the view so this menu-related data does not need to be stored in the LazySplitViewConfig enum.
+    - The primaryView is automatically set to the first case appearing in the LSXDisplay enum
+    - The menu uses a tuple to control which LazySplitDisplays are to appear as a menu button. The tuple attaches the button title and icon directly in the view so this menu-related data does not need to be stored in the LSXDisplay enum.
     - Right-side toolbar button is hidden when menu is opened.
  
  Known Issues:
@@ -174,7 +188,7 @@ import Combine
  
  
  Other:
- - Removed Hashable from LazySplitViewConfig enum
+ - Removed Hashable from LSXDisplay enum
  
  ----------------------------
  VERSION 1.5
@@ -197,102 +211,144 @@ import Combine
  - Made menu scrollable
  
  
- [] TODO: BUG #13 6/29/24 - On compact horizontal sizes, after navigating to a detail view from settings, you can not get back to the original settings view. The menu button still shows.
+ [x] TODO: BUG #13 6/29/24 - On compact horizontal sizes, after navigating to a detail view from settings, you can not get back to the original settings view. The menu button still shows.
+        - I think this will be fixed with what I have planned for v1.7 - orchestrating where views should be layed out through a single function.
+ => Fixed by migrating to PassthroughSubject in LSXService
  
- - I think this will be fixed with what I have planned for v1.7 - orchestrating where views should be layed out through a single function.
- 
- [] TODO: BUG #14 6/30/24 - When changing displays from a LazySplitViewConfig.detailOnly to .besidesDetail, there is an odd animation in the detail column of the child navigation split. The width of the view shrinks/grows to fit the size of the primary NavigationSplitView's detail column. While the size of the view is animating, a gray color appears in between the columns
+ [x] TODO: BUG #14 6/30/24 - When changing displays from a LSXDisplay.detailOnly to .besidesDetail, there is an odd animation in the detail column of the child navigation split. The width of the view shrinks/grows to fit the size of the primary NavigationSplitView's detail column. While the size of the view is animating, a gray color appears in between the columns
         - This is the same color as the column separator.
+ => Set the detail view to be the same width as GeometryReader.size.width. This makes the view act more like the default BalancedNavigationSplitStyle - on settings view, when the menu is opened, the detail view is slightly offset and slightly covered by the view in the center column. Using UIColorOverride .clear solves the issue of the color displaying.
  
- [] TODO: BUG #15 6/30/24 - The app crashes when 1) the horizontal size class is .compact; 2) The menu is open; 3) Device is rotated and the horizontal size class changes to regular.
+ [x] TODO: BUG #15 6/30/24 - The app crashes when 1) the horizontal size class is .compact; 2) The menu is open; 3) Device is rotated and the horizontal size class changes to regular.
+ *** Assertion failure in -[SwiftUI.UIKitNavigationBar layoutSubviews], UINavigationBar.m:3856
+ *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'Layout requested for visible navigation bar, <SwiftUI.UIKitNavigationBar: 0x101717d40; baseClass = UINavigationBar; frame = (0 -44; 428 44); opaque = NO; autoresize = W; layer = <CALayer: 0x30022aea0>> delegate=0x101843800, when the top item belongs to a different navigation bar. topItem = <UINavigationItem: 0x10171c7b0> style=navigator leftItemsSupplementBackButton largeTitleDisplayMode=never, navigation bar = <SwiftUI.UIKitNavigationBar: 0x10160ca40; baseClass = UINavigationBar; frame = (0 0; 428 44); opaque = NO; autoresize = W; layer = <CALayer: 0x30022e680>> delegate=0x10204ce00, possibly from a client attempt to nest wrapped navigation controllers.'
+     terminating due to uncaught exception of type NSException
+ 
+        - Maybe this is related to the automatically closing of the menu on change of isLandscape
+            - No, tried only closing when .regular. Didn't fix.
+        - It could be related to the menu having an xmark back button when .compact but having nothing when .regular.
+        - Including a navigation title without the toolbar works fine.
+ 
+ => It's being caused by the `if hSize == .compact { ToolbarItem }`. If you comment out the if statement and leave the ToolbarItem, the crash does not occur.
+ => The if statement needs to be inside ToolbarItem like this:
+ 
+ ```swift
+ .toolbar {
+     ToolbarItem(placement:) {
+         if horSize == .compact {
+             Button { ... }
+         }
+     }
+ }
+ ```
+ 
+ [] TODO: Menu Button stopped working again on iPad while working on 1.6. I forget which bug this was. Loop back around to this.
+    
+
+ [] TODO: BUG #16 7/2/24 - With .compact HorizontalSizeClass, there is a second, empty, toolbar showing on detail views.
+ 
+ [] TODO: BUG #17 7/2/24 - In SettingsView with .regular HorizontalSizeClass, while the menu is open, you can still tap buttons that appear on the Detail View. The menu should close if any button on SettingsView is tapped. Tapping to the right of SettingsView (i.e. on detailView) should close the menu before users can click a button appearing on the detailView
+ 
+ For videos, demonstrate
+ - ipad, from settings push multiple details then subdetail
+ 
+ ----------------------------
+ VERSION 1.7
+ - Make navigation passthrough.
+ - Combine LSXDisplay and DetailPath enums
+ - Remove navigation title from LSXDisplay to make it more lightweight. Now the only computed properties it has are for other LSX related lightweight enums.
+ - Change settings view to look more like the iOS settings app using a list.
  
  
  ----------------------------
  Future Goals:
- - Make navigation passthrough.
  - Memory comparison to Apple versions.
- - Combine LazySplitViewConfig and DetailPath enums
  - Add right side bar
  */
 
 class LazySplitService {
-    let pathView = PassthroughSubject<DetailPath?, Never>()
+    let pathView = PassthroughSubject<LSXDisplay, Never>()
     
-    @Published var primaryRoot: LazySplitViewConfig
-    @Published var detailRoot: DetailPath?
-    
-    @Published var primaryPath: NavigationPath = .init()
-    @Published var detailPath: NavigationPath = .init()
+//    @Published var primaryRoot: LSXDisplay
+//    @Published var detailRoot: LSXDisplay?
+//    
+//    @Published var primaryPath: NavigationPath = .init()
+//    @Published var detailPath: NavigationPath = .init()
     
     static let shared = LazySplitService()
     
     init() {
-        self.primaryRoot = LazySplitViewConfig.allCases.first ?? .settings
+//        self.primaryRoot = LSXDisplay.allCases.first ?? .settings
     }
     
-    func changeDisplay(to newDisplay: LazySplitViewConfig) {
-        detailPath = .init()
+    // Pass this a display, add the display to its corresponding path based on its DisplayMode and ViewType
+    func update(newDisplay: LSXDisplay) {
+        pathView.send(newDisplay)
+    }
+    
+//    private func changeDisplay(to newDisplay: LSXDisplay) {
+//        detailPath = .init()
+////        primaryPath = .init()
+//        primaryRoot = newDisplay
+//    }
+    
+//    func resetPaths() {
 //        primaryPath = .init()
-        primaryRoot = newDisplay
-    }
+//        print("Primary path reset")
+////        if detailRoot == nil {
+//            detailPath = .init()
+//            print("Detail path reset")
+////        }
+//    }
     
-    func resetPaths() {
-        primaryPath = .init()
-        print("Primary path reset")
-//        if detailRoot == nil {
-            detailPath = .init()
-            print("Detail path reset")
+//    func pushPrimary(_ display: LSXDisplay) {
+////        primaryPath.send(display)
+//        primaryPath.append(display)
+//        detailPath = .init()
+//    }
+    
+//    func setDetailRoot(_ view: LSXDisplay) {
+//        self.detailRoot = view
+//    }
+//    
+//    /// Only call this from views appearing after the detail root
+//    func pushDetail(_ view: LSXDisplay) {
+//        detailPath.append(view)
+//    }
+    
+//    func getShouldShowBackButton() -> Bool {
+//        // The back button shouldn't show when there is just a root view displayed. It should only show when there are views in the navigation paths.
+//        return !(detailPath.isEmpty && primaryPath.isEmpty)
+//    }
+    
+//    func backButtonTapped() {
+//        print("Back button tapped")
+//        if !primaryPath.isEmpty {
+//            print("Popping primary path")
+//            popPrimary()
+//        } else if !detailPath.isEmpty {
+//            print("Popping detail path")
+//            popDetail()
+//        } else if detailPath.isEmpty && detailRoot != nil {
+//            print("Detail path is empty and detail root is not nil")
 //        }
-    }
-    
-    func pushPrimary(_ display: DetailPath) {
-//        primaryPath.send(display)
-        primaryPath.append(display)
-        detailPath = .init()
-    }
-    
-    func setDetailRoot(_ view: DetailPath) {
-        self.detailRoot = view
-    }
-    
-    /// Only call this from views appearing after the detail root
-    func pushDetail(_ view: DetailPath) {
-        detailPath.append(view)
-    }
-    
-    func getShouldShowBackButton() -> Bool {
-        // The back button shouldn't show when there is just a root view displayed. It should only show when there are views in the navigation paths.
-        return !(detailPath.isEmpty && primaryPath.isEmpty)
-    }
-    
-    func backButtonTapped() {
-        print("Back button tapped")
-        if !primaryPath.isEmpty {
-            print("Popping primary path")
-            popPrimary()
-        } else if !detailPath.isEmpty {
-            print("Popping detail path")
-            popDetail()
-        } else if detailPath.isEmpty && detailRoot != nil {
-            print("Detail path is empty and detail root is not nil")
-        }
-    }
-    
-    private func popPrimary() {
-//        primaryPath.send(nil)
-        if primaryPath.count > 0 {
-            primaryPath.removeLast()
-        }
-    }
-    
-    private func popDetail() {
-        if detailPath.isEmpty {
-            detailRoot = nil
-            detailPath = .init()
-        } else {
-            detailPath.removeLast()
-        }
-    }
+//    }
+//    
+//    private func popPrimary() {
+////        primaryPath.send(nil)
+//        if primaryPath.count > 0 {
+//            primaryPath.removeLast()
+//        }
+//    }
+//    
+//    private func popDetail() {
+//        if detailPath.isEmpty {
+//            detailRoot = nil
+//            detailPath = .init()
+//        } else {
+//            detailPath.removeLast()
+//        }
+//    }
 }
 
 
@@ -303,11 +359,13 @@ class LazySplitService {
     @Published var colVis: NavigationSplitViewVisibility = .detailOnly
     @Published var prefCol: NavigationSplitViewColumn = .detail
     
+    @Published var primaryPath: NavigationPath = .init()
     @Published var detailPath: NavigationPath = .init()
-    @Published var mainDisplay: LazySplitViewConfig = .home
-    @Published var detailRoot: DetailPath?
-    @Published var path: NavigationPath = .init()
-    //        let path = PassthroughSubject<NavigationPath, Never>()
+    
+    @Published var mainDisplay: LSXDisplay = .home
+    @Published var detailRoot: LSXDisplay?
+    
+    private var isCompact: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -333,63 +391,89 @@ class LazySplitService {
         guard colVis != .detailOnly && prefCol != .detail else { return }
         colVis = .detailOnly
         prefCol = .detail
+        
+    }
+    
+    func configNavSubscribers() {
+//        navService.$primaryRoot
+//            .sink { [weak self] display in
+//                self?.mainDisplay = display
+//                self?.hideMenu()
+//            }.store(in: &cancellables)
+//        
+//        navService.$detailRoot
+//            .sink { [weak self] detailPath in
+//                self?.detailRoot = detailPath
+//            }.store(in: &cancellables)
+//        
+//        navService.$primaryPath
+//            .sink { [weak self] path in
+//                self?.path = path
+//            }.store(in: &cancellables)
+        
+//        navService.$detailPath
+//            .sink { [weak self] detailPath in
+//                self?.detailPath = detailPath
+//            }.store(in: &cancellables)
+        
+        // Receive a main view
+        navService.pathView
+            .filter({ $0.defaultViewType == .primary })
+            .sink { [weak self] view in
+                self?.changeDisplay(to: view)
+            }.store(in: &cancellables)
+        
+        
+        // Receive a detail view
+        navService.pathView
+            .filter({ $0.defaultViewType == .detail })
+            .sink { [weak self] view in
+                self?.pushDetail(view)
+            }.store(in: &cancellables)
     }
     
     
-    func configNavSubscribers() {
-        navService.$primaryRoot
-            .sink { [weak self] display in
-                self?.mainDisplay = display
-                self?.hideMenu()
-            }.store(in: &cancellables)
-        
-        navService.$detailRoot
-            .sink { [weak self] detailPath in
-                self?.detailRoot = detailPath
-            }.store(in: &cancellables)
-        
-        navService.$primaryPath
-            .sink { [weak self] path in
-                self?.path = path
-            }.store(in: &cancellables)
-        
-        //        navService.primaryPath
-        //            .sink { [weak self] completion in
-        //                print("Sink Completion called")
-        ////                self?.path = path
-        //
-        //            } receiveValue: { [weak self] detailPath in
-        //                if let detailPath = detailPath {
-        //                    self?.path.append(detailPath)
-        //                } else {
-        //                    guard self?.path.count ?? 0 > 0 else { return }
-        //                    self?.path.removeLast()
-        //                }
-        //            }
-        //            .store(in: &cancellables)
-        
-        navService.$detailPath
-            .sink { [weak self] detailPath in
-                self?.detailPath = detailPath
-            }.store(in: &cancellables)
+    // Functions previously in LSXService
+    private func changeDisplay(to newDisplay: LSXDisplay) {
+        detailPath = .init()
+        primaryPath = .init()
+        mainDisplay = newDisplay
+    }
+    
+    // There is no limit on how many of the same view can be pushed onto the detailPath. For example, you can click the toDetail button in Settings 10 times, each time it will push the same view onto the stack and you will therefore need to hit back 10 times.
+    //  - TODO: try -  If you don't want the user to be able to push a view multiple times, disable the button when its detail view is being displayed in the right column
+    private func pushDetail(_ display: LSXDisplay) {
+        if isCompact || mainDisplay.displayMode == .detailOnly {
+            primaryPath.append(display)
+        } else {
+            // The main view is layed out in a split view style so views can display in the detail column on .regular size classes.
+            if detailRoot == nil {
+                detailRoot = display
+            } else {
+                detailPath.append(display)
+            }
+        }
+    }
+    
+    
+    
+    func setHorIsCompact(isCompact: Bool) {
+        self.isCompact = isCompact
     }
 }
 
 /*
- 
  Overview of .toolbar(removing:), .toolbar(.hidden,for:), and .hidesBackButton modifiers
  
  A: Without this, a second sidebar toggle is shown when the menu is open
- B: Doesn't do anything unless the sidebar has a navigationTitle - Test this
+ B: Doesn't seem to do anything on any device.
  C: Without this, a default sidebar toggle will appear on a view that is .besidesPrimary (e.g. SettingsView). The default behavior of this button will show and hide the view that is .besidesPrimary. (Regular hor. size class only)
  D: Doesn't do anything unless the sidebar has a navigationTitle - Test this
  E: Same behavior as C. Will show large navigation bar without the default button on compact hor. size.
  F: Displays back button on all screens. Tapping it opens the menu but causes glitching. Also shows large navigation bar without the default button on regular hor. size. If you want to pass ToolbarItems from the view themselves, this is the toolbar they will land on.
  G: Doesn't seem to do anything on any device. Doesn't matter if navigationBackButton is hidden or visible
  H: Doesn't seem to do anything on any device.
- 
  */
-
 
 
 /// - Parameters
@@ -409,6 +493,7 @@ struct LazySplit<S: View, C: View, D: View>: View {
     let content: C
     let detail: D
     
+    // Adding @ViewBuilder to view parameters removed the need to enclose the views in Groups in RootView
     init(viewModel: LazySplitViewModel, @ViewBuilder sidebar: (() -> S), @ViewBuilder content: (() -> C), @ViewBuilder detail: (() -> D)) {
         self._vm = StateObject(wrappedValue: viewModel)
         self.sidebar = sidebar()
@@ -420,39 +505,38 @@ struct LazySplit<S: View, C: View, D: View>: View {
         GeometryReader { geo in
             let isLandscape = geo.size.width > geo.size.height
             
-            NavigationStack(path: $vm.path) {
+            NavigationStack(path: $vm.primaryPath) {
                 NavigationSplitView(columnVisibility: $vm.colVis,  preferredCompactColumn: $vm.prefCol) {
                     sidebar
-                        .navigationBarTitleDisplayMode(.inline) // B
+                        .navigationTitle("Menu")
                         .toolbar(removing: .sidebarToggle) // A
-                        .toolbar {
-                            // This toolbar appears on the menu.
-                            if horSize == .compact {
-                                ToolbarItem(placement: .topBarLeading) {
+                    //                .navigationBarTitleDisplayMode(.inline) // B
+                        .toolbar { // Toolbar appears on the menu.
+                            ToolbarItem(placement: .topBarLeading) {
+                                if horSize == .compact {
                                     Button("Close", systemImage: "xmark") {
                                         vm.sidebarToggleTapped()
                                     }
                                 }
                             }
                         }
-                        .navigationSplitViewColumnWidth(240)
                 } detail: {
                     Group {
+                        // TODO: What if I were to make it so in the initializer, content and the optional detail are added to an array [content, detail] to create the "mainDisplay". This could then use the length of the array to determine the layout. This may make it easier to add a right sidebar later. It also opens the door for dynamically placing the views where they belong by working backwards through the split view using mainDisplay.last
                         if vm.mainDisplay.displayMode == .besideDetail {
                             NavigationSplitView(columnVisibility: $childColVis, preferredCompactColumn: $childPrefCol) {
                                 content
                                     .toolbar(.hidden, for: .navigationBar) // C
-                                // To display the first option by default, maybe add .onAppear { path append }
                             } detail: {
+                                // TODO: Try moving the navigation stack into the root where detail originates. This would allow for navigation destinations to move out of LazySplitX. It would also mean that the view model can't assume every detail has a stack attached to detailPath.
                                 NavigationStack(path: $vm.detailPath) {
                                     detail
                                         .frame(width: geo.size.width)
-                                        .navigationDestination(for: DetailPath.self) { detail in
+                                        .navigationDestination(for: LSXDisplay.self) { detail in
                                             switch detail {
-                                            case .subdetail(let s): 
-                                                SubDetailView(dataString: s)
-                                                
-                                            default:                Color.blue
+                                            case .detail:           DetailView()
+                                            case .subdetail(let s): SubDetailView(dataString: s)
+                                            default:                Text("Err with column detail view")
                                             }
                                         }
                                 }
@@ -463,7 +547,7 @@ struct LazySplit<S: View, C: View, D: View>: View {
                         } else {
                             content
                         }
-                    }
+                    } //: Group
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             Button("Close", systemImage: "sidebar.leading") {
@@ -474,22 +558,23 @@ struct LazySplit<S: View, C: View, D: View>: View {
                     .navigationBarBackButtonHidden() // I: Hides back button resulting from moving toolbar control back to views.
 //                    .toolbar(.hidden, for: .navigationBar) // F
                     .navigationBarTitleDisplayMode(.inline)
-                }
-                .navigationDestination(for: DetailPath.self) { detail in
+                } //: Navigation Split View
+                .navigationDestination(for: LSXDisplay.self) { detail in
                     switch detail {
                     case .detail:           DetailView()
                     case .subdetail(let s): SubDetailView(dataString: s)
+                    default:                Text("Err with full screen detail view")
                     }
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                // The toolbar here was used up to v1.5. Hiding this and gave control of the toolbar to the views.
+//                .navigationBarTitleDisplayMode(.inline)
+                // This toolbar was used up to v1.5. Hiding it gave control of the toolbar to the views.
                 .toolbar(.hidden, for: .navigationBar)
-//                .toolbar(removing: .sidebarToggle) // G
-//                .navigationBarBackButtonHidden(true) // H
-//                .toolbar {
-//                    sidebarToggle
-//                    contentToolbar
-//                }
+                //                .toolbar(removing: .sidebarToggle) // G
+                //                .navigationBarBackButtonHidden(true) // H
+                //                .toolbar {
+                //                    sidebarToggle
+                //                    contentToolbar
+                //                }
                 .modifier(LazySplitMod(isProminent: horSize == .compact && !isLandscape))
                 .overlay(
                     // Used to disable the swipe gesture that shows the menu. Perhaps the NavigationSplitView monitors the velocity of a swipe during the first pixel of the screen that isn't in the safe area?
@@ -499,9 +584,13 @@ struct LazySplit<S: View, C: View, D: View>: View {
                     , alignment: .leading
                 )
             } //: Navigation Stack
+            .onAppear {
+                vm.setHorIsCompact(isCompact: horSize == .compact)
+            }
             // v1.3 - Monitor orientation changes in the view and notify the view model when changed.
-            .onChange(of: isLandscape) { prev, landscape in
-                if landscape {
+            .onChange(of: isLandscape) { _, landscape in
+                vm.setHorIsCompact(isCompact: horSize == .compact)
+                if landscape && horSize != .compact {
                     vm.hideMenu()
                 }
             }
@@ -514,13 +603,14 @@ struct LazySplit<S: View, C: View, D: View>: View {
                 // The preferred compact column of the NavigationSplitView
                 // Pushing a view into the detail column by itself only works for iPad. childPrefCol needs to toggle between content and detail for iPhone.
                 // This should be added to VM because I'm getting an error for updating preferred column multiple times per frame.
-                // - 6/29/24 this warning might've been solved by Feature 8.
+                // - 6/29/24 this warning might've been solved by FEAT-8.
                 self.childPrefCol = detailRoot != nil ? .detail : .content
             }
-        }
+        } //: Geometry Reader
     } //: Body
     
-    // #F2-
+    
+    
     struct LazySplitMod: ViewModifier {
         let isProminent: Bool
         func body(content: Content) -> some View {

@@ -19,7 +19,9 @@ struct DetailView: View {
                     .font(.title3)
                 
                 Button {
-                    LazySplitService.shared.pushDetail(DetailPath.subdetail("Here's lots more data"))
+//                    LazySplitService.shared.pushDetail(LSXDisplay.subdetail("Here's lots more data"))
+                    
+                    LazySplitService.shared.update(newDisplay: .subdetail("Here's lots more data"))
                 } label: {
                     Text("Button: pushDetail To Subdetail")
                         .frame(maxWidth: 420)
@@ -31,7 +33,8 @@ struct DetailView: View {
                 .padding()
                 
                 Button {
-                    LazySplitService.shared.pushPrimary(DetailPath.subdetail("Here's a few more pieces of data"))
+//                    LazySplitService.shared.pushPrimary(LSXDisplay.subdetail("Here's a few more pieces of data"))
+                    LazySplitService.shared.update(newDisplay: .subdetail("Here's a few more pieces of data"))
                 } label: {
                     Text("Button: pushPrimary To Subdetail")
                         .frame(maxWidth: 420)
@@ -44,26 +47,32 @@ struct DetailView: View {
                 
             } //: VStack
         } //: ZStack
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            if LazySplitService.shared.getShouldShowBackButton() {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        LazySplitService.shared.backButtonTapped()
-                    } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "chevron.left")
-                                .fontWeight(.semibold)
-                                .padding(.vertical, 2)
-                            Text("Back")
-                        }
-                    }
-                }
-            }
-        }
+//        .navigationBarBackButtonHidden()
+//        .toolbar {
+////            if LazySplitService.shared.getShouldShowBackButton() {
+//                ToolbarItem(placement: .topBarLeading) {
+//                    Button {
+//                        LazySplitService.shared.backButtonTapped()
+//                    } label: {
+//                        HStack(spacing: 4) {
+//                            Image(systemName: "chevron.left")
+//                                .fontWeight(.semibold)
+//                                .padding(.vertical, 2)
+//                            Text("Back")
+//                        }
+//                    }
+//                }
+////            }
+//        }
     }
 }
 
 #Preview {
-    DetailView()
+    LazySplit(viewModel: LazySplitViewModel()) {
+        MenuView()
+    } content: {
+        DetailView()
+    } detail: {
+        EmptyView()
+    }
 }

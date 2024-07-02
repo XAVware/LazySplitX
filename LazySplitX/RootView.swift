@@ -18,12 +18,13 @@ struct RootView: View {
             case .home:         HomeView()
             case .settings:     SettingsView()
             case .otherView:    OtherView()
+            default:            Color.green
             }
         } detail: {
             switch vm.detailRoot {
             case .detail:           DetailView()
             case .subdetail(let s): SubDetailView(dataString: s)
-            default:                EmptyView()
+            default:                Color.brown
             }
         }
     }
