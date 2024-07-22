@@ -10,9 +10,9 @@ import SwiftUI
 @main
 struct LazySplitXApp: App {
     
-//    init() {
-//        UIColor.classInit
-//    }
+    init() {
+        UIColor.classInit
+    }
     
     var body: some Scene {
         WindowGroup {

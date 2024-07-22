@@ -7,10 +7,49 @@
 
 import SwiftUI
 
-struct UIDetailView: View {
-    @State var display: LSXDisplay
+enum UIDisplayMode { case detailOnly, besideDetail }
+
+enum UIViewType: Identifiable, Hashable {
+    var id: UIViewType { return self }
+    case primary
+    case detail
+}
+
+enum UIDisplay: Hashable, CaseIterable {
+    static var allCases: [UIDisplay] {
+        return [.home, .otherView, .settings]
+    }
     
-    init(display: LSXDisplay) {
+    case home
+    case otherView
+    case settings
+    
+    case detail
+    case subdetail(String)
+
+    var displayMode: UIDisplayMode {
+        return switch self {
+        case .settings:     .besideDetail
+        default:            .detailOnly
+        }
+    }
+
+    var defaultViewType: UIViewType {
+        return switch self {
+        case .home:         .primary
+        case .otherView:    .primary
+        case .settings:     .primary
+        default:            .detail
+        }
+    }
+    
+}
+
+
+struct UIDetailView: View {
+    @State var display: UIDisplay
+    
+    init(display: UIDisplay) {
         self.display = display
     }
     

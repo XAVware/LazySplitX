@@ -10,35 +10,21 @@ import SwiftUI
 struct SubDetailView: View {
     let dataString: String
     var body: some View {
-        ZStack {
-            Color.gray.opacity(0.1)
-            VStack {
-                Text("Sub detail")
-                    .font(.title3)
-                
-                Text("Your data is: \(dataString)")
-            }
+        VStack {
+            Spacer()
+            Text("Deeper into the stack...")
+                .font(.title)
+            
+            Text("Your data is: \(dataString)")
+            Spacer()
         }
-//        .navigationBarBackButtonHidden()
-//        .toolbar {
-//            ToolbarItem(placement: .topBarLeading) {
-//                Button {
-//                    LazySplitService.shared.backButtonTapped()
-//                } label: {
-//                    HStack(spacing: 4) {
-//                        Image(systemName: "chevron.left")
-//                            .fontWeight(.semibold)
-//                            .padding(.vertical, 2)
-//                        Text("Back")
-//                    }
-//                }
-//            }
-//        }
+        .navigationTitle("Subdetail View")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    LazySplit(viewModel: LazySplitViewModel()) {
+    LazySplit(viewModel: LSXViewModel()) {
         MenuView()
     } content: {
         SubDetailView(dataString: "")

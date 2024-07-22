@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
-    @StateObject var vm: LazySplitViewModel = LazySplitViewModel()
+    @StateObject var vm: LSXViewModel = LSXViewModel()
     
     var body: some View {
         LazySplit(viewModel: vm) {
@@ -17,14 +17,22 @@ struct RootView: View {
             switch vm.mainDisplay {
             case .home:         HomeView()
             case .settings:     SettingsView()
-            case .otherView:    OtherView()
             default:            Color.green
             }
         } detail: {
             switch vm.detailRoot {
-            case .detail:           DetailView()
+            case .detail:           
+                DetailView()
+                    .navigationDestination(for: LSXDisplay.self) { detail in
+                        switch detail {
+                        case .detail:           DetailView()
+                        case .subdetail(let s): SubDetailView(dataString: s)
+                        default:                Text("Err with column detail view")
+                        }
+                    }
+                
             case .subdetail(let s): SubDetailView(dataString: s)
-            default:                Color.brown
+            default:                EmptyView()
             }
         }
     }

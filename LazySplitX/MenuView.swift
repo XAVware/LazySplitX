@@ -8,24 +8,22 @@
 import SwiftUI
 
 // TODO: Enable or disable scroll based on content height.
- 
-struct MenuView: View {    
+
+struct MenuView: View {
+    @Environment(\.horizontalSizeClass) var horSize
     @State var scrollDisabled: Bool = true
-    let menuButtons: [LSXDisplay] = [.home, .otherView, .settings]
+    let menuButtons: [LSXDisplay] = [.home, .settings]
     
     func getButtonData(for display: LSXDisplay) -> (String, String)? {
         return switch display {
         case .home:         ("Home", "house.fill")
-        case .otherView:    ("Other", "figure.walk.motion")
         case .settings:     ("Settings", "gearshape")
         default: nil
         }
     }
     
     var body: some View {
-        VStack {
-            // Header
-            
+        GeometryReader { geo in
             
             // Content -  Menu Buttons
             ScrollView {
@@ -33,10 +31,8 @@ struct MenuView: View {
                     ForEach(menuButtons, id: \.self) { display in
                         if let data = getButtonData(for: display) {
                             Button {
-//                                LazySplitService.shared.changeDisplay(to: display)
-                                LazySplitService.shared.update(newDisplay: display)
+                                LSXService.shared.update(newDisplay: display)
                             } label: {
-//                                let data = getButtonData(for: display)
                                 HStack(spacing: 16) {
                                     Text(data.0)
                                     Spacer()
@@ -45,7 +41,6 @@ struct MenuView: View {
                                 .font(.title3)
                                 .fontDesign(.rounded)
                                 .padding()
-//                                .foregroundStyle(Color.accentColor.opacity(display == LazySplitService.shared.primaryRoot ? 1.0 : 0.6)) // I don't think this works
                             }
                         }
                     } //: For Each
@@ -53,9 +48,19 @@ struct MenuView: View {
                 } //: VStack
                 .padding(.vertical)
             } //: Scroll
-            .background(.lightAccent)
             .scrollDisabled(scrollDisabled)
-        }
+            .padding(.trailing)
+            .background(
+                Color.lightAccent
+                    .cornerRadius(36, corners: [.topRight, .bottomRight])
+                    .shadow(radius: 2)
+                    .ignoresSafeArea()
+                    .padding(.trailing, 3)
+            )
+            
+            
+        } //: Geometry Reader
+        
     }
 }
 
@@ -63,5 +68,5 @@ struct MenuView: View {
 
 
 #Preview {
-    MenuView()
+    RootView()
 }

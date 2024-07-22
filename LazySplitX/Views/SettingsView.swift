@@ -9,52 +9,70 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        ZStack {
-            Color.yellow.opacity(0.3)
-                .font(.title3)
-            
-            VStack {
-                Button {
-//                    LazySplitService.shared.setDetailRoot(.detail)
-                    LazySplitService.shared.update(newDisplay: .detail)
-                } label: {
-                    Text("Button: To Primary Detail")
-                        .frame(maxWidth: 420)
-                        .frame(height: 48)
-                }
-                .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .shadow(radius: 1)
-                .padding()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Settings")
+                    .font(.largeTitle)
                 
-                // Use pushView to display view through main navigation stack, replacing the current full screen.
-                Button {
-//                    LazySplitService.shared.pushPrimary(.detail)
-                    LazySplitService.shared.update(newDisplay: .detail)
-                } label: {
-                    Text("Button: To Primary Detail")
-                        .frame(maxWidth: 420)
-                        .frame(height: 48)
-                }
-                .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .shadow(radius: 1)
-                .padding()
-
+                Text("The settings view demonstrates a view that would commonly be found in the content column of a NavigationSplitView.")
+                    .font(.subheadline)
             }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Compact Horizontal Screen")
+                    .font(.headline)
+                
+                Text("This will be the root view of the navigation. Views are presented as similarly to a NavigationStack.")
+                    .font(.subheadline)
+            }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Regular Size Horizontal Screen")
+                    .font(.headline)
+                Text("This view is laid out in the smaller, left column. LazySplitX gives you full flexibility of presenting views from here onto the detail or onto the full screen.")
+                    .font(.subheadline)
+            
+            }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Button("Push view to column") {
+                    LSXService.shared.update(newDisplay: .detail)
+                }
+                .buttonStyle(BorderedProminentButtonStyle())
+                
+                Button("Push view to full screen") {
+                    LSXService.shared.update(newDisplay: .detail, overrideLocation: .primary)
+                }
+                .buttonStyle(BorderedButtonStyle())
+            }
+            .padding(.vertical)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
         }
+        .padding(.horizontal)
         .navigationTitle("Settings View")
-        .navigationBarTitleDisplayMode(.large)
-        
+        .navigationBarTitleDisplayMode(.inline)
+        .scrollIndicators(.hidden)
+        .background(Color.gray.opacity(0.1))
+//        .cornerRadius(24, corners: .allCorners)
+//        .shadow(radius: 2)
+//        .padding(.vertical)
     }
 }
 
 #Preview {
-    LazySplit(viewModel: LazySplitViewModel()) {
-        MenuView()
-    } content: {
-        SettingsView()
-    } detail: {
-        EmptyView()
-    }
+    RootView()
+//    LazySplit(viewModel: LSXViewModel()) {
+//        MenuView()
+//    } content: {
+//        SettingsView()
+//    } detail: {
+//        EmptyView()
+//    }
 }
