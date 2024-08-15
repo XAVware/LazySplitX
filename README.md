@@ -97,11 +97,10 @@
  }
  ```
  
- ## Known Bugs
- - When the menu is open on compact width devices, changing the orientation will cause a crash. Related to toolbar or lack thereof.
  
  
- ## Bonus - UIColorOverride - Hide the NavigationSplitView separator that appears between the content and detail columns on iPad.
+ ## Bonus - Hide NavigationSplitView Separator
+ ### UIColorOverride
   As of ~April 2024, the separator between the columns of NavigationSplitView is `opaqueSeparator` color. Extend UIColor with the following:
   Note: This also changes the color resulting from Bug #14, so I don't recommend using any color other than clear.
   

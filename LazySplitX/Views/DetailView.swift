@@ -35,7 +35,7 @@ struct DetailView: View {
 }
 
 #Preview {
-    LazySplit(viewModel: LSXViewModel()) {
+    LSXView(viewModel: LSXViewModel()) {
         MenuView()
     } content: {
         SettingsView()

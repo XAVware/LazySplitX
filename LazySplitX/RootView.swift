@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct RootView: View {
-    @StateObject var vm: LSXViewModel = LSXViewModel()
+    @StateObject var lsxVM: LSXViewModel = LSXViewModel()
     
     var body: some View {
-        LazySplit(viewModel: vm) {
+        LSXView(viewModel: lsxVM) {
             MenuView()
         } content: {
-            switch vm.mainDisplay {
+            switch lsxVM.mainDisplay {
             case .home:         HomeView()
             case .settings:     SettingsView()
             default:            Color.green
             }
         } detail: {
-            switch vm.detailRoot {
+            switch lsxVM.detailRoot {
             case .detail:           
                 DetailView()
                     .navigationDestination(for: LSXDisplay.self) { detail in

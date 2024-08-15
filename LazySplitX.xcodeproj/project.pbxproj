@@ -14,12 +14,11 @@
 		9405E3FD2BF83E0F001E059D /* SubDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E3FC2BF83E0F001E059D /* SubDetailView.swift */; };
 		9405E4032BF84028001E059D /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9405E4022BF84028001E059D /* DetailView.swift */; };
 		940B69B42C3B6838008207CB /* RoundedCorner+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940B69B32C3B6838008207CB /* RoundedCorner+Ext.swift */; };
-		940C97092BFEECC700A0BEAF /* LazySplitX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C97082BFEECC700A0BEAF /* LazySplitX.swift */; };
+		940C97092BFEECC700A0BEAF /* LSXView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940C97082BFEECC700A0BEAF /* LSXView.swift */; };
 		941A626C2BF9E1530040DC6C /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941A626B2BF9E1530040DC6C /* MenuView.swift */; };
 		941DB73C2C4F1299009E6EDF /* LSXService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DB73B2C4F1299009E6EDF /* LSXService.swift */; };
 		941DB73E2C4F12AA009E6EDF /* LSXViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941DB73D2C4F12AA009E6EDF /* LSXViewModel.swift */; };
 		9426B6EB2BF4A98C002D6230 /* UISplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9426B6EA2BF4A98C002D6230 /* UISplitView.swift */; };
-		944324B02C1793DE001D9C2A /* Bug2Diagnosis in Resources */ = {isa = PBXBuildFile; fileRef = 944324AF2C1793DE001D9C2A /* Bug2Diagnosis */; };
 		94462F5B2BF5A46300D0068F /* LSXDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94462F582BF5A46300D0068F /* LSXDisplay.swift */; };
 		9454536D2BED3C5E004762C0 /* LazySplitXApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454536C2BED3C5E004762C0 /* LazySplitXApp.swift */; };
 		945453712BED3C5F004762C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 945453702BED3C5F004762C0 /* Assets.xcassets */; };
@@ -28,6 +27,8 @@
 		9454539D2BEEE670004762C0 /* UIDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9454539C2BEEE670004762C0 /* UIDetailView.swift */; };
 		94790D5B2C124A5000059189 /* UIColorOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D5A2C124A5000059189 /* UIColorOverride.swift */; };
 		94790D5D2C124ADC00059189 /* Content_UIKitSplit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94790D5C2C124ADC00059189 /* Content_UIKitSplit.swift */; };
+		94FA6CD92C6DA065001D3CA8 /* iPhone15Plus_v1.7.mov in Resources */ = {isa = PBXBuildFile; fileRef = 94FA6CD82C6DA065001D3CA8 /* iPhone15Plus_v1.7.mov */; };
+		94FA6CDC2C6DA1F4001D3CA8 /* iPad11Inch_v1.7.mov in Resources */ = {isa = PBXBuildFile; fileRef = 94FA6CDB2C6DA1F4001D3CA8 /* iPad11Inch_v1.7.mov */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,14 +40,12 @@
 		9405E4022BF84028001E059D /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		940B69B32C3B6838008207CB /* RoundedCorner+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoundedCorner+Ext.swift"; sourceTree = "<group>"; };
 		940C97072BFEEC0400A0BEAF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		940C97082BFEECC700A0BEAF /* LazySplitX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySplitX.swift; sourceTree = "<group>"; };
+		940C97082BFEECC700A0BEAF /* LSXView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSXView.swift; sourceTree = "<group>"; };
 		941A626B2BF9E1530040DC6C /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		941DB73B2C4F1299009E6EDF /* LSXService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSXService.swift; sourceTree = "<group>"; };
 		941DB73D2C4F12AA009E6EDF /* LSXViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LSXViewModel.swift; sourceTree = "<group>"; };
 		9426B6EA2BF4A98C002D6230 /* UISplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitView.swift; sourceTree = "<group>"; };
-		944324AF2C1793DE001D9C2A /* Bug2Diagnosis */ = {isa = PBXFileReference; lastKnownFileType = text; path = Bug2Diagnosis; sourceTree = "<group>"; };
 		94462F582BF5A46300D0068F /* LSXDisplay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LSXDisplay.swift; sourceTree = "<group>"; };
-		944FAA722C32645100EC45EF /* ProjectNotes.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ProjectNotes.md; sourceTree = "<group>"; };
 		945453692BED3C5E004762C0 /* LazySplitX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LazySplitX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9454536C2BED3C5E004762C0 /* LazySplitXApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySplitXApp.swift; sourceTree = "<group>"; };
 		945453702BED3C5F004762C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,6 +56,8 @@
 		94790D5C2C124ADC00059189 /* Content_UIKitSplit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content_UIKitSplit.swift; sourceTree = "<group>"; };
 		94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iPhone15ProMax_LazySplit_v1.5.mov; sourceTree = "<group>"; };
 		94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iPadPro11Inch_LazySplit_v1.5.mov; sourceTree = "<group>"; };
+		94FA6CD82C6DA065001D3CA8 /* iPhone15Plus_v1.7.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iPhone15Plus_v1.7.mov; sourceTree = "<group>"; };
+		94FA6CDB2C6DA1F4001D3CA8 /* iPad11Inch_v1.7.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = iPad11Inch_v1.7.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +74,7 @@
 		9405E3F72BF83DF5001E059D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				941A626B2BF9E1530040DC6C /* MenuView.swift */,
 				9405E3F82BF83DFE001E059D /* HomeView.swift */,
 				9405E3FA2BF83E02001E059D /* SettingsView.swift */,
 				9405E3FC2BF83E0F001E059D /* SubDetailView.swift */,
@@ -84,12 +86,11 @@
 		945453602BED3C5E004762C0 = {
 			isa = PBXGroup;
 			children = (
-				94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */,
-				94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */,
+				94FA6CD82C6DA065001D3CA8 /* iPhone15Plus_v1.7.mov */,
+				94FA6CDB2C6DA1F4001D3CA8 /* iPad11Inch_v1.7.mov */,
 				940C97072BFEEC0400A0BEAF /* README.md */,
-				944FAA722C32645100EC45EF /* ProjectNotes.md */,
-				944324AF2C1793DE001D9C2A /* Bug2Diagnosis */,
 				9454536B2BED3C5E004762C0 /* LazySplitX */,
+				94FA6CDA2C6DA071001D3CA8 /* Recordings */,
 				9454536A2BED3C5E004762C0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,12 +108,11 @@
 			children = (
 				9454536C2BED3C5E004762C0 /* LazySplitXApp.swift */,
 				9405E3F52BF83BA3001E059D /* RootView.swift */,
-				940C97082BFEECC700A0BEAF /* LazySplitX.swift */,
+				940C97082BFEECC700A0BEAF /* LSXView.swift */,
 				94462F582BF5A46300D0068F /* LSXDisplay.swift */,
 				941DB73B2C4F1299009E6EDF /* LSXService.swift */,
 				941DB73D2C4F12AA009E6EDF /* LSXViewModel.swift */,
 				94790D5A2C124A5000059189 /* UIColorOverride.swift */,
-				941A626B2BF9E1530040DC6C /* MenuView.swift */,
 				94F2FF772C13F04800C72F0C /* PastVersions */,
 				9405E3F72BF83DF5001E059D /* Views */,
 				945453702BED3C5F004762C0 /* Assets.xcassets */,
@@ -148,6 +148,15 @@
 				9405E3F32BF7EB55001E059D /* StackInSplitView.swift */,
 			);
 			path = PastVersions;
+			sourceTree = "<group>";
+		};
+		94FA6CDA2C6DA071001D3CA8 /* Recordings */ = {
+			isa = PBXGroup;
+			children = (
+				94A4CAD02C28C99F00590777 /* iPadPro11Inch_LazySplit_v1.5.mov */,
+				94A4CACF2C28C99E00590777 /* iPhone15ProMax_LazySplit_v1.5.mov */,
+			);
+			path = Recordings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,9 +217,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94FA6CDC2C6DA1F4001D3CA8 /* iPad11Inch_v1.7.mov in Resources */,
 				945453742BED3C5F004762C0 /* Preview Assets.xcassets in Resources */,
+				94FA6CD92C6DA065001D3CA8 /* iPhone15Plus_v1.7.mov in Resources */,
 				945453712BED3C5F004762C0 /* Assets.xcassets in Resources */,
-				944324B02C1793DE001D9C2A /* Bug2Diagnosis in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,7 +239,7 @@
 				9454537D2BED406E004762C0 /* UIMenuView.swift in Sources */,
 				941DB73C2C4F1299009E6EDF /* LSXService.swift in Sources */,
 				9405E3FB2BF83E02001E059D /* SettingsView.swift in Sources */,
-				940C97092BFEECC700A0BEAF /* LazySplitX.swift in Sources */,
+				940C97092BFEECC700A0BEAF /* LSXView.swift in Sources */,
 				940B69B42C3B6838008207CB /* RoundedCorner+Ext.swift in Sources */,
 				9405E3F62BF83BA3001E059D /* RootView.swift in Sources */,
 				94790D5B2C124A5000059189 /* UIColorOverride.swift in Sources */,

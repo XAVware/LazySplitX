@@ -14,7 +14,7 @@ struct HomeView: View {
             Text("The home view demonstrates one of the main pages of an app.")
                 .font(.headline)
             
-            Text("You can use a button or a toolbar item to navigate to a detail view.")
+            Text("Use a button or a toolbar item to navigate to a detail view.")
                 .font(.subheadline)
             
             // This view does not have a detail column on the right, so views will be presented over the entire screen. There is no need to override the location.

@@ -24,7 +24,7 @@ struct SubDetailView: View {
 }
 
 #Preview {
-    LazySplit(viewModel: LSXViewModel()) {
+    LSXView(viewModel: LSXViewModel()) {
         MenuView()
     } content: {
         SubDetailView(dataString: "")

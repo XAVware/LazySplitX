@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+
 @MainActor final class LSXViewModel: ObservableObject {
     private let navService = LSXService.shared
     
@@ -35,14 +36,14 @@ import Combine
     
     func showMenu() {
         // Exit if menu is already in desired state
-        guard colVis != .doubleColumn && prefCol != .sidebar else { return }
+//        guard colVis != .doubleColumn && prefCol != .sidebar else { return }
         colVis = .doubleColumn
         prefCol = .sidebar
         detailRoot = nil
     }
     
     func hideMenu() {
-        guard colVis != .detailOnly && prefCol != .detail else { return }
+//        guard colVis != .detailOnly && prefCol != .detail else { return }
         colVis = .detailOnly
         prefCol = .detail
     }
@@ -71,6 +72,7 @@ import Combine
     
     // Change the root view to one of LSXDisplay.allCases
     private func changeDisplay(to newDisplay: LSXDisplay) {
+        hideMenu()
         detailPath = .init()
         primaryPath = .init()
         mainDisplay = newDisplay
